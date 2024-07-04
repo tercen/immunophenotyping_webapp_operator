@@ -79,9 +79,10 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
   @override
   Widget build(BuildContext context) {
-    var wdg = Container(
-      alignment: Alignment.topLeft,
+    var wdg = Material(
+      // alignment: Alignment.topLeft,
       child: 
+      //#TODO Might need to switch to row....
       Table(
         columnWidths: 
           const {
@@ -102,9 +103,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     );
 
 
-    return Material(
-      child: _buildLeftTab,
-    );
+    return wdg;
   }
 
 
