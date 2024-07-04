@@ -103,7 +103,12 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     );
 
 
-    return wdg;
+    return Row(
+      children: [
+        _buildLeftTab,
+        _verticalDivider
+      ],
+    );
   }
 
 
