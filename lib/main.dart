@@ -65,9 +65,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     scrollDirection: Axis.vertical,
     shrinkWrap: true,
     children: [
-      Text("Test")
-      // _addItem(Icons.home_rounded, "FCS Files", const FcsLoadScreen()),
-      // _addItem(Icons.search_rounded, "Annotations", const AnnotationScreen()),
+      _addItem(Icons.home_rounded, "FCS Files", const FcsLoadScreen()),
+      _addItem(Icons.search_rounded, "Annotations", const AnnotationScreen()),
       // _addItem(Icons.settings, "Settings"),
     ],
   ));
@@ -104,9 +103,11 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         _buildLeftTab,
-        _verticalDivider
+        _verticalDivider,
+        _buildRightScreen()
       ],
     );
   }
