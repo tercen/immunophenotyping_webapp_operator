@@ -94,7 +94,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
             children: [
               _buildLeftTab,
               _verticalDivider,
-              _buildRightScreen(),
+              // _buildRightScreen(),
             ]
           )
         ],
@@ -103,7 +103,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
 
     return Material(
-      child: Column(children: [Text("Test")],),
+      child: wdg,
     );
   }
 
