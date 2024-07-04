@@ -1,0 +1,20 @@
+{
+    "name": "Immunophenotyping Webapp",
+    "description": "",
+    "isWebApp": true,
+    "isViewOnly": false,
+    "tags": [
+  
+    ],
+    "authors": [
+      "tercen"
+    ],
+    "urls": [
+      "https://github.com/tercen/immunophneotyping_webapp_operator"
+    ],
+    "serve": "build/web",
+    "properties": [
+  
+    ],
+    "auth": ["google"]
+  }
