@@ -8,8 +8,8 @@ import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:web/web.dart' as web;
 
-import 'package:sci_tercen_client/sci_client.dart' as sci;
-import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
+// import 'package:sci_tercen_client/sci_client.dart' as sci;
+// import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
 
 class FcsLoadScreen extends StatefulWidget {
   const FcsLoadScreen({super.key});
@@ -69,26 +69,26 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   Future<void> _uploadFiles() async {
     print("Starting factory");
-    var factory = tercen.ServiceFactory();
-    // print("Connecting");
-    // factory.userService.connect("test", "test");
-    print("Success");
-    List<String> teamNameList = [];
-    List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [""]);
+    // var factory = tercen.ServiceFactory();
+    // // print("Connecting");
+    // // factory.userService.connect("test", "test");
+    // print("Success");
     // List<String> teamNameList = [];
-    for( var team in teamList){
-      print(team.name);
-      teamNameList.add(team.name);
-    }
+    // List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [""]);
+    // // List<String> teamNameList = [];
+    // for( var team in teamList){
+    //   print(team.name);
+    //   teamNameList.add(team.name);
+    // }
 
-    setState(() {
-      if(teamNameList.length > 0){
-        filesToUpload.add(teamNameList[0]);
-      }else{
-        filesToUpload.add("No teams found");
-      }
+    // setState(() {
+    //   if(teamNameList.length > 0){
+    //     filesToUpload.add(teamNameList[0]);
+    //   }else{
+    //     filesToUpload.add("No teams found");
+    //   }
       
-    });
+    // });
   }
 
   void  _processSingleFileDrop(ev){
