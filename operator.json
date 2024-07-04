@@ -15,6 +15,5 @@
     "serve": "build/web",
     "properties": [
   
-    ],
-    "auth": ["google"]
+    ]
   }
