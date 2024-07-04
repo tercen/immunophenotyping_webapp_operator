@@ -67,29 +67,33 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     htmlFileList.add(wf);
   }
 
-  Future<void> _uploadFiles() async {
-    print("Starting factory");
-    // var factory = tercen.ServiceFactory();
-    // // print("Connecting");
-    // // factory.userService.connect("test", "test");
-    // print("Success");
-    // List<String> teamNameList = [];
-    // List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [""]);
-    // // List<String> teamNameList = [];
-    // for( var team in teamList){
-    //   print(team.name);
-    //   teamNameList.add(team.name);
-    // }
+  void _uploadFiles(){
 
-    // setState(() {
-    //   if(teamNameList.length > 0){
-    //     filesToUpload.add(teamNameList[0]);
-    //   }else{
-    //     filesToUpload.add("No teams found");
-    //   }
-      
-    // });
   }
+
+  // Future<void> _uploadFiles() async {
+  //   print("Starting factory");
+  //   // var factory = tercen.ServiceFactory();
+  //   // // print("Connecting");
+  //   // // factory.userService.connect("test", "test");
+  //   // print("Success");
+  //   // List<String> teamNameList = [];
+  //   // List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [""]);
+  //   // // List<String> teamNameList = [];
+  //   // for( var team in teamList){
+  //   //   print(team.name);
+  //   //   teamNameList.add(team.name);
+  //   // }
+
+  //   // setState(() {
+  //   //   if(teamNameList.length > 0){
+  //   //     filesToUpload.add(teamNameList[0]);
+  //   //   }else{
+  //   //     filesToUpload.add("No teams found");
+  //   //   }
+      
+  //   // });
+  // }
 
   void  _processSingleFileDrop(ev){
     if (ev is web.File) {
