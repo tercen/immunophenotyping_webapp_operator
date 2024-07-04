@@ -65,8 +65,9 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     scrollDirection: Axis.vertical,
     shrinkWrap: true,
     children: [
-      _addItem(Icons.home_rounded, "FCS Files", const FcsLoadScreen()),
-      _addItem(Icons.search_rounded, "Annotations", const AnnotationScreen()),
+      Text("Test")
+      // _addItem(Icons.home_rounded, "FCS Files", const FcsLoadScreen()),
+      // _addItem(Icons.search_rounded, "Annotations", const AnnotationScreen()),
       // _addItem(Icons.settings, "Settings"),
     ],
   );
