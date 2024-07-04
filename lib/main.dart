@@ -8,10 +8,10 @@ import 'package:immunophenotyping_template_assistant/fcs_load_screen.dart';
 // 1: Use InkWell on left panel to navigate screens on the right
 // *: Use MediaQuery to scale text across the application
 
-void main() => runApp(const PromptApp());
+void main() => runApp(const ImmunophenotypingApp());
 
-class PromptApp extends StatelessWidget {
-  const PromptApp({super.key});
+class ImmunophenotypingApp extends StatelessWidget {
+  const ImmunophenotypingApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +103,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
 
     return Material(
-      child: wdg,
+      child: Column(children: [Text("Test")],),
     );
   }
 
