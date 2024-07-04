@@ -102,7 +102,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     );
 
 
-    return Container(child: wdg,);
+    return Row(children: [wdg],);
   }
 
 
