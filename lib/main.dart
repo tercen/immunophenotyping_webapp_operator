@@ -100,7 +100,10 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
       ),
     );
 
-    return wdg;
+
+    return Material(
+      child: wdg,
+    );
   }
 
 
