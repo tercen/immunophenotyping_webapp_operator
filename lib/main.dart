@@ -61,7 +61,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     return tbl;
   }
 
-  final Widget _buildLeftTab = ListView(
+  final Widget _buildLeftTab = Container( child:ListView(
     scrollDirection: Axis.vertical,
     shrinkWrap: true,
     children: [
@@ -70,7 +70,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
       // _addItem(Icons.search_rounded, "Annotations", const AnnotationScreen()),
       // _addItem(Icons.settings, "Settings"),
     ],
-  );
+  ));
 
   Widget _buildRightScreen(){
     return const FcsLoadScreen();
