@@ -70,8 +70,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   Future<void> _uploadFiles() async {
     print("Starting factory");
     var factory = tercen.ServiceFactory();
-    print("Connecting");
-    factory.userService.connect("test", "test");
+    // print("Connecting");
+    // factory.userService.connect("test", "test");
     print("Success");
     List<String> teamNameList = [];
     List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [""]);
