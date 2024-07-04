@@ -103,7 +103,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
 
     return Material(
-      child: wdg,
+      child: _buildLeftTab,
     );
   }
 
