@@ -61,7 +61,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     return tbl;
   }
 
-  final Widget _buildLeftTab = Container( child:ListView(
+  final Widget _buildLeftTab = Material( child:ListView(
     scrollDirection: Axis.vertical,
     shrinkWrap: true,
     children: [
@@ -87,7 +87,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
           const {
             0: FixedColumnWidth(250.0),
             1: FixedColumnWidth(5.0),
-            2: IntrinsicColumnWidth(),
+            // 2: IntrinsicColumnWidth(),
           },
         children: [
           TableRow(
