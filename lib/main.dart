@@ -32,8 +32,8 @@ class TwoColumnHome extends StatefulWidget {
 
 class _TwoColumnHomeState extends State<TwoColumnHome>{
   final Widget _verticalDivider = Expanded(child: Container(constraints: const BoxConstraints(maxHeight: 1000, maxWidth: 5, minHeight: 50), color: Colors.black,) );
-  static const Widget _fcsLoadScreen = FcsLoadScreen();
-  static const Widget _annotationScreen = FcsLoadScreen();
+  // static const Widget _fcsLoadScreen = FcsLoadScreen();
+  // static const Widget _annotationScreen = FcsLoadScreen();
   
   static Widget _addItem( IconData icon, String label, Widget screenTo){
     var inset = const EdgeInsets.symmetric(vertical: 5, horizontal: 5);
@@ -65,8 +65,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     scrollDirection: Axis.vertical,
     shrinkWrap: true,
     children: [
-      _addItem(Icons.home_rounded, "FCS Files", _fcsLoadScreen),
-      _addItem(Icons.search_rounded, "Annotations", _annotationScreen),
+      _addItem(Icons.home_rounded, "FCS Files", const FcsLoadScreen()),
+      _addItem(Icons.search_rounded, "Annotations", const AnnotationScreen()),
       // _addItem(Icons.settings, "Settings"),
     ],
   );
