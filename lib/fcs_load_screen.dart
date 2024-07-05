@@ -1,7 +1,5 @@
 
 
-import 'dart:math';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
@@ -22,6 +20,7 @@ class FcsLoadScreen extends StatefulWidget {
 
 
 class _FcsLoadScreenState extends State<FcsLoadScreen>{
+  final factory = tercen.ServiceFactory();
   late DropzoneViewController dvController;
   late FilePickerResult result;
   late String selectedTeam;
@@ -31,9 +30,22 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   var teamTfController = TextEditingController();
 
 
-  List<String> _loadTeams() {
 
-    return const ["DevTeam", "Team A", "Team B", "Team C"];
+  Future<List<String>> _loadTeams() async {
+    var token = Uri.base.queryParameters["token"] ?? '';
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+
+    List<String> teamNameList = [];
+
+    List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["data"]["u"]]);
+
+      for( var team in teamList){
+        // print(team.name);
+      teamNameList.add(team.name);
+    }
+
+
+    return teamNameList;
   }
 
 
@@ -73,29 +85,27 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   // }
 
   Future<void> _uploadFiles() async {
-    print("Starting factory");
-    var factory = tercen.ServiceFactory();
-    print("Success");
+    
     var token = Uri.base.queryParameters["token"] ?? '';
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    print(decodedToken);
+
     List<String> teamNameList = [];
-    // factory.
+
     List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["data"]["u"]]);
-    // List<String> teamNameList = [];
+
     for( var team in teamList){
       print(team.name);
       teamNameList.add(team.name);
     }
 
-    // setState(() {
-    //   if(teamNameList.length > 0){
-    //     filesToUpload.add(teamNameList[0]);
-    //   }else{
-    //     filesToUpload.add("No teams found");
-    //   }
+    setState(() {
+      if(teamNameList.length > 0){
+        filesToUpload.add(teamNameList[0]);
+      }else{
+        filesToUpload.add("No teams found");
+      }
       
-    // });
+    });
   }
 
   void  _processSingleFileDrop(ev){
@@ -151,7 +161,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                 selectedTeam = (await showPickerDialog(
                   context: context,
                   label: "Team",
-                  items: _loadTeams(),
+                  items: await _loadTeams(),
                 ))!;
 
                 teamTfController.text = selectedTeam;
