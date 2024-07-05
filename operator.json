@@ -12,7 +12,7 @@
     "urls": [
       "https://github.com/tercen/immunophneotyping_webapp_operator"
     ],
-    "serve": "web",
+    "serve": "build/web",
     "properties": [
   
     ]
