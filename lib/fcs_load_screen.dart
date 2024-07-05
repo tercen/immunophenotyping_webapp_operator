@@ -81,7 +81,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     print(decodedToken);
     List<String> teamNameList = [];
     // factory.
-    List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["user"]]);
+    List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["data"]["u"]]);
     // List<String> teamNameList = [];
     for( var team in teamList){
       print(team.name);
