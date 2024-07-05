@@ -87,7 +87,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
           const {
             0: FixedColumnWidth(250.0),
             1: FixedColumnWidth(5.0),
-            2: FixedColumnWidth(700),
+            2: IntrinsicColumnWidth(),
           },
         children: [
           TableRow(
