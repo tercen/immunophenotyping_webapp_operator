@@ -78,31 +78,33 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
   @override
   Widget build(BuildContext context) {
-    // var wdg = Align(
-    //   alignment: Alignment.topLeft,
-    //   child: 
-    //   //#TODO Might need to switch to row....
-    //   Table(
-    //     columnWidths: 
-    //       const {
-    //         0: FixedColumnWidth(250.0),
-    //         1: FixedColumnWidth(5.0),
-    //         // 2: IntrinsicColumnWidth(),
-    //       },
-    //     children: [
-    //       TableRow(
-    //         children: [
-    //           _buildLeftTab,
-    //           _verticalDivider,
-    //           // _buildRightScreen(),
-    //         ]
-    //       )
-    //     ],
-    //   ),
-    // );
+    var wdg = Align(
+      alignment: Alignment.topLeft,
+      child: 
+      //#TODO Might need to switch to row....
+      Table(
+        columnWidths: 
+          const {
+            0: FixedColumnWidth(250.0),
+            1: FixedColumnWidth(5.0),
+            // 2: IntrinsicColumnWidth(),
+          },
+        children: [
+          TableRow(
+            children: [
+              Text("Left"),
+              Text("Right")
+              // _buildLeftTab,
+              // _verticalDivider,
+              // _buildRightScreen(),
+            ]
+          )
+        ],
+      ),
+    );
 
     //FIXME Only rendering Row, the other screens are blank...
-    return Row(children: [Text("Left"), Text("Right")],);
+    return wdg;
   }
 
 
