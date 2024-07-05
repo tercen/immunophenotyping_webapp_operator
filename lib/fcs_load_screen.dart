@@ -84,7 +84,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   void _uploadFiles() async {
     var taskId = Uri.base.queryParameters["taskId"] ?? '';
     // sci.Task task = await factory.taskService.get(taskId);
-    print(factory.persistentService.getDependentObjects(taskId));
+    List<sci.PersistentObject> res = await factory.persistentService.getDependentObjects(taskId);
+
+    for( var o in res ){
+      print(o.kind);
+      print(o);
+    }
     
   }
 
