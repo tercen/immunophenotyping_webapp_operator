@@ -86,14 +86,14 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         columnWidths: 
           const {
             0: FixedColumnWidth(250.0),
-            1: FixedColumnWidth(5.0),
+            // 1: FixedColumnWidth(5.0),
             2: IntrinsicColumnWidth(),
           },
         children: [
           TableRow(
             children: [
               _buildLeftTab,
-              _verticalDivider,
+              // _verticalDivider,
               // _buildRightScreen(),
               Text("WIP")
             ]
