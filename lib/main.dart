@@ -94,8 +94,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
             children: [
               _buildLeftTab,
               // _verticalDivider,
-              // _buildRightScreen(),
-              Text("WIP")
+              _buildRightScreen(),
             ]
           )
         ],
