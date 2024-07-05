@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:web/web.dart' as web;
 
@@ -74,11 +75,13 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   Future<void> _uploadFiles() async {
     print("Starting factory");
     var factory = tercen.ServiceFactory();
-    print("Connecting");
-    // factory.userService.connect("test", "test");
     print("Success");
+    var token = Uri.base.queryParameters["token"] ?? '';
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    print(decodedToken);
     List<String> teamNameList = [];
-    List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [""]);
+    // factory.
+    List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["user"]]);
     // List<String> teamNameList = [];
     for( var team in teamList){
       print(team.name);
