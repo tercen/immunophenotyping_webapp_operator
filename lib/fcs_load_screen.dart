@@ -260,7 +260,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
         ],
       ),
-    )
+    );
  
   }
 

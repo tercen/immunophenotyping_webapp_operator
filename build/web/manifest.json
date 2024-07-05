@@ -1,6 +1,6 @@
 {
-    "name": "immunophenotyping_template_assistant",
-    "short_name": "immunophenotyping_template_assistant",
+    "name": "immunophenotyping_template_assist",
+    "short_name": "immunophenotyping_template_assist",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
