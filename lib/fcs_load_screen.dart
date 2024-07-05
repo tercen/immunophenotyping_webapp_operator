@@ -34,7 +34,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   Future<List<String>> _loadTeams() async {
     var token = Uri.base.queryParameters["token"] ?? '';
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    print(decodedToken);
+    
 
     List<String> teamNameList = [];
 
@@ -82,8 +82,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   }
 
   void _uploadFiles() async {
-    // var taskId = Uri.base.queryParameters["taskId"] ?? '';
+    var taskId = Uri.base.queryParameters["taskId"] ?? '';
     // sci.Task task = await factory.taskService.get(taskId);
+    print(factory.persistentService.getDependentObjects(taskId));
     
   }
 
