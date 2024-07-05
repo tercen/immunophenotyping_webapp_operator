@@ -274,7 +274,7 @@ packages:
     source: git
     version: "1.1.0"
   sci_http_client:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: sci_http_client
       ref: "1.1.0"

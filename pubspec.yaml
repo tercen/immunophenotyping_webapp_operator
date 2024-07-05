@@ -37,6 +37,13 @@ dependencies:
       url: https://github.com/tercen/sci_tercen_client
       path: sci_tercen_client
 
+  sci_http_client:
+    git:
+      ref: 1.1.0
+      url: https://github.com/tercen/sci_tercen_client
+      path: sci_http_client
+
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
