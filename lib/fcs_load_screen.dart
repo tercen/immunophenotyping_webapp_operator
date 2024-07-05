@@ -34,6 +34,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   Future<List<String>> _loadTeams() async {
     var token = Uri.base.queryParameters["token"] ?? '';
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    print(decodedToken);
 
     List<String> teamNameList = [];
 
@@ -80,33 +81,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     htmlFileList.add(wf);
   }
 
-  // void _uploadFiles(){
-// 
-  // }
-
-  Future<void> _uploadFiles() async {
+  void _uploadFiles() async {
+    // var taskId = Uri.base.queryParameters["taskId"] ?? '';
+    // sci.Task task = await factory.taskService.get(taskId);
     
-    var token = Uri.base.queryParameters["token"] ?? '';
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-
-    List<String> teamNameList = [];
-
-    List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["data"]["u"]]);
-
-    for( var team in teamList){
-      print(team.name);
-      teamNameList.add(team.name);
-    }
-
-    setState(() {
-      if(teamNameList.length > 0){
-        filesToUpload.add(teamNameList[0]);
-      }else{
-        filesToUpload.add("No teams found");
-      }
-      
-    });
   }
+
 
   void  _processSingleFileDrop(ev){
     if (ev is web.File) {
@@ -160,7 +140,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
               onPressed: () async {
                 selectedTeam = (await showPickerDialog(
                   context: context,
-                  label: "Team",
+                  label: "",
                   items: await _loadTeams(),
                 ))!;
 
