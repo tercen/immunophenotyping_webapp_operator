@@ -35,7 +35,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   // static const Widget _fcsLoadScreen = FcsLoadScreen();
   // static const Widget _annotationScreen = FcsLoadScreen();
   
-  static Widget _addItem( IconData icon, String label, Widget screenTo){
+  static Widget _addItem( IconData icon, String label, String screenTo){
     var inset = const EdgeInsets.symmetric(vertical: 5, horizontal: 5);
     var tbl = Align(
       alignment: Alignment.centerLeft,
@@ -65,8 +65,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     scrollDirection: Axis.vertical,
     shrinkWrap: true,
     children: [
-      _addItem(Icons.home_rounded, "FCS Files", const FcsLoadScreen()),
-      _addItem(Icons.search_rounded, "Annotations", const AnnotationScreen()),
+      _addItem(Icons.home_rounded, "FCS Files","FcsLoadScreen"),
+      _addItem(Icons.search_rounded, "Annotations", "AnnotationScreen"),
       // _addItem(Icons.settings, "Settings"),
     ],
   ));
@@ -92,7 +92,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         children: [
           TableRow(
             children: [
-              Text("Left"),
+              _buildLeftTab,
               Text("Right")
               // _buildLeftTab,
               // _verticalDivider,
