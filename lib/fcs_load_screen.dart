@@ -134,7 +134,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return Material(child: Align(
       alignment: Alignment.topLeft,
       child: Column(
         children: [
@@ -260,6 +260,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
         ],
       ),
+    )
     );
   }
 
