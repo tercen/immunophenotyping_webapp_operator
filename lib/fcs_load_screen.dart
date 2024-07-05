@@ -85,7 +85,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     var taskId = Uri.base.queryParameters["taskId"] ?? '';
     // sci.Task task = await factory.taskService.get(taskId);
     List<sci.PersistentObject> res = await factory.persistentService.getDependentObjects(taskId);
-
+    print(Uri.base.queryParameters);
     for( var o in res ){
       print(o.kind);
       print(o);
