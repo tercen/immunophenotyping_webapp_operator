@@ -102,7 +102,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     );
 
     //FIXME Only rendering Row, the other screens are blank...
-    return Scaffold(body: wdg,);
+    return wdg;
   }
 
 
