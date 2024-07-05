@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:immunophenotyping_template_assistant/annotation_screen.dart';
 import 'package:immunophenotyping_template_assistant/fcs_load_screen.dart';
+import 'package:immunophenotyping_template_assistant/util.dart';
 
 
 //TODO list
@@ -101,8 +102,19 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
       ),
     );
 
-    //FIXME Only rendering Row, the other screens are blank...
-    return wdg;
+
+    return FutureBuilder(
+      future: initFactory(),
+      builder: (context, data) {
+          if (data.hasData) {
+            return wdg;
+          } else if (data.hasError) {
+            return Text(data.error!.toString());
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        }
+     );
   }
 
 
