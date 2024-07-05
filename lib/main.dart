@@ -101,8 +101,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     //   ),
     // );
 
-
-    return Row(children: [_buildLeftTab, _buildRightScreen()],);
+    //FIXME Only rendering Row, the other screens are blank...
+    return Row(children: [Text("Left"), Text("Right")],);
   }
 
 
