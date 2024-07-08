@@ -117,21 +117,31 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     print("Creating workflow");
     // https://github.com/tercen/flow_core_immunophenotyping_template
     // Create workflow for FCS reading
-    sci.ImportGitWorkflowTask importTask = sci.ImportGitWorkflowTask();
-    importTask.projectId = project.id;
-    importTask.url = sci.Url();
-    importTask.url.uri = "http://github.com/tercen/flow_core_immunophenotyping_template";
-    
-    importTask.version = "0.1.2";
-    
-    importTask.owner = "Thiago";
+    sci.Workflow wkf = sci.Workflow();
+    wkf.url = sci.Url();
+    wkf.url.uri = "http://github.com/tercen/flow_core_immunophenotyping_template";
+    wkf.name = "Test";
+    wkf.version = "0.1.2";
+    wkf.acl.owner = "Thiago";
+    wkf.projectId = project.id;
 
-    importTask.state = sci.InitState();
+    await factory.workflowService.create(wkf);
 
-    var task = await factory.taskService.create(importTask);
-    await factory.taskService.runTask(task.id);
-    task = await factory.taskService.waitDone(task.id);
-    print("done");
+    // sci.ImportGitWorkflowTask importTask = sci.ImportGitWorkflowTask();
+    // importTask.projectId = project.id;
+    // importTask.url = sci.Url();
+    // importTask.url.uri = "http://github.com/tercen/flow_core_immunophenotyping_template";
+    
+    // importTask.version = "0.1.2";
+    
+    // importTask.owner = "Thiago";
+
+    // importTask.state = sci.InitState();
+
+    // var task = await factory.taskService.create(importTask);
+    // await factory.taskService.runTask(task.id);
+    // task = await factory.taskService.waitDone(task.id);
+    // print("done");
 
   // static const List<String> PROPERTY_NAMES = [
   //   Vocabulary.url_OP,
