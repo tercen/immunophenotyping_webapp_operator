@@ -124,6 +124,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     importTask.version = "0.1.2";
     importTask.aclContext.username = "Thiago";
+
+    importTask.state = sci.InitState();
+    
     var task = await factory.taskService.create(importTask);
     factory.taskService.runTask(task.id);
     task = await factory.taskService.waitDone(task.id);
