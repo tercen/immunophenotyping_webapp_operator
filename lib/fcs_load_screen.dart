@@ -105,12 +105,14 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     for( web.File file in htmlFileList ){
       print("Uploading ${file.name}");
       var bytes = await dvController.getFileData(file);
+      print("File uploaded...")
       sci.FileDocument docToUpload = sci.FileDocument();
       docToUpload.name = file.name;
       docToUpload.projectId = project.id;
       docToUpload.acl.owner = selectedTeam;
 
       factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) );
+      print("Done with ${file.name}");
     }
     
     
