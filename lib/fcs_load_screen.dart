@@ -23,30 +23,38 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   final factory = tercen.ServiceFactory();
   late DropzoneViewController dvController;
   late FilePickerResult result;
-  late String selectedTeam;
+  String selectedTeam = "Please select a team";
   Color dvBackground = Colors.white;
   List<String> filesToUpload = ["Drag Files Here"];
   List<web.File> htmlFileList = [];
-  var teamTfController = TextEditingController();
+  var workflowTfController = TextEditingController(text: "Immunophenotyping Workflow");
+
+  List<String> teamNameList = [];
+
+  @override
+  void initState () {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _loadTeams();
+    });
+        
+  }
 
 
-
-  Future<List<String>> _loadTeams() async {
+  Future<void> _loadTeams() async {
     var token = Uri.base.queryParameters["token"] ?? '';
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    
 
     List<String> teamNameList = [];
 
     List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["data"]["u"]]);
 
       for( var team in teamList){
-        // print(team.name);
       teamNameList.add(team.name);
     }
 
 
-    return teamNameList;
+    // return teamNameList;
   }
 
 
@@ -81,15 +89,24 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     htmlFileList.add(wf);
   }
 
+
   void _uploadFiles() async {
-    var taskId = Uri.base.queryParameters["taskId"] ?? '';
-    // sci.Task task = await factory.taskService.get(taskId);
-    List<sci.PersistentObject> res = await factory.persistentService.getDependentObjects(taskId);
-    print(Uri.base.queryParameters);
-    for( var o in res ){
-      print(o.kind);
-      print(o);
+    
+
+    var workflowId = Uri.base.queryParameters["worflowId"] ?? '';
+    var workflow = await factory.workflowService.get(workflowId);
+    var project = await factory.projectService.get(workflow.projectId);
+
+    for( web.File file in htmlFileList ){
+      var bytes = dvController.getFileStream(file);
+      sci.FileDocument docToUpload = sci.FileDocument();
+      docToUpload.name = file.name;
+      docToUpload.projectId = project.id;
+      docToUpload.acl.owner = selectedTeam;
+
+      factory.fileService.upload(docToUpload, bytes );
     }
+    
     
   }
 
@@ -137,20 +154,32 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       alignment: Alignment.topLeft,
       child: Column(
         children: [
-          _addAlignedWidget(const Text("Immunophenotyping Workflow", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),)),
+          _addAlignedWidget(
+            // const Text("Immunophenotyping Workflow", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),)
+            TextField(
+              controller: workflowTfController,
+              decoration: 
+                const InputDecoration(
+                  border: UnderlineInputBorder()
+                ),
+            )
+          ),
 
           _addSeparator(),
 
           _addAlignedWidget(ElevatedButton(
               child: const Text("Select Team"),
-              onPressed: () async {
-                selectedTeam = (await showPickerDialog(
+              onPressed: ()  async {
+                String team = ( await showPickerDialog(
                   context: context,
                   label: "",
-                  items: await _loadTeams(),
+                  items: teamNameList,
                 ))!;
 
-                teamTfController.text = selectedTeam;
+                setState(() {
+                  selectedTeam = team;
+                });
+                // teamTfController.text = selectedTeam;
               }
             ),
           ),
@@ -160,12 +189,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           
 
           _addAlignedWidget(Material( 
-              child: TextField(
-                controller: teamTfController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Team"
-                ),
+              child: 
+              Text(
+                selectedTeam, 
+                style: 
+                  const TextStyle(fontSize: 16, color: Colors.black)
               ),
             ) 
           ),
@@ -226,6 +254,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                   width: 400,
                   child: 
                     DropzoneView(
+                      
                       operation: DragOperation.copy,
                       onCreated: (ctrl) => dvController = ctrl,
                       onLeave: () {
