@@ -37,7 +37,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     WidgetsBinding.instance.addPostFrameCallback((_){
       _loadTeams();
     });
-        
+
+
   }
 
 
@@ -45,7 +46,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     var token = Uri.base.queryParameters["token"] ?? '';
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
 
-    List<String> teamNameList = [];
+    // List<String> teamNameList = [];
 
     List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["data"]["u"]]);
 
@@ -53,7 +54,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       teamNameList.add(team.name);
     }
 
-
+    // setState(() {
+      
+    // });
     // return teamNameList;
   }
 
