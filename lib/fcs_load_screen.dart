@@ -120,7 +120,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.ImportGitWorkflowTask importTask = sci.ImportGitWorkflowTask();
     importTask.projectId = project.id;
     importTask.url = sci.Url();
-    importTask.url.uri = "https://github.com/tercen/flow_core_immunophenotyping_template";
+    importTask.url.uri = "tercen/flow_core_immunophenotyping_template";
     
     importTask.version = "0.1.2";
     
