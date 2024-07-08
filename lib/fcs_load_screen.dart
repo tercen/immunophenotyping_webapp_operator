@@ -120,7 +120,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.ImportGitWorkflowTask importTask = sci.ImportGitWorkflowTask();
     importTask.projectId = project.id;
     importTask.url = sci.Url();
-    importTask.url.uri = "tercen/flow_core_immunophenotyping_template";
+    importTask.url.uri = "http://github.com/tercen/flow_core_immunophenotyping_template";
     
     importTask.version = "0.1.2";
     
@@ -129,7 +129,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     importTask.state = sci.InitState();
 
     var task = await factory.taskService.create(importTask);
-    factory.taskService.runTask(task.id);
+    await factory.taskService.runTask(task.id);
     task = await factory.taskService.waitDone(task.id);
     print("done");
 
