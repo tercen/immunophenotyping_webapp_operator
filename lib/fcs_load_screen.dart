@@ -125,22 +125,21 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     wkf.acl.owner = "Thiago";
     wkf.projectId = project.id;
 
-    await factory.workflowService.create(wkf);
+    wkf = await factory.workflowService.create(wkf);
 
-    // sci.ImportGitWorkflowTask importTask = sci.ImportGitWorkflowTask();
-    // importTask.projectId = project.id;
-    // importTask.url = sci.Url();
-    // importTask.url.uri = "http://github.com/tercen/flow_core_immunophenotyping_template";
-    
-    // importTask.version = "0.1.2";
-    
+    sci.ImportGitWorkflowTask importTask = sci.ImportGitWorkflowTask();
+    importTask.projectId = project.id;
+    importTask.url = sci.Url();
+    importTask.url.uri = "http://github.com/tercen/flow_core_immunophenotyping_template";
+    importTask.version = "0.1.2";
+    importTask.workflowId = wkf.id;
     // importTask.owner = "Thiago";
 
-    // importTask.state = sci.InitState();
+    importTask.state = sci.InitState();
 
-    // var task = await factory.taskService.create(importTask);
-    // await factory.taskService.runTask(task.id);
-    // task = await factory.taskService.waitDone(task.id);
+    var task = await factory.taskService.create(importTask);
+    await factory.taskService.runTask(task.id);
+    task = await factory.taskService.waitDone(task.id);
     // print("done");
 
   // static const List<String> PROPERTY_NAMES = [
