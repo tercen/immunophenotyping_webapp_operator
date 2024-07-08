@@ -95,12 +95,15 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _uploadFiles() async {
     
-
+    print(Uri.base.queryParameters);
     var workflowId = Uri.base.queryParameters["worflowId"] ?? '';
+
     var workflow = await factory.workflowService.get(workflowId);
+    
     var project = await factory.projectService.get(workflow.projectId);
 
     for( web.File file in htmlFileList ){
+      print("Uploading $file.name");
       var bytes = dvController.getFileStream(file);
       sci.FileDocument docToUpload = sci.FileDocument();
       docToUpload.name = file.name;
