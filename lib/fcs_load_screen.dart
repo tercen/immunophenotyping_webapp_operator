@@ -105,7 +105,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     for( web.File file in htmlFileList ){
       print("Uploading ${file.name}");
       var bytes = await dvController.getFileData(file);
-      print("File uploaded...");
       sci.FileDocument docToUpload = sci.FileDocument();
       docToUpload.name = file.name;
       docToUpload.projectId = project.id;
@@ -115,6 +114,44 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       print("Done with ${file.name}");
     }
     
+    print("Creating workflow");
+    // https://github.com/tercen/flow_core_immunophenotyping_template
+    // Create workflow for FCS reading
+    sci.ImportGitWorkflowTask importTask = sci.ImportGitWorkflowTask();
+    importTask.projectId = project.id;
+    importTask.url = sci.Url();
+    importTask.url.uri = "https://github.com/tercen/flow_core_immunophenotyping_template";
+    
+    importTask.version = "0.1.2";
+    importTask.aclContext.username = "Thiago";
+    var task = await factory.taskService.create(importTask);
+    factory.taskService.runTask(task.id);
+    task = await factory.taskService.waitDone(task.id);
+    print("done");
+
+  // static const List<String> PROPERTY_NAMES = [
+  //   Vocabulary.url_OP,
+  //   Vocabulary.version_DP
+  // ];
+  // static const List<String> REF_PROPERTY_NAMES = [];
+  // static const List<base.RefId> REF_IDS = [];
+        // # Clone the template project from git into the temp project
+        // importTask = GitProjectTask()
+        // importTask.owner = params['user']
+        // importTask.state = InitState()
+       // importTask.addMeta("PROJECT_ID", project.id)
+        // importTask.addMeta("PROJECT_REV", project.rev)
+        // importTask.addMeta("GIT_ACTION", "reset/pull")
+        // importTask.addMeta("GIT_PAT", params["gitToken"])
+        // importTask.addMeta("GIT_URL", params["templateRepo"])
+        // importTask.addMeta("GIT_BRANCH",params["branch"])
+        // importTask.addMeta("GIT_MESSAGE", "")
+        // if params["tag"] != "":
+        //     importTask.addMeta("GIT_TAG", params["tag"])
+
+        // importTask = client.taskService.create(importTask)
+        // client.taskService.runTask(importTask.id)
+        // importTask = client.taskService.waitDone(importTask.id)
     
   }
 
