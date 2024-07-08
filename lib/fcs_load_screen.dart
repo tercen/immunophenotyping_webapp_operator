@@ -123,10 +123,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     importTask.url.uri = "https://github.com/tercen/flow_core_immunophenotyping_template";
     
     importTask.version = "0.1.2";
-    importTask.aclContext.username = "Thiago";
+    
+    importTask.owner = "Thiago";
 
     importTask.state = sci.InitState();
-    
+
     var task = await factory.taskService.create(importTask);
     factory.taskService.runTask(task.id);
     task = await factory.taskService.waitDone(task.id);
