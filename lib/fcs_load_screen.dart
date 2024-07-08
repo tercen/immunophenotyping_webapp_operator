@@ -95,9 +95,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _uploadFiles() async {
     
-    print(Uri.base.queryParameters);
-    var workflowId = Uri.base.queryParameters["worflowId"] ?? '';
-    print(workflowId);
+    
+    var workflowId = Uri.base.queryParameters["workflowId"] ?? '';
+    print("workflowId is $workflowId");
 
     var workflow = await factory.workflowService.get(workflowId);
     var project = await factory.projectService.get(workflow.projectId);
