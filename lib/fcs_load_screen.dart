@@ -121,15 +121,47 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     }
     
     // Reading FCS
+    // 1. Get operator
+    print("Getting operator");
+    var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '');
+    sci.Document op = sci.Document();
+    for( var o in installedOperators ){
+      if( o.name == "FCS"){
+        print("Found ReadFCS operator installed");
+        op = o;
+      }
+    }
+
+    // 2. Prepare the computation task
+    print("Preparing input");
     sci.CubeQuery query = sci.CubeQuery();
+    print("** Setting up operator");
+    query.operatorSettings.operatorRef.operatorId = op.id;
+    query.operatorSettings.operatorRef.operatorKind = op.kind;
+    query.operatorSettings.operatorRef.name = op.name;
+    
+    print("** Setting up projection [TABLE]");
+    sci.Column col = sci.Column();
+    col.name = "documentId";
+    col.type = "string";
+    col.values = [uploadedDocs[0].id];
+    sci.Schema sch = sci.Schema();
+    sch.columns.add(col);
+
+    sch = await factory.tableSchemaService.create(sch);
+    print("** [TABLE OK]");
+
+
+    // query.colColumns.add(docFactor);
+    sci.SimpleRelation rel = sci.SimpleRelation();
+    rel.id = sch.id;
+    
+    query.relation = rel;
     sci.Factor docFactor = sci.Factor();
     docFactor.type = "string";
     docFactor.name = "documentId";
-    
     query.colColumns.add(docFactor);
-    sci.SimpleRelation rel = sci.SimpleRelation();
-    rel.id = uploadedDocs[0].id;
-    query.relation = rel;
+    
 
     sci.RunComputationTask compTask = sci.RunComputationTask();
     compTask.state = sci.InitState();
