@@ -116,7 +116,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       docToUpload.projectId = project.id;
       docToUpload.acl.owner = selectedTeam;
 
-      uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) ));
+      sci.FileDocument doc = await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) );
+      print("Uploaded ${doc.name} with id ${doc.id}");
+      uploadedDocs.add( doc );
       print("Done with ${file.name}");
     }
     
