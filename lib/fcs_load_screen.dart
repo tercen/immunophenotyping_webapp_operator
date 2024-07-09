@@ -154,6 +154,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sch.columns.add(col);
     sch.name = "fcs_data";
     sch.projectId = project.id;
+    sch.acl.owner = selectedTeam;
     print(sch.toJson());
 
     sch = await factory.tableSchemaService.create(sch);
