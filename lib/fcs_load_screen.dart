@@ -108,7 +108,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // var workflow = await factory.workflowService.get(workflowId);
     // var project = await factory.projectService.get(workflow.projectId);
     List<sci.FileDocument> uploadedDocs = [];
-    sci.FileDocument doc = sci.FileDocument();
+
     for( web.File file in htmlFileList ){
       print("Uploading ${file.name}");
       var bytes = await dvController.getFileData(file);
@@ -117,9 +117,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       docToUpload.projectId = project.id;
       docToUpload.acl.owner = selectedTeam;
 
-      doc = await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) );
-      print("Uploaded ${doc.name} with id ${doc.id}");
-      uploadedDocs.add( doc );
+      
+      
+      uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) ) );
       print("Done with ${file.name}");
     }
     
@@ -147,11 +147,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Column col = sci.Column();
     col.name = "documentId";
     col.type = "string";
-    print("Adding ${uploadedDocs[0].id}");
-    print("Adding ${doc.id}");
     col.values = [uploadedDocs[0].id];
     sci.Schema sch = sci.Schema();
     sch.columns.add(col);
+    sch.name = "fcs_data";
+
 
     sch = await factory.tableSchemaService.create(sch);
     print("** [TABLE OK]");
