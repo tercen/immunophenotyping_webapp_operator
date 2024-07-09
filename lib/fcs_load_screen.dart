@@ -147,25 +147,28 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Column col = sci.Column();
     col.name = "documentId";
     col.type = "string";
-    print(col.toJson());
-
     col.values = [uploadedDocs[0].id];
+
     sci.Schema sch = sci.Schema();
     sch.columns.add(col);
     sch.name = "fcs_data";
     sch.projectId = project.id;
     sch.acl.owner = selectedTeam;
-    print(sch.toJson());
+
 
     sch = await factory.tableSchemaService.create(sch);
     print("** [TABLE OK]");
 
 
     // query.colColumns.add(docFactor);
-    sci.SimpleRelation rel = sci.SimpleRelation();
-    rel.id = sch.id;
-    
+    sci.InMemoryRelation rel = sci.InMemoryRelation();
+    rel.inMemoryTable = sci.Table.json(sch.toJson());
+    print("InMemory table created");
     query.relation = rel;
+      
+    
+    
+    
     sci.Factor docFactor = sci.Factor();
     docFactor.type = "string";
     docFactor.name = "documentId";
@@ -176,6 +179,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     compTask.state = sci.InitState();
     compTask.owner = selectedTeam;
     compTask.query = query;
+    
 
 
     var task = await factory.taskService.create(compTask);
