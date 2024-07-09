@@ -163,28 +163,28 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // query.colColumns.add(docFactor);
     sci.InMemoryRelation rel = sci.InMemoryRelation();
     rel.inMemoryTable = sci.Table.json(sch.toJson());
-    print("InMemory table created");
+    print("InMemory table created: ${rel.inMemoryTable.toJson()}");
     query.relation = rel;
-      
-    
-    
     
     sci.Factor docFactor = sci.Factor();
     docFactor.type = "string";
     docFactor.name = "documentId";
     query.colColumns.add(docFactor);
     
+    
 
     sci.RunComputationTask compTask = sci.RunComputationTask();
     compTask.state = sci.InitState();
     compTask.owner = selectedTeam;
     compTask.query = query;
-    
-
+    compTask.projectId = project.id;
 
     var task = await factory.taskService.create(compTask);
+    print("A");
     await factory.taskService.runTask(task.id);
+    print("B");
     task = await factory.taskService.waitDone(task.id);
+    print("C");
 
 
     // print("Creating workflow");
