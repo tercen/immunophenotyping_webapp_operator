@@ -52,6 +52,7 @@ dependencies:
   list_picker: ^1.1.0
   web: ^0.5.1
   jwt_decoder: ^2.0.1
+  flutter_modal_dialog: ^0.0.4
 
 dev_dependencies:
   flutter_test:

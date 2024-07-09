@@ -6,7 +6,7 @@ import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:web/web.dart' as web;
-
+import 'package:flutter_modal_dialog/flutter_modal_dialog.dart';
 import 'package:sci_tercen_client/sci_client.dart' as sci;
 import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
 
@@ -29,7 +29,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   List<web.File> htmlFileList = [];
   var workflowTfController = TextEditingController(text: "Immunophenotyping Workflow");
 
-  List<String> teamNameList = [];
+  final List<String> teamNameList = [];
+  sci.Project project = sci.Project();
 
   @override
   void initState () {
@@ -95,12 +96,18 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _uploadFiles() async {
     
-    var workflowId = Uri.base.queryParameters["workflowId"] ?? '';
-    print("workflowId is $workflowId");
+    // Create a project to store the workflow
+    if( project.id == "" ){
+      project.name = workflowTfController.text;
+      project.acl.owner = selectedTeam;
+      project = await factory.projectService.create(project);
+    }
+    // var workflowId = Uri.base.queryParameters["workflowId"] ?? '';
+    // print("workflowId is $workflowId");
 
-    var workflow = await factory.workflowService.get(workflowId);
-    var project = await factory.projectService.get(workflow.projectId);
-
+    // var workflow = await factory.workflowService.get(workflowId);
+    // var project = await factory.projectService.get(workflow.projectId);
+    List<sci.FileDocument> uploadedDocs = [];
     for( web.File file in htmlFileList ){
       print("Uploading ${file.name}");
       var bytes = await dvController.getFileData(file);
@@ -109,29 +116,51 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       docToUpload.projectId = project.id;
       docToUpload.acl.owner = selectedTeam;
 
-      factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) );
+      uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) ));
       print("Done with ${file.name}");
     }
     
-    print("Creating workflow");
-    // https://github.com/tercen/flow_core_immunophenotyping_template
-    // Create workflow for FCS reading
-    sci.GitProjectTask importTask = sci.GitProjectTask();
-    importTask.owner = selectedTeam;
-    importTask.meta.add(sci.Pair.from("PROJECT_ID", project.id));
-    importTask.meta.add(sci.Pair.from("PROJECT_REV", project.rev));
-    importTask.meta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
-    importTask.meta.add(sci.Pair.from("GIT_PAT", ""));
-    importTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template"));
-    importTask.meta.add(sci.Pair.from("GIT_BRANCH", "main"));
-    importTask.meta.add(sci.Pair.from("GIT_MESSAGE", ""));
-    importTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.2"));
+    // Reading FCS
+    sci.CubeQuery query = sci.CubeQuery();
+    sci.Factor docFactor = sci.Factor();
+    docFactor.type = "string";
+    docFactor.name = "documentId";
+    
+    query.colColumns.add(docFactor);
+    sci.SimpleRelation rel = sci.SimpleRelation();
+    rel.id = uploadedDocs[0].id;
+    query.relation = rel;
 
-    importTask.state = sci.InitState();
+    sci.RunComputationTask compTask = sci.RunComputationTask();
+    compTask.state = sci.InitState();
+    compTask.owner = selectedTeam;
+    compTask.query = query;
 
-    var task = await factory.taskService.create(importTask);
+
+    var task = await factory.taskService.create(compTask);
     await factory.taskService.runTask(task.id);
     task = await factory.taskService.waitDone(task.id);
+
+
+    // print("Creating workflow");
+    // // https://github.com/tercen/flow_core_immunophenotyping_template
+    // // Create workflow for FCS reading
+    // sci.GitProjectTask importTask = sci.GitProjectTask();
+    // importTask.owner = selectedTeam;
+    // importTask.meta.add(sci.Pair.from("PROJECT_ID", project.id));
+    // importTask.meta.add(sci.Pair.from("PROJECT_REV", project.rev));
+    // importTask.meta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
+    // importTask.meta.add(sci.Pair.from("GIT_PAT", ""));
+    // importTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template"));
+    // importTask.meta.add(sci.Pair.from("GIT_BRANCH", "main"));
+    // importTask.meta.add(sci.Pair.from("GIT_MESSAGE", ""));
+    // importTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.2"));
+
+    // importTask.state = sci.InitState();
+
+    // var task = await factory.taskService.create(importTask);
+    // await factory.taskService.runTask(task.id);
+    // task = await factory.taskService.waitDone(task.id);
     print("done");
 
     
@@ -307,7 +336,14 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           _addAlignedWidget(
             ElevatedButton(
                 onPressed: () {
+                  ModalDialog.waiting(
+                      context: context,
+                      title: const ModalTitle(text: "Uploading files and creating workflow. Please wait"),
+                  );
+
                   _uploadFiles();
+
+                   Navigator.pop(context);
                 }, 
                 child: const Text("Upload")
             )
