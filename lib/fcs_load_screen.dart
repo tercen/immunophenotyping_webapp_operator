@@ -147,11 +147,13 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Column col = sci.Column();
     col.name = "documentId";
     col.type = "string";
+    print(col.toJson());
+
     col.values = [uploadedDocs[0].id];
     sci.Schema sch = sci.Schema();
     sch.columns.add(col);
     sch.name = "fcs_data";
-
+    print(sch.toJson());
 
     sch = await factory.tableSchemaService.create(sch);
     print("** [TABLE OK]");
