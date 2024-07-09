@@ -95,7 +95,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _uploadFiles() async {
     
-    
     var workflowId = Uri.base.queryParameters["workflowId"] ?? '';
     print("workflowId is $workflowId");
 
@@ -117,18 +116,23 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     print("Creating workflow");
     // https://github.com/tercen/flow_core_immunophenotyping_template
     // Create workflow for FCS reading
-    sci.ImportGitWorkflowTask importTask = sci.ImportGitWorkflowTask();
-    importTask.projectId = project.id;
-    importTask.url = sci.Url();
-    importTask.url.uri = "http://github.com/tercen/flow_core_immunophenotyping_template";
-    importTask.version = "0.1.2";
-    // importTask.owner = "Thiago";
+    sci.GitProjectTask importTask = sci.GitProjectTask();
+    importTask.owner = selectedTeam;
+    importTask.meta.add(sci.Pair.from("PROJECT_ID", project.id));
+    importTask.meta.add(sci.Pair.from("PROJECT_REV", project.rev));
+    importTask.meta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
+    importTask.meta.add(sci.Pair.from("GIT_PAT", ""));
+    importTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template"));
+    importTask.meta.add(sci.Pair.from("GIT_BRANCH", "main"));
+    importTask.meta.add(sci.Pair.from("GIT_MESSAGE", ""));
+    importTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.2"));
 
     importTask.state = sci.InitState();
 
     var task = await factory.taskService.create(importTask);
     await factory.taskService.runTask(task.id);
     task = await factory.taskService.waitDone(task.id);
+    print("done");
 
     
   }
