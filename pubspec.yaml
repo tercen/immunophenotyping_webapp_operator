@@ -58,6 +58,7 @@ dependencies:
   web: ^0.5.1
   jwt_decoder: ^2.0.1
   flutter_modal_dialog: ^0.0.4
+  uuid: ^4.4.0
 
 dev_dependencies:
   flutter_test:

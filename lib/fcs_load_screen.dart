@@ -10,6 +10,7 @@ import 'package:flutter_modal_dialog/flutter_modal_dialog.dart';
 import 'package:sci_tercen_client/sci_client.dart' as sci;
 import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
 import 'package:tson/tson.dart' as tson;
+import 'package:uuid/uuid.dart';
 
 class FcsLoadScreen extends StatefulWidget {
   const FcsLoadScreen({super.key});
@@ -104,7 +105,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
 
   void _uploadFiles() async {
-    
+    var uuid = Uuid();
+
+
     // Create a project to store the workflow
     if( project.id == "" ){
       project.name = workflowTfController.text;
@@ -168,7 +171,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..id = "documentId"
           ..nRows = 1
           ..size = -1
-          ..values = tson.CStringList.fromList(["SomeAliasID"]);
+          ..values = tson.CStringList.fromList([uuid.v4()]);
     
     sch.columns.add(col);
 
@@ -183,17 +186,22 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sch.columns.add(col);
 
     sch = await factory.tableSchemaService.create(sch);
-    
+    var id = uuid.v4();
     sci.InMemoryRelation rel = sci.InMemoryRelation()
+            ..id = id
             ..inMemoryTable = sci.Table.json(sch.toJson());
     print(sch);
     print(sci.Table.json(sch.toJson()).toJson());
     
+    
+
     sci.RenameRelation rr = sci.RenameRelation()
+        ..id = "rename_$id"
         ..relation = rel;
 
     rr.inNames.add("documentId");
     rr.inNames.add(".documentId");
+
     rr.outNames.add("documentId");
     rr.outNames.add(".documentId");
     
