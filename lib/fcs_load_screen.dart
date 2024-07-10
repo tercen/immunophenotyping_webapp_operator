@@ -162,15 +162,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.InMemoryRelation rel = sci.InMemoryRelation()
             ..inMemoryTable = sci.Table.json(sch.toJson());
               
-    sci.RenameRelation rr = sci.RenameRelation()
-        ..relation = rel;
-    
     print(rel.toJson());
 
-    rr.inNames.add("documentId");
-    rr.outNames.add("documentId");
+
     
-    query.relation = rr;
+    query.relation = rel;
     
 
     sci.RunComputationTask compTask = sci.RunComputationTask()
