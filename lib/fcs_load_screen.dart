@@ -161,9 +161,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sch = await factory.tableSchemaService.create(sch);
     sci.InMemoryRelation rel = sci.InMemoryRelation()
             ..inMemoryTable = sci.Table.json(sch.toJson());
-              
+    
     sci.RenameRelation rr = sci.RenameRelation()
-        ..relation = rel;
+        ..relation = sci.SimpleRelation()..id = "something";
+        // ..relation = rel;
     
     
 
