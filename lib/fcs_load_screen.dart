@@ -162,19 +162,27 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Column col = sci.Column()
           ..name = "documentId"
           ..type = "string"
+          ..id = "documentId"
+          ..nRows = 1
+          ..values = tson.CStringList.fromList(["SomeAliasID"]);
+    
+    sch.columns.add(col);
+
+    col = sci.Column()
+          ..name = ".documentId"
+          ..type = "string"
+          ..id = ".documentId"
           ..nRows = 1
           ..values = tson.CStringList.fromList([uploadedDocs[0].id]);
     
     sch.columns.add(col);
+
     sch = await factory.tableSchemaService.create(sch);
     
     sci.InMemoryRelation rel = sci.InMemoryRelation()
             ..inMemoryTable = sci.Table.json(sch.toJson());
-    sci.SimpleRelation sr = sci.SimpleRelation()
-            ..id = sch.id;
-
-    
-    
+   
+    print(sci.Table.json(sch.toJson()).toJson());
     
     sci.RenameRelation rr = sci.RenameRelation()
         ..relation = rel;
@@ -183,7 +191,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
 
     rr.inNames.add("documentId");
+    rr.inNames.add(".documentId");
     rr.outNames.add("documentId");
+    rr.outNames.add(".documentId");
     print(rr.toJson());
     query.relation = rr;
     
