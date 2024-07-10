@@ -9,6 +9,7 @@ import 'package:web/web.dart' as web;
 import 'package:flutter_modal_dialog/flutter_modal_dialog.dart';
 import 'package:sci_tercen_client/sci_client.dart' as sci;
 import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
+import 'package:tson/tson.dart' as tson;
 
 class FcsLoadScreen extends StatefulWidget {
   const FcsLoadScreen({super.key});
@@ -154,7 +155,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..name = "documentId"
           ..type = "string"
           ..nRows = 1
-          ..values = [uploadedDocs[0].id];
+          ..values = tson.CStringList.fromList([uploadedDocs[0].id]);
     
     sch.columns.add(col);
     sch = await factory.tableSchemaService.create(sch);
@@ -166,7 +167,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     print(rel.toJson());
 
-    rr.inNames.add("");
+    rr.inNames.add("documentId");
     rr.outNames.add("documentId");
     
     query.relation = rr;
