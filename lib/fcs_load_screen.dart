@@ -143,7 +143,25 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
             ..type = "string";
     query.colColumns.add(docFactor);
 
+    // Data to feed projection
+    sci.Schema sch = sci.Schema()
+        ..projectId = project.id
+        ..name = "fcs_data"
+        ..nRows = 1
+        ..acl.owner = selectedTeam;
+
+    sci.Column col = sci.Column()
+          ..name = "documentId"
+          ..type = "string"
+          ..nRows = 1
+          ..values = [uploadedDocs[0].id];
     
+    sch.columns.add(col);
+    sch = await factory.tableSchemaService.create(sch);
+    sci.InMemoryRelation rel = sci.InMemoryRelation()
+            ..inMemoryTable = sci.Table.json(sch.toJson());
+              
+    query.relation = rel;
     
     sci.RunComputationTask compTask = sci.RunComputationTask()
           ..state = sci.InitState()
@@ -165,18 +183,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     // print("** Setting up projection [TABLE]");
 
-    
-    // sci.Column col = sci.Column()
-    //       ..name = "documentId"
-    //       ..type = "string"
-    //       ..values = [uploadedDocs[0].id];
-    // sch.columns.add(col)
-    // sci.Schema sch = sci.Schema()
-    //     ..projectId = project.id
-    //     ..name = "fcs_data"
-    //     ..acl.owner = selectedTeam;
-    // sch.columns.add(col);
-    
+
 
     // sch = await factory.tableSchemaService.create(sch);
     // print("** [TABLE OK]");
