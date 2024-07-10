@@ -157,19 +157,17 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..values = [uploadedDocs[0].id];
     
     sch.columns.add(col);
-
-    sci.Table tbl = sci.Table.json(sch.toJson());
     sch = await factory.tableSchemaService.create(sch);
     sci.InMemoryRelation rel = sci.InMemoryRelation()
-            ..inMemoryTable = tbl;
+            ..inMemoryTable = sci.Table.json(sch.toJson());
               
-    sci.TableRelation rr = sci.TableRelation()
-          ..id = sch.id;
-      
+    sci.RenameRelation rr = sci.RenameRelation()
+        ..relation = rel;
     
-    // print(rel.toJson());
+    print(rel.toJson());
 
-    
+    rr.inNames.add("");
+    rr.outNames.add("documentId");
     
     query.relation = rr;
     
