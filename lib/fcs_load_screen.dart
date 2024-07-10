@@ -38,7 +38,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_){
       _loadTeams();
-      _debugInfo();
+      // _debugInfo();
       
     });
 
@@ -150,13 +150,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Factor docFactor = sci.Factor()
             ..name = "documentId"
             ..type = "string";
+
     query.colColumns.add(docFactor);
+
 
     // Data to feed projection
     sci.Schema sch = sci.Schema()
         ..projectId = project.id
         ..name = "fcs_data"
         ..nRows = 1
+        ..isDeleted = false
         ..acl.owner = selectedTeam;
 
     sci.Column col = sci.Column()
@@ -164,6 +167,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..type = "string"
           ..id = "documentId"
           ..nRows = 1
+          ..size = -1
           ..values = tson.CStringList.fromList(["SomeAliasID"]);
     
     sch.columns.add(col);
@@ -173,6 +177,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..type = "string"
           ..id = ".documentId"
           ..nRows = 1
+          ..size = -1
           ..values = tson.CStringList.fromList([uploadedDocs[0].id]);
     
     sch.columns.add(col);
@@ -181,19 +186,17 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     sci.InMemoryRelation rel = sci.InMemoryRelation()
             ..inMemoryTable = sci.Table.json(sch.toJson());
-   
+    print(sch);
     print(sci.Table.json(sch.toJson()).toJson());
     
     sci.RenameRelation rr = sci.RenameRelation()
         ..relation = rel;
-        // ..relation = rel;
-    
-    
 
     rr.inNames.add("documentId");
     rr.inNames.add(".documentId");
     rr.outNames.add("documentId");
     rr.outNames.add(".documentId");
+    
     print(rr.toJson());
     query.relation = rr;
     
@@ -203,6 +206,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..owner = selectedTeam
           ..query = query
           ..projectId = project.id;
+    
     
 
     compTask = await factory.taskService.create(compTask) as sci.RunComputationTask;
