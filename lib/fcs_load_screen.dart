@@ -112,11 +112,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     for( web.File file in htmlFileList ){
       print("Uploading ${file.name}");
       var bytes = await dvController.getFileData(file);
-      sci.FileDocument docToUpload = sci.FileDocument();
-      docToUpload.name = file.name;
-      docToUpload.projectId = project.id;
-      docToUpload.acl.owner = selectedTeam;
-
+      sci.FileDocument docToUpload = sci.FileDocument()
+              ..name = file.name
+              ..projectId = project.id
+              ..acl.owner = selectedTeam;
       
       
       uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) ) );
@@ -135,81 +134,82 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       }
     }
 
-    // 2. Prepare the computation task
-    print("Preparing input");
-    sci.CubeQuery query = sci.CubeQuery();
-    print("** Setting up operator");
-    query.operatorSettings.operatorRef.operatorId = op.id;
-    query.operatorSettings.operatorRef.operatorKind = op.kind;
-    query.operatorSettings.operatorRef.name = op.name;
-    
-    print("** Setting up projection [TABLE]");
-    sci.Column col = sci.Column();
-    col.name = "documentId";
-    col.type = "string";
-    col.values = [uploadedDocs[0].id];
-
-    sci.Schema sch = sci.Schema();
-    sch.columns.add(col);
-    sch.name = "fcs_data";
-    sch.projectId = project.id;
-    sch.acl.owner = selectedTeam;
+    // 2. File to table
+    sci.CSVTask csvTask = sci.CSVTask()
+        ..owner = selectedTeam
+        ..projectId = project.id
+        ..fileDocumentId = uploadedDocs[0].id;
 
 
-    sch = await factory.tableSchemaService.create(sch);
-    print("** [TABLE OK]");
-
-
-    // query.colColumns.add(docFactor);
-    sci.InMemoryRelation rel = sci.InMemoryRelation();
-    rel.inMemoryTable = sci.Table.json(sch.toJson());
-    print("InMemory table created: ${rel.inMemoryTable.toJson()}");
-    sci.RenameRelation rr = sci.RenameRelation();
-    rr.relation = rel;
-    rr.inNames.add("documentId");
-    rr.outNames.add("documentId");
-    query.relation = rr;
-    
-    sci.Factor docFactor = sci.Factor();
-    docFactor.type = "string";
-    docFactor.name = "documentId";
-    query.colColumns.add(docFactor);
-    
-    
-
-    sci.RunComputationTask compTask = sci.RunComputationTask();
-    compTask.state = sci.InitState();
-    compTask.owner = selectedTeam;
-    compTask.query = query;
-    compTask.projectId = project.id;
-
-    var task = await factory.taskService.create(compTask);
-    print("A");
+    var task = await factory.taskService.create(csvTask);
     await factory.taskService.runTask(task.id);
-    print("B");
     task = await factory.taskService.waitDone(task.id);
-    print("C");
+
+    print(task.toJson());
+
+    // // 2. Prepare the computation task
+    // print("Preparing input");
+    // sci.CubeQuery query = sci.CubeQuery();
+    // print("** Setting up operator");
+    // query.operatorSettings.operatorRef.operatorId = op.id;
+    // query.operatorSettings.operatorRef.operatorKind = op.kind;
+    // query.operatorSettings.operatorRef.name = op.name;
+    
+    // print("** Setting up projection [TABLE]");
+    // sci.Column col = sci.Column()
+    //       ..name = "documentId"
+    //       ..type = "string"
+    //       ..values = [uploadedDocs[0].id];
+    
+
+    // sci.Schema sch = sci.Schema()
+    //     ..projectId = project.id
+    //     ..name = "fcs_data"
+    //     ..acl.owner = selectedTeam;
+    // sch.columns.add(col);
+    
+
+    // sch = await factory.tableSchemaService.create(sch);
+    // print("** [TABLE OK]");
 
 
-    // print("Creating workflow");
-    // // https://github.com/tercen/flow_core_immunophenotyping_template
-    // // Create workflow for FCS reading
-    // sci.GitProjectTask importTask = sci.GitProjectTask();
-    // importTask.owner = selectedTeam;
-    // importTask.meta.add(sci.Pair.from("PROJECT_ID", project.id));
-    // importTask.meta.add(sci.Pair.from("PROJECT_REV", project.rev));
-    // importTask.meta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
-    // importTask.meta.add(sci.Pair.from("GIT_PAT", ""));
-    // importTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template"));
-    // importTask.meta.add(sci.Pair.from("GIT_BRANCH", "main"));
-    // importTask.meta.add(sci.Pair.from("GIT_MESSAGE", ""));
-    // importTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.2"));
+    // // query.colColumns.add(docFactor);
+    // sci.InMemoryRelation rel = sci.InMemoryRelation();
+    // rel.inMemoryTable = sci.Table.json(sch.toJson());
 
-    // importTask.state = sci.InitState();
 
-    // var task = await factory.taskService.create(importTask);
+
+    // print("InMemory table created: ${rel.inMemoryTable.toJson()}");
+    // sci.RenameRelation rr = sci.RenameRelation()
+    //         ..relation = rel;
+    
+    // rr.inNames.add("documentId");
+    // rr.outNames.add("documentId");
+    // query.relation = rr;
+    
+    // sci.Factor docFactor = sci.Factor()
+    //       ..type = "string"
+    //       ..name = "documentId";
+    
+    // query.colColumns.add(docFactor);
+    
+    
+    // // Rename relation --> attribute not found documentId
+    // sci.RunComputationTask compTask = sci.RunComputationTask()
+    //       ..state = sci.InitState()
+    //       ..owner = selectedTeam
+    //       ..query = query
+    //       ..projectId = project.id;
+    
+
+    // var task = await factory.taskService.create(compTask);
+    // print("A");
     // await factory.taskService.runTask(task.id);
+    // print("B");
     // task = await factory.taskService.waitDone(task.id);
+
+
+
     print("done");
 
     
