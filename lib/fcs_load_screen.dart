@@ -102,11 +102,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       project.acl.owner = selectedTeam;
       project = await factory.projectService.create(project);
     }
-    // var workflowId = Uri.base.queryParameters["workflowId"] ?? '';
-    // print("workflowId is $workflowId");
 
-    // var workflow = await factory.workflowService.get(workflowId);
-    // var project = await factory.projectService.get(workflow.projectId);
     List<sci.FileDocument> uploadedDocs = [];
 
     for( web.File file in htmlFileList ){
@@ -134,40 +130,47 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       }
     }
 
-    // 2. File to table
-    sci.CSVTask csvTask = sci.CSVTask()
-        ..state = sci.InitState()
-        ..owner = selectedTeam
-        ..projectId = project.id
-        ..fileDocumentId = uploadedDocs[0].id;
 
-
-    csvTask = await factory.taskService.create(csvTask) as sci.CSVTask;
-    print("2.1");
-    await factory.taskService.runTask(csvTask.id);
-    print("2.2");
-    print(csvTask.toJson());
-    await factory.taskService.waitDone(csvTask.id);
-    print("2.3");
-
-    csvTask = await factory.taskService.get(csvTask.id) as sci.CSVTask;
-
-    print(csvTask.toJson());
-
-    // 3. Prepare the computation task
+    // 2. Prepare the computation task
     sci.CubeQuery query = sci.CubeQuery();
-    print("** Setting up operator");
     query.operatorSettings.operatorRef.operatorId = op.id;
     query.operatorSettings.operatorRef.operatorKind = op.kind;
     query.operatorSettings.operatorRef.name = op.name;
+
+    // Query Projection
+    sci.Factor docFactor = sci.Factor()
+            ..name = "documentId"
+            ..type = "string";
+    query.colColumns.add(docFactor);
+
+    
+    
+    sci.RunComputationTask compTask = sci.RunComputationTask()
+          ..state = sci.InitState()
+          ..owner = selectedTeam
+          ..query = query
+          ..projectId = project.id;
+    
+
+    compTask = await factory.taskService.create(compTask) as sci.RunComputationTask;
+    print("2.1");
+    await factory.taskService.runTask(compTask.id);
+    print("2.2");
+    await factory.taskService.waitDone(compTask.id);
+    print("2.3");
+
+
+    compTask = await factory.taskService.get(compTask.id) as sci.RunComputationTask;
+    print(compTask.toJson());
     
     // print("** Setting up projection [TABLE]");
+
+    
     // sci.Column col = sci.Column()
     //       ..name = "documentId"
     //       ..type = "string"
     //       ..values = [uploadedDocs[0].id];
-    
-
+    // sch.columns.add(col)
     // sci.Schema sch = sci.Schema()
     //     ..projectId = project.id
     //     ..name = "fcs_data"
@@ -179,7 +182,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // print("** [TABLE OK]");
 
 
-    // // query.colColumns.add(docFactor);
+    // // ;
     // sci.InMemoryRelation rel = sci.InMemoryRelation();
     // rel.inMemoryTable = sci.Table.json(sch.toJson());
 
@@ -201,18 +204,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     
     // // Rename relation --> attribute not found documentId
-    // sci.RunComputationTask compTask = sci.RunComputationTask()
-    //       ..state = sci.InitState()
-    //       ..owner = selectedTeam
-    //       ..query = query
-    //       ..projectId = project.id;
-    
 
-    // var task = await factory.taskService.create(compTask);
-    // print("A");
-    // await factory.taskService.runTask(task.id);
-    // print("B");
-    // task = await factory.taskService.waitDone(task.id);
 
 
 
