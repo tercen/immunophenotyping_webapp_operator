@@ -136,6 +136,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     // 2. File to table
     sci.CSVTask csvTask = sci.CSVTask()
+        ..state = sci.InitState()
         ..owner = selectedTeam
         ..projectId = project.id
         ..fileDocumentId = uploadedDocs[0].id;
