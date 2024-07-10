@@ -157,12 +157,23 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..values = [uploadedDocs[0].id];
     
     sch.columns.add(col);
+
+    sci.Table tbl = sci.Table.json(sch.toJson());
     sch = await factory.tableSchemaService.create(sch);
     sci.InMemoryRelation rel = sci.InMemoryRelation()
-            ..inMemoryTable = sci.Table.json(sch.toJson());
+            ..inMemoryTable = tbl;
               
-    query.relation = rel;
+    sci.TableRelation rr = sci.TableRelation()
+          ..id = sch.id;
+      
     
+    // print(rel.toJson());
+
+    
+    
+    query.relation = rr;
+    
+
     sci.RunComputationTask compTask = sci.RunComputationTask()
           ..state = sci.InitState()
           ..owner = selectedTeam
@@ -181,36 +192,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     compTask = await factory.taskService.get(compTask.id) as sci.RunComputationTask;
     print(compTask.toJson());
     
-    // print("** Setting up projection [TABLE]");
 
-
-
-    // sch = await factory.tableSchemaService.create(sch);
-    // print("** [TABLE OK]");
-
-
-    // // ;
-    // sci.InMemoryRelation rel = sci.InMemoryRelation();
-    // rel.inMemoryTable = sci.Table.json(sch.toJson());
-
-
-
-    // print("InMemory table created: ${rel.inMemoryTable.toJson()}");
-    // sci.RenameRelation rr = sci.RenameRelation()
-    //         ..relation = rel;
-    
-    // rr.inNames.add("documentId");
-    // rr.outNames.add("documentId");
-    // query.relation = rr;
-    
-    // sci.Factor docFactor = sci.Factor()
-    //       ..type = "string"
-    //       ..name = "documentId";
-    
-    // query.colColumns.add(docFactor);
-    
-    
-    // // Rename relation --> attribute not found documentId
 
 
 
