@@ -38,12 +38,20 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_){
       _loadTeams();
+      _debugInfo();
+      
     });
 
-
+    // http://127.0.0.1:5400/lib/w/5e8e784622396f3064cd7cd90e7376e7/ds/b3718281-eb72-47a1-b962-003c49b9e539
+    
   }
 
-
+  Future<void> _debugInfo() async {
+    sci.Workflow wkf = await factory.workflowService.get("5e8e784622396f3064cd7cd90e7376e7");
+    for( var stp in wkf.steps){
+      print(stp.toJson());
+    }
+  }
   Future<void> _loadTeams() async {
     var token = Uri.base.queryParameters["token"] ?? '';
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
@@ -159,6 +167,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     sch.columns.add(col);
     sch = await factory.tableSchemaService.create(sch);
+    
     sci.InMemoryRelation rel = sci.InMemoryRelation()
             ..inMemoryTable = sci.Table.json(sch.toJson());
     sci.SimpleRelation sr = sci.SimpleRelation()
