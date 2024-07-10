@@ -142,19 +142,23 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         ..fileDocumentId = uploadedDocs[0].id;
 
 
-    var task = await factory.taskService.create(csvTask);
-    await factory.taskService.runTask(task.id);
-    task = await factory.taskService.waitDone(task.id);
+    csvTask = await factory.taskService.create(csvTask) as sci.CSVTask;
+    print("2.1");
+    await factory.taskService.runTask(csvTask.id);
+    print("2.2");
+    await factory.taskService.waitDone(csvTask.id);
+    print("2.3");
 
-    print(task.toJson());
+    csvTask = await factory.taskService.get(csvTask.id) as sci.CSVTask;
 
-    // // 2. Prepare the computation task
-    // print("Preparing input");
-    // sci.CubeQuery query = sci.CubeQuery();
-    // print("** Setting up operator");
-    // query.operatorSettings.operatorRef.operatorId = op.id;
-    // query.operatorSettings.operatorRef.operatorKind = op.kind;
-    // query.operatorSettings.operatorRef.name = op.name;
+    print(csvTask.toJson());
+
+    // 3. Prepare the computation task
+    sci.CubeQuery query = sci.CubeQuery();
+    print("** Setting up operator");
+    query.operatorSettings.operatorRef.operatorId = op.id;
+    query.operatorSettings.operatorRef.operatorKind = op.kind;
+    query.operatorSettings.operatorRef.name = op.name;
     
     // print("** Setting up projection [TABLE]");
     // sci.Column col = sci.Column()
