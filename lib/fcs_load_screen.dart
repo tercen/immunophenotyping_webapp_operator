@@ -163,7 +163,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
             ..inMemoryTable = sci.Table.json(sch.toJson());
     
     sci.RenameRelation rr = sci.RenameRelation()
-        ..relation = sci.SimpleRelation()..id = "something";
+        ..relation = sci.SimpleRelation()..id = sch.id;
         // ..relation = rel;
     
     
