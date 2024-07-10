@@ -159,14 +159,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     sch.columns.add(col);
     sch = await factory.tableSchemaService.create(sch);
-    // sci.InMemoryRelation rel = sci.InMemoryRelation()
-            // ..inMemoryTable = sci.Table.json(sch.toJson());
+    sci.InMemoryRelation rel = sci.InMemoryRelation()
+            ..inMemoryTable = sci.Table.json(sch.toJson());
     sci.SimpleRelation sr = sci.SimpleRelation()
             ..id = sch.id;
 
-
+    
+    
+    
     sci.RenameRelation rr = sci.RenameRelation()
-        ..relation = sr;
+        ..relation = rel;
         // ..relation = rel;
     
     
