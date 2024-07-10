@@ -152,7 +152,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         ..acl.owner = selectedTeam;
 
     sci.Column col = sci.Column()
-          ..name = "documentId"
+          ..name = "documentId_COL"
           ..type = "string"
           ..nRows = 1
           ..values = tson.CStringList.fromList([uploadedDocs[0].id]);
@@ -161,7 +161,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sch = await factory.tableSchemaService.create(sch);
     sci.InMemoryRelation rel = sci.InMemoryRelation()
             ..inMemoryTable = sci.Table.json(sch.toJson());
-              
+    
     print(rel.toJson());
 
 
