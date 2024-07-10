@@ -146,6 +146,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     print("2.1");
     await factory.taskService.runTask(csvTask.id);
     print("2.2");
+    print(csvTask.toJson());
     await factory.taskService.waitDone(csvTask.id);
     print("2.3");
 
