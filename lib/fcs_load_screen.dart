@@ -273,6 +273,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _tryToPrint(String id, String name) async {
     try {
+      print("Trying to print $name");
       sci.Schema sch = await factory.tableSchemaService.get(id);
       print(sch.toJson());
     } catch (e) {
@@ -286,6 +287,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     
     _tryToPrint(rel.mainRelation.id, "rel.mainRelation.id");
+    _tryToPrint(rel.joinOperators[0].rightRelation.id, "rel.joinOperators[0].rightRelation.id"); // Channel annotation
     _tryToPrint(rel.joinOperators[1].rightRelation.id, "rel.joinOperators[1].rightRelation.id");
     
   }
