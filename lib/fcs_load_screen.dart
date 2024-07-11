@@ -224,10 +224,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     var sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
       // if( evtMap["taskId"] == compTask.id){
+        print(evtMap);
         if(evtMap["kind"] == "TaskProgressEvent"){
           setState(() {
             if( currentFile != uploadedDocs[0].name){
               currentFile = uploadedDocs[0].name;
+              progressDialog.close();
               progressDialog.show(
                     msg: "Processing file ${uploadedDocs[0].name}", 
                     max: evt.toJson()["total"],
