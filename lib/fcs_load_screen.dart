@@ -228,14 +228,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // await factory.taskService.waitDone(compTask.id);
     // print("2.3");
 
-    var taskStream = factory.eventService.listenTaskChannel(compTask.id, true);
+    var taskStream = factory.eventService.listenTaskChannel(compTask.id, true).asBroadcastStream();
     
+    //{kind: TaskProgressEvent, id: , isDeleted: false, rev: , date: {kind: Date, value: 2024-07-11T16:29:54.226033Z}, taskId: 3adc6ed4b2e0e95f81fa2488033fb5f9, message: measurement, total: 8, actual: 2}
+    var sub = taskStream.listen((evt)=>print("sub"));
     await for (var evt in taskStream) {
       print("On For");
       print(evt.toJson());
     }
 
-    
+    sub.cancel();
     // Navigator.pop(context);
     print("done");
     finishedUploading = true;
