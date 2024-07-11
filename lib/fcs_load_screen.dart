@@ -105,7 +105,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
 
   void _uploadFiles() async {
-    var uuid = Uuid();
+    var uuid = const Uuid();
 
 
     // Create a project to store the workflow
@@ -226,17 +226,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     var taskStream = factory.eventService.listenTaskChannel(compTask.id, true);
     
-    var sub = taskStream.listen( (evt) => print(evt.toJson()) );
+    var sub = taskStream.listen( (evt) => print("listen"));
     // compTask = await factory.taskService.get(compTask.id) as sci.RunComputationTask;
     // print(compTask.toJson());
     sub.onData((evt) {
+      if(evt.kind == "TaskProgressEvent"){
+
+      }
       print("In sub");
       print(evt.toJson());
     });
-    await for (sci.TaskEvent evt in taskStream) {
-      print("In loop:");
-      print(evt.toJson());
-    }
 
 
     sub.cancel();
@@ -415,15 +414,14 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
           _addAlignedWidget(
             ElevatedButton(
+
                 onPressed: () {
                   ModalDialog.waiting(
                       context: context,
                       title: const ModalTitle(text: "Uploading files and creating workflow. Please wait"),
                   );
-
-                  _uploadFiles();
-
-                   Navigator.pop(context);
+                  // _uploadFiles();
+                  //  Navigator.pop(context);
                 }, 
                 child: const Text("Upload")
             )
