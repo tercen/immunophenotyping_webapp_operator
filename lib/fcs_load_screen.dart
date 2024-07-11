@@ -229,6 +229,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         setState(() {
           if( currentFile != uploadedDocs[0].name){
             currentFile = uploadedDocs[0].name;
+            progressDialog.close();
             progressDialog.show(
                   msg: "Processing file ${uploadedDocs[0].name}", 
                   max: evtMap["total"] as int,
