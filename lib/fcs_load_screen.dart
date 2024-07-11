@@ -222,36 +222,35 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // date: {kind: Date, value: 2024-07-11T16:29:54.226033Z}, taskId: 3adc6ed4b2e0e95f81fa2488033fb5f9, message: measurement, total: 8, actual: 2}
     var currentFile = "";
     var sub = taskStream.listen((evt){
-      var evtMap = evt.toJson();
-      // if( evtMap["taskId"] == compTask.id){
-        print(evtMap);
-        if(evtMap["kind"] == "TaskProgressEvent"){
-          setState(() {
-            if( currentFile != uploadedDocs[0].name){
-              currentFile = uploadedDocs[0].name;
-              progressDialog.close();
-              progressDialog.show(
-                    msg: "Processing file ${uploadedDocs[0].name}", 
-                    max: evt.toJson()["total"],
-                    barrierColor: const Color.fromARGB(125, 0, 0, 0));
-            }
-            progressDialog.update(value: evt.toJson()["actual"]);
-          });
-        // }
-      }
-      
+      print("sub");
     });
 
     sub.onDone((){
+      print("Done");
       finishedUploading = true;
     });
 
-    // await for (var evt in taskStream) {
-    //   print("On For");
-    //   print(evt.toJson());
-    // }
+    await for (var evt in taskStream) {
+      var evtMap = evt.toJson();
+      print("for");
+      // if(evtMap["kind"] == "TaskProgressEvent"){
+      //     setState(() {
+      //       if( currentFile != uploadedDocs[0].name){
+      //         currentFile = uploadedDocs[0].name;
+      //         progressDialog.close();
+      //         progressDialog.show(
+      //               msg: "Processing file ${uploadedDocs[0].name}", 
+      //               max: evt.toJson()["total"],
+      //               barrierColor: const Color.fromARGB(125, 0, 0, 0));
+      //       }
+      //       progressDialog.update(value: evt.toJson()["actual"]);
+      //     });
+      //   // }
+      // }
+    }
 
     sub.cancel();
+    finishedUploading = true;
     // Navigator.pop(context);
     print("done");
     
