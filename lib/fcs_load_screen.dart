@@ -222,8 +222,23 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     //{kind: TaskProgressEvent, id: , isDeleted: false, rev: ,
     // date: {kind: Date, value: 2024-07-11T16:29:54.226033Z}, taskId: 3adc6ed4b2e0e95f81fa2488033fb5f9, message: measurement, total: 8, actual: 2}
     var currentFile = "";
+
+
     sub = taskStream.listen((evt){
-      print("sub");
+      var evtMap = evt.toJson();
+      if(evtMap["kind"] == "TaskProgressEvent"){
+        setState(() {
+          if( currentFile != uploadedDocs[0].name){
+            currentFile = uploadedDocs[0].name;
+            progressDialog.close();
+            progressDialog.show(
+                  msg: "Processing file ${uploadedDocs[0].name}", 
+                  max: evt.toJson()["total"],
+                  barrierColor: const Color.fromARGB(125, 0, 0, 0));
+          }
+          progressDialog.update(value: evt.toJson()["actual"]);
+        });
+      }
     });
 
     sub.onDone((){
@@ -231,31 +246,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       finishedUploading = true;
     });
 
-    // await for (var evt in taskStream) {
-    //   var evtMap = evt.toJson();
-    //   print("for");
-    //   // if(evtMap["kind"] == "TaskProgressEvent"){
-    //   //     setState(() {
-    //   //       if( currentFile != uploadedDocs[0].name){
-    //   //         currentFile = uploadedDocs[0].name;
-    //   //         progressDialog.close();
-    //   //         progressDialog.show(
-    //   //               msg: "Processing file ${uploadedDocs[0].name}", 
-    //   //               max: evt.toJson()["total"],
-    //   //               barrierColor: const Color.fromARGB(125, 0, 0, 0));
-    //   //       }
-    //   //       progressDialog.update(value: evt.toJson()["actual"]);
-    //   //     });
-    //   //   // }
-    //   // }
-    // }
-
-    
-    // finishedUploading = true;
-    // Navigator.pop(context);
-    print("done");
-    
-    
   }
 
   
@@ -430,15 +420,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
                 onPressed: () {
                   finishedUploading = false;
-                  // ModalDialog.waiting(
-                  //     context: context,
 
-                  //     title: ModalTitle(text: progress),
-                  // );
 
                   progressDialog.show(msg: "Starting upload");
                   
-
                   _uploadFiles();
 
                   Timer.periodic(const Duration(milliseconds: 250), (tmr){
