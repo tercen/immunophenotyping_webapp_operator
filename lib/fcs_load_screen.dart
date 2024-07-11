@@ -258,12 +258,17 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     sub.onDone((){
       print("Done");
-      compTask = factory.taskService.get(compTask.id) as sci.RunComputationTask;
-      print(compTask.computedRelation);
+      
+      _getComputedRelation(compTask.id);
       
       finishedUploading = true;
     });
 
+  }
+
+  void _getComputedRelation(String taskId) async{
+    var compTask = factory.taskService.get(taskId) as sci.RunComputationTask;
+    print(compTask.computedRelation);
   }
 
   
