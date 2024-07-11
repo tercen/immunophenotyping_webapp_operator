@@ -227,9 +227,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       var evtMap = evt.toJson();
       if(evtMap["kind"] == "TaskProgressEvent"){
         setState(() {
+          print(evtMap);
           if( currentFile != uploadedDocs[0].name){
             currentFile = uploadedDocs[0].name;
-            progressDialog.close();
+            // progressDialog.close();
             progressDialog.show(
                   msg: "Processing file ${uploadedDocs[0].name}", 
                   max: evtMap["total"] as int,
@@ -269,7 +270,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _getComputedRelation(String taskId) async{
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
-    print(compTask.computedRelation);
+    sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
+    print(rel.toJson());
   }
 
   
