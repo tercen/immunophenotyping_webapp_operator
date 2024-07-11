@@ -268,7 +268,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   }
 
   void _getComputedRelation(String taskId) async{
-    var compTask = factory.taskService.get(taskId) as sci.RunComputationTask;
+    var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
     print(compTask.computedRelation);
   }
 
