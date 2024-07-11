@@ -1,6 +1,7 @@
 
 
 import 'dart:async';
+import 'dart:io';
 
 
 import 'package:file_picker/file_picker.dart';
@@ -297,7 +298,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
 
     for( var po in projObjs ){
-      print(po.name);
+      //TODO Need to check for && po.name.contains(uploadedFiledoc name ...)
+      if(po.name.contains( "Channel-Descriptions" )  ){
+        print(po.toJson());
+        sci.Schema sch = await factory.tableSchemaService.get(po.id);
+        print(sch.toJson());
+      }
     }
     // print("Selecting");
     // sci.Table tbl = await factory.tableSchemaService.select(sch.id, ["filename", ".content"], 0, 1);
