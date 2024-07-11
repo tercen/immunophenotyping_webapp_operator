@@ -230,7 +230,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           print(evtMap);
           if( currentFile != uploadedDocs[0].name){
             currentFile = uploadedDocs[0].name;
-            // progressDialog.close();
+            if(progressDialog.isOpen()){
+              progressDialog.close();
+            }
+            
             progressDialog.show(
                   msg: "Processing file ${uploadedDocs[0].name}", 
                   max: evtMap["total"] as int,
@@ -268,10 +271,23 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   }
 
+  void _tryToPrint(String id, String name) async {
+    try {
+      sci.Schema sch = await factory.tableSchemaService.get(id);
+      print(sch.toJson());
+    } catch (e) {
+      print("$name failed");
+    }
+  }
+
   void _getComputedRelation(String taskId) async{
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
     sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
-    print(rel.toJson());
+
+    
+    _tryToPrint(rel.mainRelation.id, "rel.mainRelation.id");
+    _tryToPrint(rel.joinOperators[1].rightRelation.id, "rel.joinOperators[1].rightRelation.id");
+    
   }
 
   
@@ -456,7 +472,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                     if( finishedUploading == true){
                       tmr.cancel();
                       sub.cancel();
-                      progressDialog.close();
+                      if( progressDialog.isOpen()){
+                        progressDialog.close();
+                      }
+                      
                     }
                   });
 
