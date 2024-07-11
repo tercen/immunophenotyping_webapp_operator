@@ -10,7 +10,6 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:web/web.dart' as web;
-import 'package:flutter_modal_dialog/flutter_modal_dialog.dart';
 import 'package:sci_tercen_client/sci_client.dart' as sci;
 import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
 import 'package:tson/tson.dart' as tson;
@@ -230,19 +229,38 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         setState(() {
           if( currentFile != uploadedDocs[0].name){
             currentFile = uploadedDocs[0].name;
-            progressDialog.close();
             progressDialog.show(
                   msg: "Processing file ${uploadedDocs[0].name}", 
-                  max: evt.toJson()["total"],
+                  max: evtMap["total"] as int,
                   barrierColor: const Color.fromARGB(125, 0, 0, 0));
           }
-          progressDialog.update(value: evt.toJson()["actual"]);
+          progressDialog.update(value: evtMap["actual"] as int);
         });
       }
     });
 
+
+      
+// try {
+//   await for (var evt in stream) {
+//     state.taskState = evt.state;
+//   }
+// } catch (e) {
+//   state
+//     ..taskId = ''
+//     ..taskState = FailedState.fromError(e);
+
+//   (state.taskState as FailedState).throwError();
+
+//   return;
+// }
+      
+
     sub.onDone((){
       print("Done");
+      compTask = factory.taskService.get(compTask.id) as sci.RunComputationTask;
+      print(compTask.computedRelation);
+      
       finishedUploading = true;
     });
 
@@ -422,7 +440,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                   finishedUploading = false;
 
 
-                  progressDialog.show(msg: "Starting upload");
+                  progressDialog.show(msg: "Starting upload", barrierColor: const Color.fromARGB(125, 0, 0, 0));
                   
                   _uploadFiles();
 
