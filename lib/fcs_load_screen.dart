@@ -234,15 +234,21 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // compTask = await factory.taskService.get(compTask.id) as sci.RunComputationTask;
     // print(compTask.toJson());
     sub.onData((evt) {
-      if(evt.kind == "TaskProgressEvent"){
-        
-        
-      }
-      print(evt.toJson());
+      print("OnData");
       
     });
 
 
+    await for (var evt in taskStream) {
+      print("On For");
+      print(evt.toJson());
+    }
+
+
+    sub.onDone((){
+      print("OnDone");
+    });
+    
     sub.cancel();
 
 
