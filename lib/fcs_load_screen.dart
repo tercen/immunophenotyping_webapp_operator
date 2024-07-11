@@ -1,5 +1,8 @@
 
 
+import 'dart:async';
+
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
@@ -22,6 +25,7 @@ class FcsLoadScreen extends StatefulWidget {
 
 
 class _FcsLoadScreenState extends State<FcsLoadScreen>{
+  bool finishedUploading = false;
   final factory = tercen.ServiceFactory();
   late DropzoneViewController dvController;
   late FilePickerResult result;
@@ -231,17 +235,20 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // print(compTask.toJson());
     sub.onData((evt) {
       if(evt.kind == "TaskProgressEvent"){
-
+        
+        
       }
-      print("In sub");
       print(evt.toJson());
+      
     });
 
 
     sub.cancel();
 
-    print("done");
 
+    // Navigator.pop(context);
+    print("done");
+    finishedUploading = true;
     
   }
 
@@ -416,12 +423,20 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
             ElevatedButton(
 
                 onPressed: () {
+                  finishedUploading = false;
                   ModalDialog.waiting(
                       context: context,
                       title: const ModalTitle(text: "Uploading files and creating workflow. Please wait"),
                   );
-                  // _uploadFiles();
-                  //  Navigator.pop(context);
+                  _uploadFiles();
+
+                  Timer.periodic(const Duration(milliseconds: 250), (tmr){
+                    if( finishedUploading == true){
+                      tmr.cancel();
+                      Navigator.pop(context);
+                    }
+                  });
+
                 }, 
                 child: const Text("Upload")
             )
