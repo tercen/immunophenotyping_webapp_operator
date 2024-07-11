@@ -285,16 +285,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   void _getComputedRelation(String taskId) async{
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
     sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
-    print(rel.toJson());
+    // print(rel.toJson());
     sci.Schema sch = await factory.tableSchemaService.get(rel.joinOperators[1].rightRelation.id);
-    print(sch.toJson());
+    // print(sch.toJson());
     print("Selecting");
-    sci.Table tbl = await factory.tableSchemaService.select(sch.id, [".content"], 0, 1);
+    sci.Table tbl = await factory.tableSchemaService.select(sch.id, ["filename", ".content"], 0, 1);
     print(tbl.toJson());
     // _tryToPrint(rel.mainRelation.id, "rel.mainRelation.id");
-    sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
-    _tryToPrint(cr.joinOperators[0].rightRelation.id, "rel.joinOperators[0]...rightRelation.id"); 
-    _tryToPrint(rel.joinOperators[1].rightRelation.id, "rel.joinOperators[1].rightRelation.id"); // Channel annotation
+    // sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
+    // _tryToPrint(cr.joinOperators[0].rightRelation.id, "rel.joinOperators[0]...rightRelation.id"); 
+    // _tryToPrint(rel.joinOperators[1].rightRelation.id, "rel.joinOperators[1].rightRelation.id"); // Channel annotation
     
   }
 
