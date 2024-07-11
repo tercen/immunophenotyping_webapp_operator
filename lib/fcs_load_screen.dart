@@ -158,12 +158,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
 
     // Data to feed projection
-    sci.Schema sch = sci.Schema()
-        ..projectId = project.id
-        ..name = "fcs_data"
-        ..nRows = 1
-        ..isDeleted = false
-        ..acl.owner = selectedTeam;
+    sci.Table tbl = sci.Table();
+        // ..projectId = project.id
+        // ..name = "fcs_data"
+        // ..nRows = 1
+        // ..isDeleted = false
+        // ..acl.owner = selectedTeam;
 
     sci.Column col = sci.Column()
           ..name = "documentId"
@@ -173,7 +173,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..size = -1
           ..values = tson.CStringList.fromList([uuid.v4()]);
     
-    sch.columns.add(col);
+    tbl.columns.add(col);
 
     col = sci.Column()
           ..name = ".documentId"
@@ -183,30 +183,30 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..size = -1
           ..values = tson.CStringList.fromList([uploadedDocs[0].id]);
     
-    sch.columns.add(col);
+    tbl.columns.add(col);
 
-    sch = await factory.tableSchemaService.create(sch);
+    // sch = await factory.tableSchemaService.create(sch);
     var id = uuid.v4();
     sci.InMemoryRelation rel = sci.InMemoryRelation()
             ..id = id
-            ..inMemoryTable = sci.Table.json(sch.toJson());
-    print(sch);
-    print(sci.Table.json(sch.toJson()).toJson());
-    
+            ..inMemoryTable = tbl;
+    print(tbl);
+    // print(sci.Table.json(sch.toJson()).toJson());
     
 
-    sci.RenameRelation rr = sci.RenameRelation()
-        ..id = "rename_$id"
-        ..relation = rel;
+    // sci.RenameRelation rr = sci.RenameRelation()
+        // ..id = "rename_$id"
+        // ..relation = rel;
 
-    rr.inNames.add("documentId");
-    rr.inNames.add(".documentId");
+    // rr.inNames.add("documentId");
+    // rr.inNames.add(".documentId");
 
-    rr.outNames.add("documentId");
-    rr.outNames.add(".documentId");
+    // rr.outNames.add("documentId");
+    // rr.outNames.add(".documentId");
     
-    print(rr.toJson());
-    query.relation = rr;
+    // print(rr.toJson());
+    query.relation = rel;
+    query.axisQueries.add(sci.CubeAxisQuery());
     
 
     sci.RunComputationTask compTask = sci.RunComputationTask()
