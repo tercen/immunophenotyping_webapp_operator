@@ -230,28 +230,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     var taskStream = factory.eventService.listenTaskChannel(compTask.id, true);
     
-    var sub = taskStream.listen( (evt) => print("listen"));
-    // compTask = await factory.taskService.get(compTask.id) as sci.RunComputationTask;
-    // print(compTask.toJson());
-    sub.onData((evt) {
-      print("OnData");
-      
-    });
+    await for (var evt in taskStream) {
+      print("On For");
+      print(evt.toJson());
+    }
 
-
-    // await for (var evt in taskStream) {
-    //   print("On For");
-    //   print(evt.toJson());
-    // }
-
-
-    sub.onDone((){
-      print("OnDone");
-    });
     
-    sub.cancel();
-
-
     // Navigator.pop(context);
     print("done");
     finishedUploading = true;
