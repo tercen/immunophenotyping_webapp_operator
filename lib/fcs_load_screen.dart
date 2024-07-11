@@ -239,10 +239,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     });
 
 
-    await for (var evt in taskStream) {
-      print("On For");
-      print(evt.toJson());
-    }
+    // await for (var evt in taskStream) {
+    //   print("On For");
+    //   print(evt.toJson());
+    // }
 
 
     sub.onDone((){
