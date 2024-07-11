@@ -223,26 +223,36 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     var currentFile = "";
     var sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
-      if(evtMap["kind"] == "TaskProgressEvent"){
-        setState(() {
-          if( currentFile != uploadedDocs[0].name){
-            progressDialog.show(msg: "Processing file ${uploadedDocs[0].name}", max: evt.toJson()["total"]);
-          }
-          progressDialog.update(value: evt.toJson()["actual"]);
-
-          // progress = evt.toJson()["message"];
-        });
+      if( evtMap["taskId"] == compTask.id){
+        if(evtMap["kind"] == "TaskProgressEvent"){
+          setState(() {
+            if( currentFile != uploadedDocs[0].name){
+              currentFile = uploadedDocs[0].name;
+              progressDialog.show(
+                    msg: "Processing file ${uploadedDocs[0].name}", 
+                    max: evt.toJson()["total"],
+                    barrierColor: const Color.fromARGB(125, 0, 0, 0));
+            }
+            progressDialog.update(value: evt.toJson()["actual"]);
+          });
+        }
       }
+      
     });
-    await for (var evt in taskStream) {
-      print("On For");
-      print(evt.toJson());
-    }
+
+    sub.onDone((){
+      finishedUploading = true;
+    });
+
+    // await for (var evt in taskStream) {
+    //   print("On For");
+    //   print(evt.toJson());
+    // }
 
     sub.cancel();
     // Navigator.pop(context);
     print("done");
-    finishedUploading = true;
+    
     
   }
 
