@@ -223,7 +223,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     var currentFile = "";
     var sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
-      if( evtMap["taskId"] == compTask.id){
+      // if( evtMap["taskId"] == compTask.id){
         if(evtMap["kind"] == "TaskProgressEvent"){
           setState(() {
             if( currentFile != uploadedDocs[0].name){
@@ -235,7 +235,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
             }
             progressDialog.update(value: evt.toJson()["actual"]);
           });
-        }
+        // }
       }
       
     });

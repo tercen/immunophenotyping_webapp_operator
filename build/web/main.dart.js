@@ -87313,21 +87313,19 @@ a3.sJv(0,new A.Mg())
 a3.szM(q.Q)
 a3.sll(0,c)
 a3.sHV(q.CW.as)
-a6.a=a3
 o=n.y
 o===$&&A.a()
 a8=t.iF
 s=11
 return A.O(o.ty(0,a3),$async$m4)
 case 11:a3=a8.a(b0)
-a6.a=a3
 n=n.as
 n===$&&A.a()
 n=n.alA(a3.as,!0)
 o=A.t(n)
 a4=new A.vC(n,null,null,$.as,o.j("vC<bK.T>"))
 a4.e=new A.vD(a4.gab_(),a4.gaaq(),o.j("vD<bK.T>"))
-a6.b=""
+a6.a=""
 a5=a4.hW(new A.alX(a6,q,p))
 a5.UC(new A.alY(q))
 a5.ap(0)
@@ -87350,13 +87348,13 @@ A.amb.prototype={
 $1(a){this.a.wz()},
 $S:3}
 A.alX.prototype={
-$1(a){var s,r=a.p(),q=this.a
-if(J.i(r.h(0,"taskId"),q.a.as))if(J.i(r.h(0,"kind"),"TaskProgressEvent")){s=this.b
-s.aD(new A.alW(q,s,this.c,a))}},
+$1(a){var s
+if(J.i(a.p().h(0,"kind"),"TaskProgressEvent")){s=this.b
+s.aD(new A.alW(this.a,s,this.c,a))}},
 $S:491}
 A.alW.prototype={
-$0(){var s=this,r=s.a,q=r.b,p=s.c,o=p[0].R8
-if(q!==o){r.b=o
+$0(){var s=this,r=s.a,q=r.a,p=s.c,o=p[0].R8
+if(q!==o){r.a=o
 r=s.b.gA1()
 p=p[0].R8
 r.Jm(0,B.At,s.d.p().h(0,"total"),"Processing file "+p)}r=s.b.gA1()
