@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:list_picker/list_picker.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:web/web.dart' as web;
 import 'package:flutter_modal_dialog/flutter_modal_dialog.dart';
 import 'package:sci_tercen_client/sci_client.dart' as sci;
@@ -25,7 +26,12 @@ class FcsLoadScreen extends StatefulWidget {
 
 
 class _FcsLoadScreenState extends State<FcsLoadScreen>{
+  late ProgressDialog progressDialog = ProgressDialog(context: context);
   bool finishedUploading = false;
+  int total = -1;
+  int processed = -1;
+
+  String progress = "";
   final factory = tercen.ServiceFactory();
   late DropzoneViewController dvController;
   late FilePickerResult result;
@@ -194,21 +200,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.InMemoryRelation rel = sci.InMemoryRelation()
             ..id = id
             ..inMemoryTable = tbl;
-    print(tbl);
-    // print(sci.Table.json(sch.toJson()).toJson());
-    
 
-    // sci.RenameRelation rr = sci.RenameRelation()
-        // ..id = "rename_$id"
-        // ..relation = rel;
-
-    // rr.inNames.add("documentId");
-    // rr.inNames.add(".documentId");
-
-    // rr.outNames.add("documentId");
-    // rr.outNames.add(".documentId");
-    
-    // print(rr.toJson());
     query.relation = rel;
     query.axisQueries.add(sci.CubeAxisQuery());
     
@@ -222,16 +214,26 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
 
     compTask = await factory.taskService.create(compTask) as sci.RunComputationTask;
-    // print("2.1");
-    // await factory.taskService.runTask(compTask.id);
-    // print("2.2");
-    // await factory.taskService.waitDone(compTask.id);
-    // print("2.3");
+
 
     var taskStream = factory.eventService.listenTaskChannel(compTask.id, true).asBroadcastStream();
     
-    //{kind: TaskProgressEvent, id: , isDeleted: false, rev: , date: {kind: Date, value: 2024-07-11T16:29:54.226033Z}, taskId: 3adc6ed4b2e0e95f81fa2488033fb5f9, message: measurement, total: 8, actual: 2}
-    var sub = taskStream.listen((evt)=>print("sub"));
+    //{kind: TaskProgressEvent, id: , isDeleted: false, rev: ,
+    // date: {kind: Date, value: 2024-07-11T16:29:54.226033Z}, taskId: 3adc6ed4b2e0e95f81fa2488033fb5f9, message: measurement, total: 8, actual: 2}
+    var currentFile = "";
+    var sub = taskStream.listen((evt){
+      var evtMap = evt.toJson();
+      if(evtMap["kind"] == "TaskProgressEvent"){
+        setState(() {
+          if( currentFile != uploadedDocs[0].name){
+            progressDialog.show(msg: "Processing file ${uploadedDocs[0].name}", max: evt.toJson()["total"]);
+          }
+          progressDialog.update(value: evt.toJson()["actual"]);
+
+          // progress = evt.toJson()["message"];
+        });
+      }
+    });
     await for (var evt in taskStream) {
       print("On For");
       print(evt.toJson());
@@ -416,16 +418,21 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
                 onPressed: () {
                   finishedUploading = false;
-                  ModalDialog.waiting(
-                      context: context,
-                      title: const ModalTitle(text: "Uploading files and creating workflow. Please wait"),
-                  );
+                  // ModalDialog.waiting(
+                  //     context: context,
+
+                  //     title: ModalTitle(text: progress),
+                  // );
+
+                  progressDialog.show(msg: "Starting upload");
+                  
+
                   _uploadFiles();
 
                   Timer.periodic(const Duration(milliseconds: 250), (tmr){
                     if( finishedUploading == true){
                       tmr.cancel();
-                      Navigator.pop(context);
+                      progressDialog.close();
                     }
                   });
 
