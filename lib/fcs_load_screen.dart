@@ -218,27 +218,31 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
 
     compTask = await factory.taskService.create(compTask) as sci.RunComputationTask;
-    print("2.1");
-    await factory.taskService.runTask(compTask.id);
-    print("2.2");
-    await factory.taskService.waitDone(compTask.id);
-    print("2.3");
+    // print("2.1");
+    // await factory.taskService.runTask(compTask.id);
+    // print("2.2");
+    // await factory.taskService.waitDone(compTask.id);
+    // print("2.3");
 
-
-    compTask = await factory.taskService.get(compTask.id) as sci.RunComputationTask;
-    print(compTask.toJson());
+    var taskStream = factory.eventService.listenTaskChannel(compTask.id, true);
     
+    var sub = taskStream.listen( (evt) => print(evt.toJson()) );
+    // compTask = await factory.taskService.get(compTask.id) as sci.RunComputationTask;
+    // print(compTask.toJson());
+    
+    // await for (sci.TaskEvent evt in taskStream) {
+      // print(evt.toJson());
+    // }
 
 
-
-
+    sub.cancel();
 
     print("done");
 
     
   }
 
-
+  
   void  _processSingleFileDrop(ev){
     if (ev is web.File) {
       setState(() {
