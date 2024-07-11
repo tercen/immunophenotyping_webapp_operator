@@ -30,6 +30,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   bool finishedUploading = false;
   int total = -1;
   int processed = -1;
+  late StreamSubscription<sci.TaskEvent> sub;
 
   String progress = "";
   final factory = tercen.ServiceFactory();
@@ -221,7 +222,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     //{kind: TaskProgressEvent, id: , isDeleted: false, rev: ,
     // date: {kind: Date, value: 2024-07-11T16:29:54.226033Z}, taskId: 3adc6ed4b2e0e95f81fa2488033fb5f9, message: measurement, total: 8, actual: 2}
     var currentFile = "";
-    var sub = taskStream.listen((evt){
+    sub = taskStream.listen((evt){
       print("sub");
     });
 
@@ -230,27 +231,27 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       finishedUploading = true;
     });
 
-    await for (var evt in taskStream) {
-      var evtMap = evt.toJson();
-      print("for");
-      // if(evtMap["kind"] == "TaskProgressEvent"){
-      //     setState(() {
-      //       if( currentFile != uploadedDocs[0].name){
-      //         currentFile = uploadedDocs[0].name;
-      //         progressDialog.close();
-      //         progressDialog.show(
-      //               msg: "Processing file ${uploadedDocs[0].name}", 
-      //               max: evt.toJson()["total"],
-      //               barrierColor: const Color.fromARGB(125, 0, 0, 0));
-      //       }
-      //       progressDialog.update(value: evt.toJson()["actual"]);
-      //     });
-      //   // }
-      // }
-    }
+    // await for (var evt in taskStream) {
+    //   var evtMap = evt.toJson();
+    //   print("for");
+    //   // if(evtMap["kind"] == "TaskProgressEvent"){
+    //   //     setState(() {
+    //   //       if( currentFile != uploadedDocs[0].name){
+    //   //         currentFile = uploadedDocs[0].name;
+    //   //         progressDialog.close();
+    //   //         progressDialog.show(
+    //   //               msg: "Processing file ${uploadedDocs[0].name}", 
+    //   //               max: evt.toJson()["total"],
+    //   //               barrierColor: const Color.fromARGB(125, 0, 0, 0));
+    //   //       }
+    //   //       progressDialog.update(value: evt.toJson()["actual"]);
+    //   //     });
+    //   //   // }
+    //   // }
+    // }
 
-    sub.cancel();
-    finishedUploading = true;
+    
+    // finishedUploading = true;
     // Navigator.pop(context);
     print("done");
     
@@ -443,6 +444,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                   Timer.periodic(const Duration(milliseconds: 250), (tmr){
                     if( finishedUploading == true){
                       tmr.cancel();
+                      sub.cancel();
                       progressDialog.close();
                     }
                   });
