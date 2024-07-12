@@ -19,20 +19,20 @@ class AnnotationScreen extends StatefulWidget {
 
 
 class _AnnotationScreenState extends State<AnnotationScreen>{
-  late Map<String, Object> dataHandler;
+  // late Map<String, Object> dataHandler;
 
 
-  _AnnotationScreenState( ){
-    dataHandler = widget.dh;
-  }
+  // _AnnotationScreenState( ){
+  //   dataHandler = widget.dh;
+  // }
   @override
   Widget build(BuildContext context) {
-    if( dataHandler.isEmpty ){
+    if( widget.dh.isEmpty ){
       return const Material(
         child: Text("Not yet implemented"),
       );
     }else{
-      List<String> chs = dataHandler["channel_annotations"] as List<String>;
+      List<String> chs = widget.dh["channel_annotations"] as List<String>;
       return Material(
         child: Text(chs[0]),
       );
