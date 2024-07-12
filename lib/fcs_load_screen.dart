@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
@@ -17,9 +18,9 @@ import 'package:tson/tson.dart' as tson;
 import 'package:uuid/uuid.dart';
 
 class FcsLoadScreen extends StatefulWidget {
-  final Map<String, Object> dh;
+  final AppData appData;
 
-  const FcsLoadScreen({super.key,  required this.dh});
+  const FcsLoadScreen({super.key,  required this.appData});
 
   @override
   State<FcsLoadScreen> createState()=> _FcsLoadScreenState();
@@ -116,12 +117,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     htmlFileList.add(wf);
   }
 
+
   void _uploadFiles() async {
-    widget.dh["channel_annotations"] = ["Ch_1", "Ch_2"];
-
-  }
-
-  void _uploadFiles2() async {
     var uuid = const Uuid();
 
 
@@ -285,20 +282,15 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // sci.Schema sch = await factory.tableSchemaService.get(cr.joinOperators[0].rightRelation.id);
     // print(sch.toJson());
 
-// projectFiles = context.context.client.projectDocumentService.findProjectObjectsByFolderAndName(\
-    // [projectId,  "ufff0", "ufff0"],\
-    // [projectId, "",""], useFactory=False, limit=25000 )
 
     List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
 
     for( var po in projObjs ){
       //TODO Need to check for && po.name.contains(uploadedFiledoc name ...)
       if(po.name.contains( "Channel-Descriptions" )  ){
-        // print(po.toJson());
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
         sci.Table res = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
-        print(res.toJson());
-        // {kind: TableSchema, id: 3adc6ed4b2e0e95f81fa248803fd0355, isDeleted: false, rev: 2-b74f46061e29684a6df30d16e07bb31d, description: , name: Channel-Descriptions-fcs_test.zip-07_11_24-19_45_36, acl: {kind: Acl, owner: lib, aces: []}, createdDate: {kind: Date, value: 2024-07-11T19:45:36.848084Z}, lastModifiedDate: {kind: Date, value: 2024-07-11T19:45:36.848084Z}, urls: [], tags: [], meta: [], url: {kind: Url, uri: }, version: , isPublic: false, projectId: 3adc6ed4b2e0e95f81fa248803fc97c4, folderId: 3adc6ed4b2e0e95f81fa248803fcd03c, nRows: 69, columns: [{kind: ColumnSchema, id: 75502a28-3967-4987-a7f1-97df20e9ffb1, name: channel_name, type: string, nRows: 0, size: -1, metaData: {kind: ColumnSchemaMetaData, sort: [], ascending: true, quartiles: [], properties: []}}, {kind: ColumnSchema, id: 6b65f454-835a-4c9b-9232-b36ff9c0f054, name: channel_description, type: string, nRows: 0, size: -1, metaData: {kind: ColumnSchemaMetaData, sort: [], ascending: true, quartiles: [], properties: []}}, {kind: ColumnSchema, id: 814a47e2-5ec9-447c-9e81-133f22f8017e, name: channel_id, type: int32, nRows: 0, size: -1, metaData: {kind: ColumnSchemaMetaData, sort: [], ascending: true, quartiles: [], properties: []}}], dataDirectory: default/50/7b/7b509af5bc354ef4af9d6b7def4072eb, relation: {kind: Relation, id: 4e5d0925-59cf-4fb3-95b2-df216641f054}}
+        widget.appData.channelAnnotationTbl = res;
       }
     }
     // print("Selecting");

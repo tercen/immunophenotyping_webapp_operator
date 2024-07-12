@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:immunophenotyping_template_assistant/annotation_screen.dart';
+import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:immunophenotyping_template_assistant/fcs_load_screen.dart';
 import 'package:immunophenotyping_template_assistant/util.dart';
 
@@ -38,6 +39,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   final Widget _verticalDivider = Expanded(child: Container(constraints: const BoxConstraints(maxHeight: 1000, maxWidth: 5, minHeight: 50), color: Colors.black,) );
 
   final Map<String, Object> crossScreenData = {};
+  final AppData appData = AppData();
   late Widget _buildLeftTab;
   String selectedScreen = _TwoColumnHomeState.FCS_LOAD_SCREEN;
   // static const Widget _fcsLoadScreen = FcsLoadScreen();
@@ -109,11 +111,11 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
     switch( selectedScreen){
       case _TwoColumnHomeState.FCS_LOAD_SCREEN:
-        return FcsLoadScreen( dh: crossScreenData,);
+        return FcsLoadScreen( appData: appData,);
       case _TwoColumnHomeState.ANNOTATION_SCREEN:
-        return AnnotationScreen(dh: crossScreenData,);
+        return AnnotationScreen(appData: appData,);
       default:
-        return FcsLoadScreen( dh: crossScreenData );
+        return FcsLoadScreen( appData: appData  );
     }
   
     
