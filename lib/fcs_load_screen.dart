@@ -52,9 +52,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   late Map<String, Object> dataHandler;
 
 
-  _FcsLoadScreenState( ){
-    dataHandler = widget.dh;
-  }
+  // _FcsLoadScreenState( ){
+    // dataHandler = widget.dh;
+  // }
 
   @override
   void initState () {
@@ -117,7 +117,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   }
 
   void _uploadFiles() async {
-    dataHandler["channel_annotations"] = ["Ch_1", "Ch_2"];
+    widget.dh["channel_annotations"] = ["Ch_1", "Ch_2"];
 
   }
 
