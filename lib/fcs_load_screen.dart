@@ -25,6 +25,9 @@ class FcsLoadScreen extends StatefulWidget {
 }
 
 
+//TODO Improve general screen layout
+//TODO Fix progress message
+
 class _FcsLoadScreenState extends State<FcsLoadScreen>{
   late ProgressDialog progressDialog = ProgressDialog(context: context);
   bool finishedUploading = false;
@@ -68,25 +71,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     var token = Uri.base.queryParameters["token"] ?? '';
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
 
-    // List<String> teamNameList = [];
-
     List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["data"]["u"]]);
 
       for( var team in teamList){
       teamNameList.add(team.name);
     }
 
-    // setState(() {
-      
-    // });
-    // return teamNameList;
   }
 
 
   List<Widget> _buildFileList(){
-    // if( filesToUpload.isEmpty){
-    //   filesToUpload.add("No Files Selected");
-    // }else{
     List<Widget> wdgList = [];
     for(int i = 0; i < filesToUpload.length; i++){
       if( filesToUpload[i] != "Drag Files Here"){
@@ -101,7 +95,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         wdgList.add(Text(filesToUpload[i], style: const TextStyle(fontSize: 14, color: Colors.black45)));
       }
     }
-    // }
+
     return wdgList;
   }
 
@@ -129,7 +123,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     List<sci.FileDocument> uploadedDocs = [];
 
     for( web.File file in htmlFileList ){
-      print("Uploading ${file.name}");
       var bytes = await dvController.getFileData(file);
       sci.FileDocument docToUpload = sci.FileDocument()
               ..name = file.name
@@ -138,17 +131,14 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       
       
       uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) ) );
-      print("Done with ${file.name}");
     }
     
     // Reading FCS
     // 1. Get operator
-    print("Getting operator");
     var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '');
     sci.Document op = sci.Document();
     for( var o in installedOperators ){
       if( o.name == "FCS"){
-        print("Found ReadFCS operator installed");
         op = o;
       }
     }
@@ -170,11 +160,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     // Data to feed projection
     sci.Table tbl = sci.Table();
-        // ..projectId = project.id
-        // ..name = "fcs_data"
-        // ..nRows = 1
-        // ..isDeleted = false
-        // ..acl.owner = selectedTeam;
 
     sci.Column col = sci.Column()
           ..name = "documentId"
@@ -196,7 +181,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     tbl.columns.add(col);
 
-    // sch = await factory.tableSchemaService.create(sch);
     var id = uuid.v4();
     sci.InMemoryRelation rel = sci.InMemoryRelation()
             ..id = id
@@ -264,8 +248,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       
 
     sub.onDone((){
-      print("Done");
-      
       _getComputedRelation(compTask.id);
       
       finishedUploading = true;
@@ -300,9 +282,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     for( var po in projObjs ){
       //TODO Need to check for && po.name.contains(uploadedFiledoc name ...)
       if(po.name.contains( "Channel-Descriptions" )  ){
-        print(po.toJson());
+        // print(po.toJson());
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
-        print(sch.toJson());
+        sci.Table res = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, -1);
+        print(res.toJson());
+        // {kind: TableSchema, id: 3adc6ed4b2e0e95f81fa248803fd0355, isDeleted: false, rev: 2-b74f46061e29684a6df30d16e07bb31d, description: , name: Channel-Descriptions-fcs_test.zip-07_11_24-19_45_36, acl: {kind: Acl, owner: lib, aces: []}, createdDate: {kind: Date, value: 2024-07-11T19:45:36.848084Z}, lastModifiedDate: {kind: Date, value: 2024-07-11T19:45:36.848084Z}, urls: [], tags: [], meta: [], url: {kind: Url, uri: }, version: , isPublic: false, projectId: 3adc6ed4b2e0e95f81fa248803fc97c4, folderId: 3adc6ed4b2e0e95f81fa248803fcd03c, nRows: 69, columns: [{kind: ColumnSchema, id: 75502a28-3967-4987-a7f1-97df20e9ffb1, name: channel_name, type: string, nRows: 0, size: -1, metaData: {kind: ColumnSchemaMetaData, sort: [], ascending: true, quartiles: [], properties: []}}, {kind: ColumnSchema, id: 6b65f454-835a-4c9b-9232-b36ff9c0f054, name: channel_description, type: string, nRows: 0, size: -1, metaData: {kind: ColumnSchemaMetaData, sort: [], ascending: true, quartiles: [], properties: []}}, {kind: ColumnSchema, id: 814a47e2-5ec9-447c-9e81-133f22f8017e, name: channel_id, type: int32, nRows: 0, size: -1, metaData: {kind: ColumnSchemaMetaData, sort: [], ascending: true, quartiles: [], properties: []}}], dataDirectory: default/50/7b/7b509af5bc354ef4af9d6b7def4072eb, relation: {kind: Relation, id: 4e5d0925-59cf-4fb3-95b2-df216641f054}}
       }
     }
     // print("Selecting");
