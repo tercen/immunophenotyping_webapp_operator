@@ -26,10 +26,20 @@ class AnnotationDataSource extends DataTableSource{
 
   @override
   DataRow? getRow(int index) {
+    var ctrl = TextEditingController(text: tbl.columns[1].values[index]);
     return DataRow(
           cells: <DataCell>[
             DataCell(Text(tbl.columns[0].values[index])),
-            DataCell(Text(tbl.columns[1].values[index])),
+            DataCell(
+              TextField(
+                controller: ctrl,
+                decoration: 
+                  const InputDecoration(
+                    border: UnderlineInputBorder()
+                  )
+                
+              )
+            ),
           ],
         );
   }
@@ -63,19 +73,27 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
       
       return Material(
         child: 
-          PaginatedDataTable(
-            columns: const <DataColumn>[
-              DataColumn(
-                label: Text('Name'),
-              ),
-              DataColumn(
-                label: Text('Age'),
-              ),
-              
-            ],
-        source: dataSource,
+          Theme(data: Theme.of(context).copyWith(
+              cardColor: const Color.fromARGB(255, 252, 252, 252),
+              dividerColor: const Color.fromARGB(255, 188, 183, 255),
+            ), 
+            child: 
+                PaginatedDataTable(
+
+                columns: const <DataColumn>[
+                  DataColumn(
+                    label: Text('Name'),
+                  ),
+                  DataColumn(
+                    label: Text('Description'),
+                  ),
+                  
+                ],
+                source: dataSource,
       
         )
+      )
+          
       );
     }
     

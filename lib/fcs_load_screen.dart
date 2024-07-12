@@ -477,20 +477,20 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                   finishedUploading = false;
 
 
-                  // progressDialog.show(msg: "Reading FCS files, please wait", barrierColor: const Color.fromARGB(125, 0, 0, 0));
+                  progressDialog.show(msg: "Reading FCS files, please wait", barrierColor: const Color.fromARGB(125, 0, 0, 0));
                   
                   _uploadFiles();
 
-                  // Timer.periodic(const Duration(milliseconds: 250), (tmr){
-                  //   if( finishedUploading == true){
-                  //     tmr.cancel();
-                  //     sub.cancel();
-                  //     if( progressDialog.isOpen()){
-                  //       progressDialog.close();
-                  //     }
+                  Timer.periodic(const Duration(milliseconds: 250), (tmr){
+                    if( finishedUploading == true){
+                      tmr.cancel();
+                      sub.cancel();
+                      if( progressDialog.isOpen()){
+                        progressDialog.close();
+                      }
                       
-                  //   }
-                  // });
+                    }
+                  });
 
                 }, 
                 child: const Text("Upload")
