@@ -20,7 +20,8 @@ class AnnotationScreen extends StatefulWidget {
 class _AnnotationScreenState extends State<AnnotationScreen>{
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return const Material(
+      child: Text("Not yet implemented"),
+    );
   }
 }

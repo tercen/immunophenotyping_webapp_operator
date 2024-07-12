@@ -211,22 +211,22 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
       if(evtMap["kind"] == "TaskProgressEvent"){
-        setState(() {
-          print(evtMap);
-          if( currentFile != uploadedDocs[0].name){
-            currentFile = uploadedDocs[0].name;
-            if(progressDialog.isOpen()){
-              progressDialog.close();
-            }
+        // setState(() {
+        //   print(evtMap);
+        //   if( currentFile != uploadedDocs[0].name){
+        //     currentFile = uploadedDocs[0].name;
+        //     if(progressDialog.isOpen()){
+        //       progressDialog.close();
+        //     }
             
-            progressDialog.show(
-                  completed: null,
-                  msg: "Processing file ${uploadedDocs[0].name}", 
-                  max: evtMap["total"] as int,
-                  barrierColor: const Color.fromARGB(125, 0, 0, 0));
-          }
-          progressDialog.update(value: evtMap["actual"] as int);
-        });
+        //     progressDialog.show(
+        //           completed: null,
+        //           msg: "Processing file ${uploadedDocs[0].name}", 
+        //           max: evtMap["total"] as int,
+        //           barrierColor: const Color.fromARGB(125, 0, 0, 0));
+        //   }
+        //   progressDialog.update(value: evtMap["actual"] as int);
+        // });
       }
     });
 
@@ -267,7 +267,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _getComputedRelation(String taskId) async{
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
-    sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
+    // sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
     // print(rel.toJson());
     // sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
     // sci.Schema sch = await factory.tableSchemaService.get(cr.joinOperators[0].rightRelation.id);
@@ -473,7 +473,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                   finishedUploading = false;
 
 
-                  progressDialog.show(msg: "Starting upload", barrierColor: const Color.fromARGB(125, 0, 0, 0));
+                  progressDialog.show(msg: "Reading FCS files, please wait", barrierColor: const Color.fromARGB(125, 0, 0, 0));
                   
                   _uploadFiles();
 
