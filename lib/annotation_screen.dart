@@ -9,7 +9,8 @@ import 'package:list_picker/list_picker.dart';
 import 'package:web/web.dart' as web;
 
 class AnnotationScreen extends StatefulWidget {
-  const AnnotationScreen({super.key});
+  final Map<String, Object> dh;
+  const AnnotationScreen({super.key,  required this.dh});
 
   @override
   State<AnnotationScreen> createState()=> _AnnotationScreenState();
@@ -18,10 +19,24 @@ class AnnotationScreen extends StatefulWidget {
 
 
 class _AnnotationScreenState extends State<AnnotationScreen>{
+  late Map<String, Object> dataHandler;
+
+
+  _AnnotationScreenState( ){
+    dataHandler = widget.dh;
+  }
   @override
   Widget build(BuildContext context) {
-    return const Material(
-      child: Text("Not yet implemented"),
-    );
+    if( dataHandler.isEmpty ){
+      return const Material(
+        child: Text("Not yet implemented"),
+      );
+    }else{
+      List<String> chs = dataHandler["channel_annotations"] as List<String>;
+      return Material(
+        child: Text(chs[0]),
+      );
+    }
+    
   }
 }

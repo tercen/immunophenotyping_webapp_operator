@@ -109,11 +109,11 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
     switch( selectedScreen){
       case _TwoColumnHomeState.FCS_LOAD_SCREEN:
-        return const FcsLoadScreen();
+        return FcsLoadScreen( dh: crossScreenData,);
       case _TwoColumnHomeState.ANNOTATION_SCREEN:
-        return const AnnotationScreen();
+        return AnnotationScreen(dh: crossScreenData,);
       default:
-        return const FcsLoadScreen();
+        return FcsLoadScreen( dh: crossScreenData );
     }
   
     

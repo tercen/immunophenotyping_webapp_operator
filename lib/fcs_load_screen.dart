@@ -17,7 +17,9 @@ import 'package:tson/tson.dart' as tson;
 import 'package:uuid/uuid.dart';
 
 class FcsLoadScreen extends StatefulWidget {
-  const FcsLoadScreen({super.key});
+  final Map<String, Object> dh;
+
+  const FcsLoadScreen({super.key,  required this.dh});
 
   @override
   State<FcsLoadScreen> createState()=> _FcsLoadScreenState();
@@ -47,6 +49,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   final List<String> teamNameList = [];
   sci.Project project = sci.Project();
+  late Map<String, Object> dataHandler;
+
+
+  _FcsLoadScreenState( ){
+    dataHandler = widget.dh;
+  }
 
   @override
   void initState () {
@@ -108,8 +116,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     htmlFileList.add(wf);
   }
 
-
   void _uploadFiles() async {
+    dataHandler["channel_annotations"] = ["Ch_1", "Ch_2"];
+
+  }
+
+  void _uploadFiles2() async {
     var uuid = const Uuid();
 
 
