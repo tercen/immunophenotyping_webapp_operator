@@ -320,6 +320,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
         sci.Table res = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
         widget.appData.channelAnnotationTbl = res;
+        widget.appData.channelAnnotationDoc = po;
       }
     }
     // print("Selecting");

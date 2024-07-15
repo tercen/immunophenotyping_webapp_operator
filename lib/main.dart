@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:immunophenotyping_template_assistant/annotation_screen.dart';
@@ -32,15 +34,29 @@ class TwoColumnHome extends StatefulWidget {
 
 }
 
+
+class LeftMenuItem {
+  IconData icon;
+  String label;
+  String screenLink;
+  bool enabled;
+
+  LeftMenuItem(this.icon, this.label, this.screenLink, this.enabled);
+
+}
+
+
 class _TwoColumnHomeState extends State<TwoColumnHome>{
   static const String FCS_LOAD_SCREEN = "FcsLoadScreen";
   static const String ANNOTATION_SCREEN = "AnnotationScreen";
+
+  List<LeftMenuItem> leftMenuList = [];
 
   final Widget _verticalDivider = Expanded(child: Container(constraints: const BoxConstraints(maxHeight: 1000, maxWidth: 5, minHeight: 50), color: Colors.black,) );
 
   final Map<String, Object> crossScreenData = {};
   final AppData appData = AppData();
-  late Widget _buildLeftTab;
+  // late Widget _buildLeftTab;
   String selectedScreen = _TwoColumnHomeState.FCS_LOAD_SCREEN;
   // static const Widget _fcsLoadScreen = FcsLoadScreen();
   // static const Widget _annotationScreen = FcsLoadScreen();
@@ -48,21 +64,37 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   @override
   initState() {
     super.initState();
-    
-    _buildLeftTab = Material( 
+    leftMenuList.add( LeftMenuItem(Icons.home_rounded, "FCS Files", _TwoColumnHomeState.FCS_LOAD_SCREEN, true));
+    leftMenuList.add( LeftMenuItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN, false));
+
+    Timer.periodic(const Duration(milliseconds: 500), (tmr){
+      if(appData.channelAnnotationDoc.id != ""){
+
+      }
+      tmr.cancel();
+    });
+  }
+
+  Widget _buildLeftTab(){
+    List<Widget> leftItems = [];
+
+    for( var item in leftMenuList){
+      leftItems.add(  
+        _addItem(item.icon, item.label, item.screenLink, item.enabled)
+      );
+    }
+    return Material( 
       child:ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
-      children: [
-        _addItem(Icons.home_rounded, "FCS Files", _TwoColumnHomeState.FCS_LOAD_SCREEN),
-        _addItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN),
-        // _addItem(Icons.settings, "Settings"),
-      ],
+      children: leftItems,
     ));
   }
 
-  Widget _addItem( IconData icon, String label, String screenTo){
+  Widget _addItem( IconData icon, String label, String screenTo, bool enabled){
     var inset = const EdgeInsets.symmetric(vertical: 5, horizontal: 5);
+
+    
     var tbl = Align(
       alignment: Alignment.centerLeft,
       child: Table(
@@ -78,11 +110,16 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
             Padding(padding: inset, child:Icon(icon)),
             Padding(padding: inset, child:
                 InkWell(
-                  child: Text(label, style: const TextStyle(color: Colors.black, fontSize: 18),),
+                  child: enabled 
+                      ? Text(label, style: const TextStyle(color: Colors.black, fontSize: 18),)
+                      : Text(label, style: const TextStyle(color: Colors.grey, fontSize: 18),),
                   onTap: () {
-                    setState(() {
-                      selectedScreen = screenTo;
-                    });
+                    if( enabled ){
+                      setState(() {
+                        selectedScreen = screenTo;
+                      });
+                    }
+                    
                   },
                 )
                 
@@ -97,15 +134,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     return tbl;
   }
 
-  // final Widget _buildLeftTab = Material( child:ListView(
-  //   scrollDirection: Axis.vertical,
-  //   shrinkWrap: true,
-  //   children: [
-  //     _addItem(Icons.home_rounded, "FCS Files","FcsLoadScreen"),
-  //     _addItem(Icons.search_rounded, "Annotations", "AnnotationScreen"),
-  //     // _addItem(Icons.settings, "Settings"),
-  //   ],
-  // ));
+
 
   Widget _buildRightScreen(){
 
@@ -138,7 +167,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         children: [
           TableRow(
             children: [
-              _buildLeftTab,
+              _buildLeftTab(),
               // _verticalDivider,
               _buildRightScreen(),
             ]

@@ -9,6 +9,7 @@ import 'package:immunophenotyping_template_assistant/ui_utils.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:web/web.dart' as web;
 import 'package:sci_tercen_client/sci_client.dart' as sci;
+import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
 import 'package:immunophenotyping_template_assistant/data.dart';
 
 class AnnotationScreen extends StatefulWidget {
@@ -57,7 +58,17 @@ class AnnotationDataSource extends DataTableSource{
 
 class _AnnotationScreenState extends State<AnnotationScreen>{
   // late Map<String, Object> dataHandler;
+  final factory = tercen.ServiceFactory();
+  late sci.Table channelAnnotationTbl;
 
+  @override
+  Future<void> initState() async {
+    super.initState();
+
+    sci.Schema sch = await factory.tableSchemaService.get(widget.appData.channelAnnotationDoc.id);
+    channelAnnotationTbl = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
+    // widget.appData.channelAnnotationTbl = res;
+  }
 
   // _AnnotationScreenState( ){
   //   dataHandler = widget.dh;
@@ -70,7 +81,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
       );
     }else{
       // List<String> chs = widget.dh["channel_annotations"] as List<String>;
-      DataTableSource dataSource = AnnotationDataSource(widget.appData.channelAnnotationTbl);
+      DataTableSource dataSource = AnnotationDataSource(channelAnnotationTbl);
       
       return Align(
         alignment: Alignment.topLeft,
