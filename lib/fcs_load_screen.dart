@@ -44,9 +44,12 @@ class UploadFile {
 
 
 class _FcsLoadScreenState extends State<FcsLoadScreen>{
-  late ProgressDialog progressDialog = ProgressDialog(context: context);
+  //State vars
   bool finishedUploading = false;
   bool enableUpload = false;
+
+  late ProgressDialog progressDialog = ProgressDialog(context: context);
+  
   int total = -1;
   int processed = -1;
   late StreamSubscription<sci.TaskEvent> sub;
@@ -99,7 +102,17 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       if( filesToUpload[i].filename != "Drag Files Here"){
         Row entry = Row(
           children: [
-            filesToUpload[i].uploaded ? const Icon(Icons.delete_rounded) : const Icon(Icons.check),
+            filesToUpload[i].uploaded 
+                  ? const Icon(Icons.check) 
+                  : InkWell(
+                        child: const Icon(Icons.delete),
+                        onTap: () {
+                          setState(() {
+                            filesToUpload.removeAt(i);  
+                          });
+                          
+                        },
+                    ), 
             Text(filesToUpload[i].filename, style: const TextStyle(fontSize: 14, color: Colors.black45))
           ],
         );           
@@ -113,7 +126,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   }
 
   void _updateFilesToUpload(web.File wf){
-    if( filesToUpload[0] == "Drag Files Here"){
+    if( filesToUpload[0].filename == "Drag Files Here"){
       filesToUpload.removeAt(0);
     }
     filesToUpload.add(UploadFile(wf.name, false));
