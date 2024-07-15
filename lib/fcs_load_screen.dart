@@ -503,8 +503,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           addAlignedWidget(
             ElevatedButton(
                 style: enableUpload 
-                ? setButtonStyle("disabled")
-                : setButtonStyle("enabled"),
+                ? setButtonStyle("enabled")
+                : setButtonStyle("disabled"),
                 onPressed: () {
                   enableUpload 
                   ? null
