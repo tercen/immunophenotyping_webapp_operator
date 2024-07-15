@@ -507,8 +507,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                 : setButtonStyle("disabled"),
                 onPressed: () {
                   enableUpload 
-                  ? null
-                  : _doUpload();
+                  ? _doUpload()
+                  : null;
                 },
  
                 child: const Text("Upload")
