@@ -33,10 +33,20 @@ class FcsLoadScreen extends StatefulWidget {
 //TODO Fix progress message
 //TODO Check existing progress name
 //TODO Check file types for drop
+//TODO better upload/finished feedback
+
+class UploadFile {
+  String filename;
+  bool uploaded;
+
+  UploadFile(this.filename, this.uploaded);
+}
+
 
 class _FcsLoadScreenState extends State<FcsLoadScreen>{
   late ProgressDialog progressDialog = ProgressDialog(context: context);
   bool finishedUploading = false;
+  bool enableUpload = false;
   int total = -1;
   int processed = -1;
   late StreamSubscription<sci.TaskEvent> sub;
@@ -47,7 +57,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   late FilePickerResult result;
   String selectedTeam = "Please select a team";
   Color dvBackground = Colors.white;
-  List<String> filesToUpload = ["Drag Files Here"];
+  List<UploadFile> filesToUpload = [UploadFile("Drag Files Here", false)];
   List<web.File> htmlFileList = [];
   var workflowTfController = TextEditingController(text: "Immunophenotyping Workflow");
 
@@ -86,16 +96,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   List<Widget> _buildFileList(){
     List<Widget> wdgList = [];
     for(int i = 0; i < filesToUpload.length; i++){
-      if( filesToUpload[i] != "Drag Files Here"){
+      if( filesToUpload[i].filename != "Drag Files Here"){
         Row entry = Row(
           children: [
-            const Icon(Icons.delete_rounded),
-            Text(filesToUpload[i], style: const TextStyle(fontSize: 14, color: Colors.black45))
+            filesToUpload[i].uploaded ? const Icon(Icons.delete_rounded) : const Icon(Icons.check),
+            Text(filesToUpload[i].filename, style: const TextStyle(fontSize: 14, color: Colors.black45))
           ],
         );           
         wdgList.add(entry);
       }else{
-        wdgList.add(Text(filesToUpload[i], style: const TextStyle(fontSize: 14, color: Colors.black45)));
+        wdgList.add(Text(filesToUpload[i].filename, style: const TextStyle(fontSize: 14, color: Colors.black45)));
       }
     }
 
@@ -106,7 +116,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     if( filesToUpload[0] == "Drag Files Here"){
       filesToUpload.removeAt(0);
     }
-    filesToUpload.add(wf.name);
+    filesToUpload.add(UploadFile(wf.name, false));
 
     htmlFileList.add(wf);
   }
@@ -119,27 +129,44 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // Create a project to store the workflow
     if( project.id == "" ){
       var projectList = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: selectedTeam, endKey: selectedTeam);
+      bool createProject = true;
       for( var proj in projectList){
-        print(proj.name);
+        if(proj.name == workflowTfController.text){
+          project = proj;
+          createProject = false;
+        }
       }
-      project.name = workflowTfController.text;
-      project.acl.owner = selectedTeam;
-      project = await factory.projectService.create(project);
+
+      if( createProject == true ){
+        project.name = workflowTfController.text;
+        project.acl.owner = selectedTeam;
+        project = await factory.projectService.create(project);
+      }
+      
     }
 
     List<sci.FileDocument> uploadedDocs = [];
-
-    for( web.File file in htmlFileList ){
+    List<String> docIds = [];
+    List<String> dotDocIds = [];
+    
+    for( int i = 0; i < htmlFileList.length; i++ ){
+      web.File file = htmlFileList[i];
       var bytes = await dvController.getFileData(file);
       sci.FileDocument docToUpload = sci.FileDocument()
               ..name = file.name
               ..projectId = project.id
               ..acl.owner = selectedTeam;
-      
-      
+
       uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) ) );
+
+      setState(() {
+        filesToUpload[i].uploaded = true;
+      });
+
+      docIds.add(uploadedDocs[i].id);
+      dotDocIds.add(uuid.v4());
     }
-    
+
     // Reading FCS
     // 1. Get operator
     var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '');
@@ -174,7 +201,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..id = "documentId"
           ..nRows = 1
           ..size = -1
-          ..values = tson.CStringList.fromList([uuid.v4()]);
+          ..values = tson.CStringList.fromList(dotDocIds);
     
     tbl.columns.add(col);
 
@@ -184,7 +211,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..id = ".documentId"
           ..nRows = 1
           ..size = -1
-          ..values = tson.CStringList.fromList([uploadedDocs[0].id]);
+          ..values = tson.CStringList.fromList(docIds);
     
     tbl.columns.add(col);
 
@@ -212,7 +239,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     //{kind: TaskProgressEvent, id: , isDeleted: false, rev: ,
     // date: {kind: Date, value: 2024-07-11T16:29:54.226033Z}, taskId: 3adc6ed4b2e0e95f81fa2488033fb5f9, message: measurement, total: 8, actual: 2}
-    var currentFile = "";
+    // var currentFile = "";
 
 
     sub = taskStream.listen((evt){
@@ -262,15 +289,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   }
 
-  void _tryToPrint(String id, String name) async {
-    try {
-      print("Trying to print $name");
-      sci.Schema sch = await factory.tableSchemaService.get(id);
-      print(sch.toJson());
-    } catch (e) {
-      print("$name failed");
-    }
-  }
 
   void _getComputedRelation(String taskId) async{
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
@@ -312,12 +330,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     } 
   }
 
-  void _checkWorkflowName() async {
-    workflowTfController.text;
-    //projectList
-    factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: []);
-  }
-
   void _doUpload(){
     finishedUploading = false;
 
@@ -330,8 +342,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       if( finishedUploading == true){
         tmr.cancel();
         sub.cancel();
+
         if( progressDialog.isOpen()){
           progressDialog.close();
+          setState(() {
+            enableUpload = false;
+          });
         }
         
       }
@@ -371,6 +387,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
                 setState(() {
                   selectedTeam = team;
+                  enableUpload = true;
                 });
                 // teamTfController.text = selectedTeam;
               }
@@ -472,11 +489,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
           addAlignedWidget(
             ElevatedButton(
-                style: selectedTeam == "Please select a team"
+                style: enableUpload 
                 ? setButtonStyle("disabled")
                 : setButtonStyle("enabled"),
                 onPressed: () {
-                  selectedTeam == "Please select a team"
+                  enableUpload 
                   ? null
                   : _doUpload();
                 },
