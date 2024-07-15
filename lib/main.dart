@@ -69,7 +69,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
     Timer.periodic(const Duration(milliseconds: 500), (tmr){
       if(appData.channelAnnotationDoc.id != ""){
-
+        leftMenuList[1].enabled = true;
       }
       tmr.cancel();
     });

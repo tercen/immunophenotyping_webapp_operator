@@ -348,7 +348,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     finishedUploading = false;
 
 
-    progressDialog.show(msg: "Reading FCS files, please wait", barrierColor: const Color.fromARGB(125, 0, 0, 0));
+    progressDialog.show(
+                msg: "Reading FCS files, please wait", 
+                barrierColor: const Color.fromARGB(125, 0, 0, 0),
+    );
     
     _uploadFiles();
 
