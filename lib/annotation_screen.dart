@@ -61,21 +61,24 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
   final factory = tercen.ServiceFactory();
   late sci.Table channelAnnotationTbl;
 
-  @override
-  Future<void> initState() async {
-    super.initState();
+  // @override
+  // Future<void> initState() async {
+  //   super.initState();
 
     
-    // widget.appData.channelAnnotationTbl = res;
-  }
+  //   // widget.appData.channelAnnotationTbl = res;
+  // }
 
   // _AnnotationScreenState( ){
   //   dataHandler = widget.dh;
   // }
 
   void _readTable() async {
+    print("Reading table");
     sci.Schema sch = await factory.tableSchemaService.get(widget.appData.channelAnnotationDoc.id);
+    print("Read schema");
     channelAnnotationTbl = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
+    print("Read table");
   }
   @override
   Widget build(BuildContext context) {
