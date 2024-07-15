@@ -68,8 +68,11 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     leftMenuList.add( LeftMenuItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN, false));
 
     Timer.periodic(const Duration(milliseconds: 500), (tmr){
-      if(appData.channelAnnotationDoc.id != ""){
-        leftMenuList[1].enabled = true;
+      if(appData.channelAnnotationDoc.id != "" && leftMenuList[1].enabled == false){
+        setState(() {
+          leftMenuList[1].enabled = true;  
+        });
+        
       }
       tmr.cancel();
     });
