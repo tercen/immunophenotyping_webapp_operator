@@ -118,8 +118,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     // Create a project to store the workflow
     if( project.id == "" ){
-      var projectLsit = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: [selectedTeam, "0000"], endKey: [selectedTeam, "9999"]);
-      for( var proj in projectLsit){
+      var projectList = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: selectedTeam, endKey: selectedTeam);
+      for( var proj in projectList){
         print(proj.name);
       }
       project.name = workflowTfController.text;
