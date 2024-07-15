@@ -72,9 +72,9 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         setState(() {
           leftMenuList[1].enabled = true;  
         });
-        
+        tmr.cancel();  
       }
-      tmr.cancel();
+      
     });
   }
 
