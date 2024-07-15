@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:immunophenotyping_template_assistant/ui_utils.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:web/web.dart' as web;
 import 'package:sci_tercen_client/sci_client.dart' as sci;
@@ -71,28 +72,44 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
       // List<String> chs = widget.dh["channel_annotations"] as List<String>;
       DataTableSource dataSource = AnnotationDataSource(widget.appData.channelAnnotationTbl);
       
-      return Material(
+      return Align(
+        alignment: Alignment.topLeft,
         child: 
-          Theme(data: Theme.of(context).copyWith(
-              cardColor: const Color.fromARGB(255, 252, 252, 252),
-              dividerColor: const Color.fromARGB(255, 188, 183, 255),
-            ), 
-            child: 
-                PaginatedDataTable(
+          Column(
+            children: [
+              Theme(data: Theme.of(context).copyWith(
+                      cardColor: const Color.fromARGB(255, 252, 252, 252),
+                      dividerColor: const Color.fromARGB(255, 188, 183, 255),
+                    ), 
+                    child: 
+                        PaginatedDataTable(
 
-                columns: const <DataColumn>[
-                  DataColumn(
-                    label: Text('Name'),
-                  ),
-                  DataColumn(
-                    label: Text('Description'),
-                  ),
-                  
-                ],
-                source: dataSource,
-      
-        )
-      )
+                        columns: const <DataColumn>[
+                          DataColumn(
+                            label: Text('Name'),
+                          ),
+                          DataColumn(
+                            label: Text('Description'),
+                          ),
+                          
+                        ],
+                        source: dataSource,
+              
+                )
+              ),
+
+              addSeparator(),
+
+              addAlignedWidget(
+                ElevatedButton(
+                  onPressed: null, 
+                  child: Text("Update Description")
+                )
+              )
+              
+            ],
+          )
+          
           
       );
     }

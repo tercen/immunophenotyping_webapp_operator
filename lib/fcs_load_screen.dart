@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:immunophenotyping_template_assistant/data.dart';
+import 'package:immunophenotyping_template_assistant/ui_utils.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
@@ -30,6 +31,8 @@ class FcsLoadScreen extends StatefulWidget {
 
 //TODO Improve general screen layout
 //TODO Fix progress message
+//TODO Check existing progress name
+//TODO Check file types for drop
 
 class _FcsLoadScreenState extends State<FcsLoadScreen>{
   late ProgressDialog progressDialog = ProgressDialog(context: context);
@@ -53,29 +56,20 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   late Map<String, Object> dataHandler;
 
 
-  // _FcsLoadScreenState( ){
-    // dataHandler = widget.dh;
-  // }
+  List<sci.Project> projectList = [];
+
 
   @override
   void initState () {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_){
       _loadTeams();
-      // _debugInfo();
       
     });
 
-    // http://127.0.0.1:5400/lib/w/5e8e784622396f3064cd7cd90e7376e7/ds/b3718281-eb72-47a1-b962-003c49b9e539
-    
+   
   }
 
-  Future<void> _debugInfo() async {
-    sci.Workflow wkf = await factory.workflowService.get("5e8e784622396f3064cd7cd90e7376e7");
-    for( var stp in wkf.steps){
-      print(stp.toJson());
-    }
-  }
   Future<void> _loadTeams() async {
     var token = Uri.base.queryParameters["token"] ?? '';
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
@@ -124,6 +118,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     // Create a project to store the workflow
     if( project.id == "" ){
+      var projectLsit = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: [selectedTeam, "0000"], endKey: [selectedTeam, "9999"]);
+      for( var proj in projectLsit){
+        print(proj.name);
+      }
       project.name = workflowTfController.text;
       project.acl.owner = selectedTeam;
       project = await factory.projectService.create(project);
@@ -314,31 +312,31 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     } 
   }
 
-  Widget _addAlignedWidget(Widget wdg){
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: wdg,
-        ),
-    );
+  void _checkWorkflowName() async {
+    workflowTfController.text;
+    //projectList
+    factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: []);
   }
 
-  Widget _addSeparator( {String spacing = "intermediate"} ){
-    double height;
-    switch(spacing){
-      case "intermediate":
-        height = 22.0;
-      case "small":
-        height = 8.0;
-      case "large":
-        height = 30.0;
-      default:
-        height = 25.0;
-    }
+  void _doUpload(){
+    finishedUploading = false;
 
-    return SizedBox(height: height,);
+
+    progressDialog.show(msg: "Reading FCS files, please wait", barrierColor: const Color.fromARGB(125, 0, 0, 0));
+    
+    _uploadFiles();
+
+    Timer.periodic(const Duration(milliseconds: 250), (tmr){
+      if( finishedUploading == true){
+        tmr.cancel();
+        sub.cancel();
+        if( progressDialog.isOpen()){
+          progressDialog.close();
+        }
+        
+      }
+    });
+
   }
 
   @override
@@ -347,20 +345,22 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       alignment: Alignment.topLeft,
       child: Column(
         children: [
-          _addAlignedWidget(
+          addAlignedWidget(
             // const Text("Immunophenotyping Workflow", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),)
             TextField(
               controller: workflowTfController,
+              onTapOutside: null, // Should check availability
               decoration: 
                 const InputDecoration(
-                  border: UnderlineInputBorder()
+                  border: UnderlineInputBorder(),
+
                 ),
             )
           ),
 
-          _addSeparator(),
+          addSeparator(),
 
-          _addAlignedWidget(ElevatedButton(
+          addAlignedWidget(ElevatedButton(
               child: const Text("Select Team"),
               onPressed: ()  async {
                 String team = ( await showPickerDialog(
@@ -378,10 +378,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ),
 
 
-          _addSeparator(spacing: "small"),
+          addSeparator(spacing: "small"),
           
 
-          _addAlignedWidget(Material( 
+          addAlignedWidget(Material( 
               child: 
               Text(
                 selectedTeam, 
@@ -392,13 +392,13 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ),
          
 
-          _addSeparator(spacing: "intermediate"),
+          addSeparator(spacing: "intermediate"),
 
-          _addAlignedWidget(const Text("Upload FCS Files.", style: TextStyle(fontSize: 16, color: Colors.black),)),
+          addAlignedWidget(const Text("Upload FCS Files.", style: TextStyle(fontSize: 16, color: Colors.black),)),
 
-          _addSeparator(spacing: "small"),
+          addSeparator(spacing: "small"),
 
-          _addAlignedWidget(
+          addAlignedWidget(
             Table(
               columnWidths: const {
                 0: FixedColumnWidth(30),
@@ -423,10 +423,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ),
 
 
-          _addSeparator(spacing: "small"),
+          addSeparator(spacing: "small"),
 
 
-          _addAlignedWidget(
+          addAlignedWidget(
             Stack(
               children: [
                 SizedBox(
@@ -468,31 +468,19 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
             )
           ),
 
-          _addSeparator(spacing: "small"),
+          addSeparator(spacing: "small"),
 
-          _addAlignedWidget(
+          addAlignedWidget(
             ElevatedButton(
-
+                style: selectedTeam == "Please select a team"
+                ? setButtonStyle("disabled")
+                : setButtonStyle("enabled"),
                 onPressed: () {
-                  finishedUploading = false;
-
-
-                  progressDialog.show(msg: "Reading FCS files, please wait", barrierColor: const Color.fromARGB(125, 0, 0, 0));
-                  
-                  _uploadFiles();
-
-                  Timer.periodic(const Duration(milliseconds: 250), (tmr){
-                    if( finishedUploading == true){
-                      tmr.cancel();
-                      sub.cancel();
-                      if( progressDialog.isOpen()){
-                        progressDialog.close();
-                      }
-                      
-                    }
-                  });
-
-                }, 
+                  selectedTeam == "Please select a team"
+                  ? null
+                  : _doUpload();
+                },
+ 
                 child: const Text("Upload")
             )
           ),

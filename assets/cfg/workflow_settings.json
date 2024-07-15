@@ -1,0 +1,22 @@
+{
+    "settings":[
+        {
+            "Name": "Neighbours",
+            "Hint": "Help/Description about setting",
+            "Type": "int",
+            "Default": 3
+        },
+
+        {
+            "Name": "Metric",
+            "Hint": "Help/Description about setting",
+            "Type": "ListSingle",
+            "Default": "Euclidean",
+            "Options": [
+                "Euclidean",
+                "Mahalanobis",
+                "Cosine"
+            ]
+        }
+    ]
+}
