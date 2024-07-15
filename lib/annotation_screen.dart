@@ -75,55 +75,49 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
   // }
   @override
   Widget build(BuildContext context) {
-    if( widget.appData.channelAnnotationTbl.columns.isEmpty ){
-      return const Material(
-        child: Text("Please upload files first."),
-      );
-    }else{
-      // List<String> chs = widget.dh["channel_annotations"] as List<String>;
-      DataTableSource dataSource = AnnotationDataSource(channelAnnotationTbl);
-      
-      return Align(
-        alignment: Alignment.topLeft,
-        child: 
-          Column(
-            children: [
-              Theme(data: Theme.of(context).copyWith(
-                      cardColor: const Color.fromARGB(255, 252, 252, 252),
-                      dividerColor: const Color.fromARGB(255, 188, 183, 255),
-                    ), 
-                    child: 
-                        PaginatedDataTable(
+    DataTableSource dataSource = AnnotationDataSource(channelAnnotationTbl);
+    
+    return Align(
+      alignment: Alignment.topLeft,
+      child: 
+        Column(
+          children: [
+            Theme(data: Theme.of(context).copyWith(
+                    cardColor: const Color.fromARGB(255, 252, 252, 252),
+                    dividerColor: const Color.fromARGB(255, 188, 183, 255),
+                  ), 
+                  child: 
+                      PaginatedDataTable(
 
-                        columns: const <DataColumn>[
-                          DataColumn(
-                            label: Text('Name'),
-                          ),
-                          DataColumn(
-                            label: Text('Description'),
-                          ),
-                          
-                        ],
-                        source: dataSource,
-              
-                )
-              ),
-
-              addSeparator(),
-
-              addAlignedWidget(
-                ElevatedButton(
-                  onPressed: null, 
-                  child: Text("Update Description")
-                )
+                      columns: const <DataColumn>[
+                        DataColumn(
+                          label: Text('Name'),
+                        ),
+                        DataColumn(
+                          label: Text('Description'),
+                        ),
+                        
+                      ],
+                      source: dataSource,
+            
               )
-              
-            ],
-          )
-          
-          
-      );
-    }
+            ),
+
+            addSeparator(),
+
+            addAlignedWidget(
+              ElevatedButton(
+                onPressed: null, 
+                child: Text("Update Description")
+              )
+            )
+            
+          ],
+        )
+        
+        
+    );
+  
     
   }
 }
