@@ -73,59 +73,69 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
   //   dataHandler = widget.dh;
   // }
 
-  void _readTable() async {
+  Future<sci.Table> _readTable() async {
     print("Reading table");
     sci.Schema sch = await factory.tableSchemaService.get(widget.appData.channelAnnotationDoc.id);
     print("Read schema");
-    channelAnnotationTbl = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
+    var _channelAnnotationTbl = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
     print("Read table");
+
+    return _channelAnnotationTbl;
   }
   @override
   Widget build(BuildContext context) {
-    _readTable();
+    
     
     DataTableSource dataSource = AnnotationDataSource(channelAnnotationTbl);
     
-    return Align(
-      alignment: Alignment.topLeft,
-      child: 
-        Column(
-          children: [
-            Theme(data: Theme.of(context).copyWith(
-                    cardColor: const Color.fromARGB(255, 252, 252, 252),
-                    dividerColor: const Color.fromARGB(255, 188, 183, 255),
-                  ), 
-                  child: 
-                      PaginatedDataTable(
+    return FutureBuilder(
+      future: _readTable(), 
+      builder: (context, snapshot ){
+        if( snapshot.hasData ){
+          return Column(
+                    children: [
+                      Theme(data: Theme.of(context).copyWith(
+                              cardColor: const Color.fromARGB(255, 252, 252, 252),
+                              dividerColor: const Color.fromARGB(255, 188, 183, 255),
+                            ), 
+                            child: 
+                                PaginatedDataTable(
 
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Text('Name'),
-                        ),
-                        DataColumn(
-                          label: Text('Description'),
-                        ),
-                        
-                      ],
-                      source: dataSource,
-            
-              )
-            ),
+                                columns: const <DataColumn>[
+                                  DataColumn(
+                                    label: Text('Name'),
+                                  ),
+                                  DataColumn(
+                                    label: Text('Description'),
+                                  ),
+                                  
+                                ],
+                                source: dataSource,
+                      
+                        )
+                      ),
 
-            addSeparator(),
+                      addSeparator(),
 
-            addAlignedWidget(
-              ElevatedButton(
-                onPressed: null, 
-                child: Text("Update Description")
-              )
-            )
-            
-          ],
-        )
-        
-        
+                      addAlignedWidget(
+                        ElevatedButton(
+                          onPressed: null, 
+                          child: Text("Update Description")
+                        )
+                      )
+                      
+                    ],
+                  );
+              
+        }else{
+          return Center(
+                    child: CircularProgressIndicator(),
+                  );
+        }
+      }
     );
+
+    
   
     
   }
