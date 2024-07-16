@@ -10,6 +10,7 @@ import 'package:immunophenotyping_template_assistant/util.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:web/web.dart' as web;
 import 'package:sci_tercen_client/sci_client.dart' as sci;
+import 'package:sci_tercen_model/sci_model_base.dart' as model;
 import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
 import 'package:immunophenotyping_template_assistant/data.dart';
 
@@ -127,9 +128,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                             if(dataSource.changedRows.isNotEmpty){
                               print("Creating new column...");
                               sci.Column newCol = sci.Column();
-                              // newCol.copyFrom(tbl.columns[1]);
                               newCol.values = List.from(tbl.columns[1].values);
-                              // newCol.values.from(tbl.columns[1].values);
                               newCol.name = tbl.columns[1].name;
                               newCol.type = tbl.columns[1].type;
                               for(int idx in dataSource.changedRows ){
@@ -138,12 +137,23 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                                 print("OK");
                               }
 
+                              sci.Column nameCol = sci.Column();
+                              nameCol.values = List.from(tbl.columns[0].values);
+                              nameCol.name = tbl.columns[0].name;
+                              nameCol.type = tbl.columns[0].type;
+
                               print("Setting new column");
-                              tbl.columns[1] = newCol;
                               
+                              sci.Table newTbl = sci.Table.json({
+                                  model.Vocabulary.nRows_DP:tbl.nRows,
+                                  model.Vocabulary.properties_OP: tbl.properties,
+                                  model.Vocabulary.columns_OP: [nameCol, newCol]
+                              
+                              });
+
                               
                               print("Uploading new table");
-                              uploadTable(tbl, tbl.properties.name, widget.appData.channelAnnotationDoc.projectId, widget.appData.channelAnnotationDoc.acl.owner);
+                              uploadTable(newTbl, newTbl.properties.name, widget.appData.channelAnnotationDoc.projectId, widget.appData.channelAnnotationDoc.acl.owner);
                               print("Deleteing old table");
                               factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
                               
