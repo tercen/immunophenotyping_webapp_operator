@@ -132,7 +132,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                               newCol.name = tbl.columns[1].name;
                               newCol.type = tbl.columns[1].type;
                               for(int idx in dataSource.changedRows ){
-                                print("Changing list at index $idx");
+                                print("Changing list at index $idx to value ${dataSource.controllerList[idx].text}");
                                 newCol.values[idx] = dataSource.controllerList[idx].text;
                                 print("OK");
                               }
