@@ -152,6 +152,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                               });
 
                               print(newTbl.toJson());
+                              print(tbl.toJson());
                               print("Uploading new table");
                               uploadTable(newTbl, newTbl.properties.name, widget.appData.channelAnnotationDoc.projectId, widget.appData.channelAnnotationDoc.acl.owner);
                               print("Deleteing old table");
