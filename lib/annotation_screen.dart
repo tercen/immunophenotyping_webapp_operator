@@ -59,7 +59,7 @@ class AnnotationDataSource extends DataTableSource{
 class _AnnotationScreenState extends State<AnnotationScreen>{
   // late Map<String, Object> dataHandler;
   final factory = tercen.ServiceFactory();
-  late sci.Table channelAnnotationTbl;
+  
 
   // @override
   // Future<void> initState() async {
@@ -73,13 +73,14 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
   //   dataHandler = widget.dh;
   // }
 
-  Future<void> _readTable() async {
+  Future<sci.Table> _readTable() async {
     print("Reading table");
     sci.Schema sch = await factory.tableSchemaService.get(widget.appData.channelAnnotationDoc.id);
     print("Read schema");
-    channelAnnotationTbl = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
+    var channelAnnotationTbl = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
     print("Read table");
-   
+
+    return channelAnnotationTbl;
   }
   @override
   Widget build(BuildContext context) {
@@ -91,7 +92,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
         
         if( snapshot.hasData ){
 
-          DataTableSource dataSource = AnnotationDataSource(channelAnnotationTbl);
+          DataTableSource dataSource = AnnotationDataSource(snapshot.requireData);
           return Column(
                     children: [
                       Theme(data: Theme.of(context).copyWith(
