@@ -2,6 +2,7 @@ import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
 import 'package:sci_http_client/http_auth_client.dart' as auth_http;
 import 'package:sci_http_client/http_browser_client.dart' as io_http;
 import 'package:sci_tercen_client/sci_client.dart' as sci;
+import 'package:tson/tson.dart' as tson;
 
 
 
@@ -38,3 +39,54 @@ Future<bool> initFactory() async {
 
   return true;
 }
+
+
+Future<void> uploadTable(
+      sci.Table table, String filename, String projectId, String owner) async {
+    var factory = tercen.ServiceFactory();
+    var bytes = tson.encode(table.toJson());
+
+    var resultFile = sci.FileDocument()
+      ..name = table.properties.name
+      ..isHidden = true
+      ..isTemp = true
+      ..projectId = projectId
+      ..acl.owner = owner;
+
+    resultFile = await factory.fileService
+        .upload(resultFile, Stream.fromIterable([bytes]));
+
+    var csvTask = sci.CSVTask()
+      ..state = sci.InitState()
+      ..owner = owner
+      ..projectId = projectId
+      ..fileDocumentId = resultFile.id;
+
+    // csvTask = await factory.taskService.create(csvTask) as sci.CSVTask;
+
+    // await factory.taskService.runTask(csvTask.id);
+    // await factory.taskService.waitDone(csvTask.id);
+
+    // csvTask = await factory.taskService.get(csvTask.id) as sci.CSVTask;
+
+    // var schema = await factory.tableSchemaService.get(csvTask.schemaId);
+
+    // var computedSchema = sci.ComputedTableSchema()
+    //   ..nRows = schema.nRows
+    //   ..projectId = task.projectId
+    //   ..acl.owner = task.owner
+    //   ..name = table.properties.name
+    //   ..query = task.query.copy()
+    //   ..dataDirectory = schema.dataDirectory;
+
+    // for (var column in schema.columns) {
+    //   computedSchema.columns.add(column.copy());
+    // }
+
+    // computedSchema = await factory.tableSchemaService.create(computedSchema)
+    //     as sci.ComputedTableSchema;
+
+    // await factory.tableSchemaService.delete(schema.id, schema.rev);
+
+    // return computedSchema;
+  }

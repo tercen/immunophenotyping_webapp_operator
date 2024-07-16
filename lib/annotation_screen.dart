@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:immunophenotyping_template_assistant/ui_utils.dart';
+import 'package:immunophenotyping_template_assistant/util.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:web/web.dart' as web;
 import 'package:sci_tercen_client/sci_client.dart' as sci;
@@ -24,16 +25,29 @@ class AnnotationScreen extends StatefulWidget {
 
 class AnnotationDataSource extends DataTableSource{
   sci.Table tbl;
+  List<TextEditingController> controllerList = [];
+  List<int> changedRows = [];
   AnnotationDataSource(this.tbl );
 
   @override
   DataRow? getRow(int index) {
     var ctrl = TextEditingController(text: tbl.columns[1].values[index]);
+    
+
+    if( controllerList.length < index ){
+      controllerList.add(ctrl);
+    }
+
     return DataRow(
           cells: <DataCell>[
             DataCell(Text(tbl.columns[0].values[index])),
             DataCell(
               TextField(
+                onChanged: (txt) {
+                  if( !changedRows.contains(index) ){
+                    changedRows.add(index);
+                  }
+                },
                 controller: ctrl,
                 decoration: 
                   const InputDecoration(
@@ -59,26 +73,11 @@ class AnnotationDataSource extends DataTableSource{
 class _AnnotationScreenState extends State<AnnotationScreen>{
   // late Map<String, Object> dataHandler;
   final factory = tercen.ServiceFactory();
+  late sci.Schema annotSch;
   
-
-  // @override
-  // Future<void> initState() async {
-  //   super.initState();
-
-    
-  //   // widget.appData.channelAnnotationTbl = res;
-  // }
-
-  // _AnnotationScreenState( ){
-  //   dataHandler = widget.dh;
-  // }
-
   Future<sci.Table> _readTable() async {
-    print("Reading table");
-    sci.Schema sch = await factory.tableSchemaService.get(widget.appData.channelAnnotationDoc.id);
-    print("Read schema");
-    var channelAnnotationTbl = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
-    print("Read table");
+    annotSch = await factory.tableSchemaService.get(widget.appData.channelAnnotationDoc.id);
+    var channelAnnotationTbl = await factory.tableSchemaService.select(annotSch.id, ["channel_name", "channel_description"], 0, annotSch.nRows);
 
     return channelAnnotationTbl;
   }
@@ -91,8 +90,8 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
       builder: (context, snapshot ){
         
         if( snapshot.hasData ){
-
-          DataTableSource dataSource = AnnotationDataSource(snapshot.requireData);
+          
+          AnnotationDataSource dataSource = AnnotationDataSource(snapshot.requireData);
           return Column(
                     children: [
                       Theme(data: Theme.of(context).copyWith(
@@ -120,8 +119,25 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
 
                       addAlignedWidget(
                         ElevatedButton(
-                          onPressed: null, 
-                          child: Text("Update Description")
+                          style: setButtonStyle("enabled"),
+                          onPressed: (){
+                            // sci.ProjectDocument chanAnnotDoc =  widget.appData.channelAnnotationDoc;
+                            sci.Table tbl = snapshot.requireData;
+                            
+                            if(dataSource.changedRows.isNotEmpty){
+                              for(int idx in dataSource.changedRows ){
+                                tbl.columns[1].values[idx] = dataSource.controllerList[idx].text;
+                              }
+                              
+                              uploadTable(tbl, tbl.properties.name, widget.appData.channelAnnotationDoc.projectId, widget.appData.channelAnnotationDoc.acl.owner);
+                              factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
+                              
+                              // factory.tableSchemaService.update(tbl.)
+                              
+                            }
+                            
+                          }, 
+                          child: const Text("Update Descriptions")
                         )
                       )
                       
@@ -129,7 +145,8 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                   );
               
         }else{
-          return Center(
+          // TODO better place the loading icon
+          return const Center(
                     child: CircularProgressIndicator(),
                   );
         }
