@@ -85,12 +85,11 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
   @override
   Widget build(BuildContext context) {
     
-    
-    DataTableSource dataSource = AnnotationDataSource(channelAnnotationTbl);
-    
+
     return FutureBuilder(
       future: _readTable(), 
       builder: (context, snapshot ){
+        DataTableSource dataSource = AnnotationDataSource(channelAnnotationTbl);
         if( snapshot.hasData ){
           return Column(
                     children: [
