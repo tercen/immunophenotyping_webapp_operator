@@ -146,7 +146,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                               
                               sci.Table newTbl = sci.Table.json({
                                   model.Vocabulary.nRows_DP:tbl.nRows,
-                                  model.Vocabulary.properties_OP: tbl.properties,
+                                  model.Vocabulary.properties_OP: tbl.properties.toJson(),
                                   model.Vocabulary.columns_OP: [nameCol, newCol]
                               
                               });
