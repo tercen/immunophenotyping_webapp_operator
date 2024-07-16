@@ -73,14 +73,13 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
   //   dataHandler = widget.dh;
   // }
 
-  Future<sci.Table> _readTable() async {
+  Future<void> _readTable() async {
     print("Reading table");
     sci.Schema sch = await factory.tableSchemaService.get(widget.appData.channelAnnotationDoc.id);
     print("Read schema");
-    var _channelAnnotationTbl = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
+    channelAnnotationTbl = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
     print("Read table");
-
-    return _channelAnnotationTbl;
+   
   }
   @override
   Widget build(BuildContext context) {
@@ -91,6 +90,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
       builder: (context, snapshot ){
         
         if( snapshot.hasData ){
+
           DataTableSource dataSource = AnnotationDataSource(channelAnnotationTbl);
           return Column(
                     children: [
