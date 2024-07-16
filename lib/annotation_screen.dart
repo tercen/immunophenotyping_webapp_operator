@@ -125,9 +125,11 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                             sci.Table tbl = snapshot.requireData;
                             
                             if(dataSource.changedRows.isNotEmpty){
+                              print("Creating new column...");
                               sci.Column newCol = sci.Column();
                               // newCol.copyFrom(tbl.columns[1]);
-                              newCol.values.from(tbl.columns[1].values);
+                              newCol.values = List.from(tbl.columns[1].values);
+                              // newCol.values.from(tbl.columns[1].values);
                               newCol.name = tbl.columns[1].name;
                               newCol.type = tbl.columns[1].type;
                               for(int idx in dataSource.changedRows ){
