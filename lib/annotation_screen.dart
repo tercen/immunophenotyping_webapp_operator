@@ -130,6 +130,8 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                               sci.Column newCol = sci.Column();
                               newCol.values = List.from(tbl.columns[1].values);
                               newCol.name = tbl.columns[1].name;
+                              newCol.id = tbl.columns[1].id;
+                              newCol.nRows = tbl.columns[1].nRows;
                               newCol.type = tbl.columns[1].type;
                               for(int idx in dataSource.changedRows ){
                                 print("Changing list at index $idx to value ${dataSource.controllerList[idx].text}");
@@ -140,6 +142,8 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                               sci.Column nameCol = sci.Column();
                               nameCol.values = List.from(tbl.columns[0].values);
                               nameCol.name = tbl.columns[0].name;
+                              nameCol.id = tbl.columns[0].id;
+                              nameCol.nRows = tbl.columns[0].nRows;
                               nameCol.type = tbl.columns[0].type;
 
                               print("Setting new column");
