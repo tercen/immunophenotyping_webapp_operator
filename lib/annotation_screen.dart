@@ -125,11 +125,16 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                             sci.Table tbl = snapshot.requireData;
                             
                             if(dataSource.changedRows.isNotEmpty){
-                              List list = tbl.columns[1].values;
+                              sci.Column newCol = sci.Column();
+                              newCol.copyFrom(tbl.columns[1]);
                               for(int idx in dataSource.changedRows ){
-                                list[idx] = dataSource.controllerList[idx].text;
+                                print("Changing list at index $idx");
+                                newCol.values[idx] = dataSource.controllerList[idx].text;
+                                print("OK");
                               }
-                              tbl.columns[1].values = list;
+
+                              tbl.columns[1] = newCol;
+                               
                               
                               uploadTable(tbl, tbl.properties.name, widget.appData.channelAnnotationDoc.projectId, widget.appData.channelAnnotationDoc.acl.owner);
                               factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
