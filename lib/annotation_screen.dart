@@ -35,7 +35,7 @@ class AnnotationDataSource extends DataTableSource{
     var ctrl = TextEditingController(text: tbl.columns[1].values[index]);
     
 
-    if( controllerList.length < index ){
+    if( controllerList.length <= index ){
       controllerList.add(ctrl);
     }
 

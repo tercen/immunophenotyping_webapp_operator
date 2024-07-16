@@ -62,10 +62,10 @@ Future<void> uploadTable(
       ..projectId = projectId
       ..fileDocumentId = resultFile.id;
 
-    // csvTask = await factory.taskService.create(csvTask) as sci.CSVTask;
+    csvTask = await factory.taskService.create(csvTask) as sci.CSVTask;
 
-    // await factory.taskService.runTask(csvTask.id);
-    // await factory.taskService.waitDone(csvTask.id);
+    await factory.taskService.runTask(csvTask.id);
+    await factory.taskService.waitDone(csvTask.id);
 
     // csvTask = await factory.taskService.get(csvTask.id) as sci.CSVTask;
 
