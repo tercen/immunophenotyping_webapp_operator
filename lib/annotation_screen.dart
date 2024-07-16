@@ -89,8 +89,9 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
     return FutureBuilder(
       future: _readTable(), 
       builder: (context, snapshot ){
-        DataTableSource dataSource = AnnotationDataSource(channelAnnotationTbl);
+        
         if( snapshot.hasData ){
+          DataTableSource dataSource = AnnotationDataSource(channelAnnotationTbl);
           return Column(
                     children: [
                       Theme(data: Theme.of(context).copyWith(
