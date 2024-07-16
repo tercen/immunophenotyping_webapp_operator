@@ -126,17 +126,23 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                             
                             if(dataSource.changedRows.isNotEmpty){
                               sci.Column newCol = sci.Column();
-                              newCol.copyFrom(tbl.columns[1]);
+                              // newCol.copyFrom(tbl.columns[1]);
+                              newCol.values.from(tbl.columns[1].values);
+                              newCol.name = tbl.columns[1].name;
+                              newCol.type = tbl.columns[1].type;
                               for(int idx in dataSource.changedRows ){
                                 print("Changing list at index $idx");
                                 newCol.values[idx] = dataSource.controllerList[idx].text;
                                 print("OK");
                               }
 
+                              print("Setting new column");
                               tbl.columns[1] = newCol;
-                               
                               
+                              
+                              print("Uploading new table");
                               uploadTable(tbl, tbl.properties.name, widget.appData.channelAnnotationDoc.projectId, widget.appData.channelAnnotationDoc.acl.owner);
+                              print("Deleteing old table");
                               factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
                               
                               // factory.tableSchemaService.update(tbl.)
