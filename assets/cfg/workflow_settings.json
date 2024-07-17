@@ -1,18 +1,18 @@
 {
     "settings":[
         {
-            "Name": "Neighbours",
-            "Hint": "Help/Description about setting",
-            "Type": "int",
-            "Default": 3
+            "name": "Neighbours",
+            "hint": "Help/Description about setting",
+            "type": "int",
+            "value": 3
         },
 
         {
-            "Name": "Metric",
-            "Hint": "Help/Description about setting",
-            "Type": "ListSingle",
-            "Default": "Euclidean",
-            "Options": [
+            "name": "Metric",
+            "hint": "Help/Description about setting",
+            "type": "ListSingle",
+            "value": "Euclidean",
+            "options": [
                 "Euclidean",
                 "Mahalanobis",
                 "Cosine"

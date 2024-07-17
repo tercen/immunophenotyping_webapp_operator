@@ -82,6 +82,40 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
 
   bool finishedUpdate = false;
   
+  void _updateAnnotations(sci.Table tbl, List<int> changedRows, List<String> changedText ) {
+    if(changedRows.isNotEmpty){
+      List<String> newAnnotations = List.from(tbl.columns[1].values);
+      
+
+      for(int i = 0; i < changedRows.length; i++ ){
+        newAnnotations[changedRows[i]] = changedText[i];
+      }
+
+      var annotationTable = sci.Table()
+          ..properties.name = widget.appData.channelAnnotationDoc.name;
+                              
+      annotationTable.columns
+        ..add(sci.Column()
+          ..type = 'string'
+          ..name = tbl.columns[0].name
+          ..values =
+              tson.CStringList.fromList(List.from(tbl.columns[0].values)))
+        ..add(sci.Column()
+          ..type = 'string'
+          ..name = tbl.columns[1].name
+          ..values = tson.CStringList.fromList(newAnnotations));
+
+      uploadTable(annotationTable, 
+                annotationTable.properties.name, 
+                widget.appData.channelAnnotationDoc.projectId, 
+                widget.appData.channelAnnotationDoc.acl.owner,
+                widget.appData.channelAnnotationDoc.folderId
+      );
+
+      factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
+    }
+  }
+
   Future<sci.Table> _readTable() async {
     annotSch = await factory.tableSchemaService.get(widget.appData.channelAnnotationDoc.id);
     var channelAnnotationTbl = await factory.tableSchemaService.select(annotSch.id, ["channel_name", "channel_description"], 0, annotSch.nRows);
@@ -97,98 +131,59 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
       builder: (context, snapshot ){
         
         if( snapshot.hasData ){
-          
           AnnotationDataSource dataSource = AnnotationDataSource(snapshot.requireData);
-          return Column(
-                    children: [
-                      Theme(data: Theme.of(context).copyWith(
-                              cardColor: const Color.fromARGB(255, 252, 252, 252),
-                              dividerColor: const Color.fromARGB(255, 188, 183, 255),
-                            ), 
-                            child: 
-                                PaginatedDataTable(
-
-                                columns: const <DataColumn>[
-                                  DataColumn(
-                                    label: Text('Name'),
-                                  ),
-                                  DataColumn(
-                                    label: Text('Description'),
-                                  ),
-                                  
-                                ],
-                                source: dataSource,
-                      
-                        )
-                      ),
-
-                      addSeparator(),
-
-                      addAlignedWidget(
-                        ElevatedButton(
-                          style: setButtonStyle("enabled"),
-                          onPressed: (){
-                            progressDialog.show(
-                                msg: "Updating annotation table, please wait", 
-                                barrierColor: const Color.fromARGB(125, 0, 0, 0),
-                            );
-
-                            Timer.periodic(const Duration(milliseconds: 250), (tmr){
-                            if( finishedUpdate == true){
-                              tmr.cancel();
-
-                              if( progressDialog.isOpen()){
-                                progressDialog.close();
-                              }
-                              
-                            }
-                          });
+          RightScreenLayout layout = RightScreenLayout()
+          ..addWidget(
+            PaginatedDataTable(
+                columns: const <DataColumn>[
+                  DataColumn(
+                    label: Text('Name'),
+                  ),
+                  DataColumn(
+                    label: Text('Description'),
+                  ),
+                  
+                ],
+                source: dataSource,
+            
+              )    
+          )
+          ..addWidget(
+            paddingAbove: RightScreenLayout.paddingLarge,
+            ElevatedButton(
+              style: setButtonStyle("enabled"),
+              onPressed: (){
+                progressDialog.show(
+                    msg: "Updating annotation table, please wait", 
+                    barrierColor: const Color.fromARGB(125, 0, 0, 0),
+                );
 
 
-                            sci.Table tbl = snapshot.requireData;
-                            
-                            if(dataSource.changedRows.isNotEmpty){
-                              List<String> newAnnotations = List.from(tbl.columns[1].values);
-                              for(int idx in dataSource.changedRows ){
 
-                                newAnnotations[idx] = dataSource.controllerList[idx].text;
+                Timer.periodic(const Duration(milliseconds: 250), (tmr){
+                if( finishedUpdate == true){
+                  tmr.cancel();
 
-                              }
+                  if( progressDialog.isOpen()){
+                    progressDialog.close();
+                  }
+                  
+                }
+              });
 
-                              var annotationTable = sci.Table()
-                                  ..properties.name = widget.appData.channelAnnotationDoc.name;
-                              
-                              annotationTable.columns
-                                ..add(sci.Column()
-                                  ..type = 'string'
-                                  ..name = tbl.columns[0].name
-                                  ..values =
-                                      tson.CStringList.fromList(List.from(tbl.columns[0].values)))
-                                ..add(sci.Column()
-                                  ..type = 'string'
-                                  ..name = tbl.columns[1].name
-                                  ..values = tson.CStringList.fromList(newAnnotations));
-
-                              uploadTable(annotationTable, 
-                                        annotationTable.properties.name, 
-                                        widget.appData.channelAnnotationDoc.projectId, 
-                                        widget.appData.channelAnnotationDoc.acl.owner,
-                                        widget.appData.channelAnnotationDoc.folderId
-                              );
-
-                              factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
-                              
-                              // factory.tableSchemaService.update(tbl.)
-                              
-                            }
-                            
-                          }, 
-                          child: const Text("Update Descriptions")
-                        )
-                      )
-                      
-                    ],
-                  );
+              sci.Table tbl = snapshot.requireData;
+              List<String> changedText = [];
+              for( var idx in dataSource.changedRows ){
+                changedText.add(dataSource.controllerList[idx].text);
+              }
+              _updateAnnotations(tbl, dataSource.changedRows, changedText);
+                
+                
+              }, 
+              child: const Text("Update Descriptions", style: Styles.textButton)
+            )  
+          );
+          return layout.buildScreenWidget();
               
         }else{
           // TODO better place the loading icon

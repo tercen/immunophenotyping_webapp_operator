@@ -71,6 +71,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
       if(appData.channelAnnotationDoc.id != "" && leftMenuList[1].enabled == false){
         setState(() {
           leftMenuList[1].enabled = true;  
+          leftMenuList[2].enabled = true;  
         });
         tmr.cancel();  
       }

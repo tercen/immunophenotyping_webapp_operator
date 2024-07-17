@@ -48,7 +48,8 @@ class Styles {
   static const gray = Color.fromARGB(255, 180, 180, 190);
   static const darkGray = Color.fromARGB(255, 120, 120, 130);
   static const white = Color.fromARGB(255, 240, 240, 230);
-   
+
+  static final BorderRadius borderRounding = BorderRadius.circular(8.0); 
   
   //TODO Read from configuration at some point, perhaps
   static const textH1 = TextStyle(fontSize: 20, color: Styles.black, fontWeight: FontWeight.bold);
@@ -59,7 +60,7 @@ class Styles {
 
   static ButtonStyle buttonEnabled = ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: Styles.borderRounding,
               ),
               backgroundColor: Styles.black,
               foregroundColor: Styles.white);
@@ -67,7 +68,7 @@ class Styles {
   static ButtonStyle buttonDisabled = ElevatedButton.styleFrom(
 
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: Styles.borderRounding,
               ),
               backgroundColor: Styles.gray,
               foregroundColor: Styles.darkGray);

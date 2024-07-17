@@ -437,10 +437,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                   child: const Icon(Icons.add_circle_outline_rounded),
                 )
               ),
-              const Align(
-                alignment: Alignment.bottomLeft,
+              const TableCell(child: Align(
+                alignment: Alignment.center,
                 child: Text("Choose Files", style: Styles.text),
               )
+              )
+              
               
             ]
           )
