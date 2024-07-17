@@ -57,7 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
   Future<List<SettingsEntry>> _readSettings() async {
     List<SettingsEntry> entries = [];    
 
-    String settingsStr = await DefaultAssetBundle.of(context).loadString("workflow_settings.json");
+    String settingsStr = await DefaultAssetBundle.of(context).loadString("assets/cfg/workflow_settings.json");
     final settingsMap = jsonDecode(settingsStr); 
 
     for(int i = 0; i < settingsMap["settings"].length; i++){
