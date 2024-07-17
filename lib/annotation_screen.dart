@@ -12,6 +12,7 @@ import 'package:web/web.dart' as web;
 import 'package:sci_tercen_client/sci_client.dart' as sci;
 import 'package:sci_tercen_model/sci_model_base.dart' as model;
 import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
+import 'package:tson/tson.dart' as tson;
 import 'package:immunophenotyping_template_assistant/data.dart';
 
 class AnnotationScreen extends StatefulWidget {
@@ -127,40 +128,38 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                             
                             if(dataSource.changedRows.isNotEmpty){
                               print("Creating new column...");
-                              sci.Column newCol = sci.Column();
-                              newCol.values = List.from(tbl.columns[1].values);
-                              newCol.name = tbl.columns[1].name;
-                              newCol.id = tbl.columns[1].id;
-                              newCol.nRows = tbl.columns[1].nRows;
-                              newCol.type = tbl.columns[1].type;
-                              newCol.size = -1;
+                              // sci.Column newCol = sci.Column();
+                              // newCol.values = List.from(tbl.columns[1].values);
+                              // newCol.name = tbl.columns[1].name;
+                              // newCol.id = tbl.columns[1].id;
+                              // newCol.nRows = tbl.columns[1].nRows;
+                              // newCol.type = tbl.columns[1].type;
+                              // newCol.size = -1;
+                              List<String> newAnnotations = List.from(tbl.columns[1].values);
                               for(int idx in dataSource.changedRows ){
-                                print("Changing list at index $idx to value ${dataSource.controllerList[idx].text}");
-                                newCol.values[idx] = dataSource.controllerList[idx].text;
-                                print("OK");
+
+                                newAnnotations[idx] = dataSource.controllerList[idx].text;
+
                               }
 
-                              sci.Column nameCol = sci.Column();
-                              nameCol.values = List.from(tbl.columns[0].values);
-                              nameCol.name = tbl.columns[0].name;
-                              nameCol.id = tbl.columns[0].id;
-                              nameCol.nRows = tbl.columns[0].nRows;
-                              nameCol.type = tbl.columns[0].type;
-                              nameCol.size = -1;
+                              var annotationTable = sci.Table()..properties.name = tbl.properties.name;
+                              annotationTable.columns
+                                ..add(sci.Column()
+                                  ..type = 'string'
+                                  ..name = tbl.columns[0].name
+                                  ..values =
+                                      tson.CStringList.fromList(List.from(tbl.columns[0].values)))
+                                ..add(sci.Column()
+                                  ..type = 'string'
+                                  ..name = tbl.columns[1].name
+                                  ..values = tson.CStringList.fromList(newAnnotations));
 
                               print("Setting new column");
                               
-                              sci.Table newTbl = sci.Table.json({
-                                  model.Vocabulary.nRows_DP:tbl.nRows,
-                                  model.Vocabulary.properties_OP: tbl.properties.toJson(),
-                                  model.Vocabulary.columns_OP: [nameCol.toJson(), newCol.toJson()]
-                              
-                              });
+                              print(annotationTable.toJson());
 
-                              print(newTbl.toJson());
-                              print(tbl.toJson());
                               print("Uploading new table");
-                              uploadTable(newTbl, newTbl.properties.name, widget.appData.channelAnnotationDoc.projectId, widget.appData.channelAnnotationDoc.acl.owner);
+                              uploadTable(annotationTable, annotationTable.properties.name, widget.appData.channelAnnotationDoc.projectId, widget.appData.channelAnnotationDoc.acl.owner);
                               print("Deleting old table");
                               factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
                               
