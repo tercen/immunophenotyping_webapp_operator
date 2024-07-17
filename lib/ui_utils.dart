@@ -64,6 +64,10 @@ class Styles {
               foregroundColor: Styles.white);
 
   static ButtonStyle buttonDisabled = ElevatedButton.styleFrom(
+              
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
               backgroundColor: Styles.gray,
               foregroundColor: Styles.darkGray);
   
