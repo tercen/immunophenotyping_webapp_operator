@@ -133,6 +133,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                               newCol.id = tbl.columns[1].id;
                               newCol.nRows = tbl.columns[1].nRows;
                               newCol.type = tbl.columns[1].type;
+                              newCol.size = -1;
                               for(int idx in dataSource.changedRows ){
                                 print("Changing list at index $idx to value ${dataSource.controllerList[idx].text}");
                                 newCol.values[idx] = dataSource.controllerList[idx].text;
@@ -145,6 +146,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                               nameCol.id = tbl.columns[0].id;
                               nameCol.nRows = tbl.columns[0].nRows;
                               nameCol.type = tbl.columns[0].type;
+                              nameCol.size = -1;
 
                               print("Setting new column");
                               
@@ -159,7 +161,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                               print(tbl.toJson());
                               print("Uploading new table");
                               uploadTable(newTbl, newTbl.properties.name, widget.appData.channelAnnotationDoc.projectId, widget.appData.channelAnnotationDoc.acl.owner);
-                              print("Deleteing old table");
+                              print("Deleting old table");
                               factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
                               
                               // factory.tableSchemaService.update(tbl.)
