@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:immunophenotyping_template_assistant/annotation_screen.dart';
 import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:immunophenotyping_template_assistant/fcs_load_screen.dart';
+import 'package:immunophenotyping_template_assistant/settings_screen.dart';
 import 'package:immunophenotyping_template_assistant/util.dart';
 
 
@@ -147,6 +148,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         return FcsLoadScreen( appData: appData,);
       case _TwoColumnHomeState.ANNOTATION_SCREEN:
         return AnnotationScreen(appData: appData,);
+      case _TwoColumnHomeState.SETTINGS_SCREEN:
+        return SettingsScreen(appData: appData,);
       default:
         return FcsLoadScreen( appData: appData  );
     }
