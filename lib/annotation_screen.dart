@@ -142,7 +142,9 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
 
                               }
 
-                              var annotationTable = sci.Table()..properties.name = tbl.properties.name;
+                              var annotationTable = sci.Table()
+                                  ..properties.name = widget.appData.channelAnnotationDoc.name;
+                              
                               annotationTable.columns
                                 ..add(sci.Column()
                                   ..type = 'string'
@@ -159,7 +161,12 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                               print(annotationTable.toJson());
 
                               print("Uploading new table");
-                              uploadTable(annotationTable, annotationTable.properties.name, widget.appData.channelAnnotationDoc.projectId, widget.appData.channelAnnotationDoc.acl.owner);
+                              uploadTable(annotationTable, 
+                                        annotationTable.properties.name, 
+                                        widget.appData.channelAnnotationDoc.projectId, 
+                                        widget.appData.channelAnnotationDoc.acl.owner
+                                        widget.appData.channelAnnotationDoc.folderId
+                              );
                               print("Deleting old table");
                               factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
                               

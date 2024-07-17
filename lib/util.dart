@@ -42,7 +42,7 @@ Future<bool> initFactory() async {
 
 
 Future<void> uploadTable(
-      sci.Table table, String filename, String projectId, String owner) async {
+      sci.Table table, String filename, String projectId, String owner, String folderId) async {
     var factory = tercen.ServiceFactory();
     var bytes = tson.encode(table.toJson());
 
@@ -50,6 +50,7 @@ Future<void> uploadTable(
       ..name = table.properties.name
       ..isHidden = true
       ..isTemp = true
+      ..folderId = folderId
       ..projectId = projectId
       ..acl.owner = owner;
 
