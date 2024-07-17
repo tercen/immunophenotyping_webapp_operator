@@ -56,8 +56,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
   
   Future<List<SettingsEntry>> _readSettings() async {
     List<SettingsEntry> entries = [];    
-
+    print("Loading config file");
     String settingsStr = await DefaultAssetBundle.of(context).loadString("assets/cfg/workflow_settings.json");
+    print("Decoding config file");
     final settingsMap = jsonDecode(settingsStr); 
 
     for(int i = 0; i < settingsMap["settings"].length; i++){
@@ -75,6 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
       entries.add(setting);
     }
 
+    print("done");
     return entries;
   }
 
@@ -136,6 +138,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
       builder: (context, snapshot ){
 
         if( snapshot.hasData ){
+          print("Bu8ilding screen");
           RightScreenLayout layout = RightScreenLayout();
 
           for( SettingsEntry setting in snapshot.data!){
