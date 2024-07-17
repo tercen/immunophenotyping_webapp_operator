@@ -54,7 +54,8 @@ class Styles {
   static const textH1 = TextStyle(fontSize: 20, color: Styles.black, fontWeight: FontWeight.bold);
   static const textH2 = TextStyle(fontSize: 16, color: Styles.black, fontWeight: FontWeight.w600);
   static const text = TextStyle(fontSize: 14, color: Styles.black, fontWeight: FontWeight.w400);
-  static const textBlocked = TextStyle(fontSize: 14, color: Styles.gray, fontWeight: FontWeight.w400);
+  static const textButton = TextStyle(fontSize: 14, color: Styles.black, fontWeight: FontWeight.w400);
+  static const textBlocked = TextStyle(fontSize: 14, color: Styles.white, fontWeight: FontWeight.w400);
 
   static ButtonStyle buttonEnabled = ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -64,7 +65,7 @@ class Styles {
               foregroundColor: Styles.white);
 
   static ButtonStyle buttonDisabled = ElevatedButton.styleFrom(
-              
+
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),

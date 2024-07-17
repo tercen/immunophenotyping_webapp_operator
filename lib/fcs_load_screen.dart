@@ -391,7 +391,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           paddingAbove: RightScreenLayout.paddingLarge,
           ElevatedButton(
               style: Styles.buttonEnabled,
-              child: const Text("Select Team", style: Styles.textH2,),
+              child: const Text("Select Team", style: Styles.textButton,),
               onPressed: ()  async {
                 String team = ( await showPickerDialog(
                   context: context,
@@ -420,7 +420,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       const Text("Upload FCS Files.", style: Styles.textH2)
     )
     ..addWidget(
-      paddingAbove: RightScreenLayout.paddingLarge,
+      paddingAbove: RightScreenLayout.paddingMedium,
       Table(
         columnWidths: const {
           0: FixedColumnWidth(30),
@@ -437,7 +437,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                   child: const Icon(Icons.add_circle_outline_rounded),
                 )
               ),
-              const Text("Choose Files", style: Styles.text)
+              const Align(
+                alignment: Alignment.center,
+                child: Text("Choose Files", style: Styles.text),
+              )
+              
             ]
           )
         ],
@@ -497,7 +501,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
             : null;
           },
 
-          child: const Text("Upload", style: Styles.text,)
+          child: const Text("Upload", style: Styles.textButton,)
       )
     );
 
