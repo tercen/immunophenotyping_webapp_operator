@@ -4,7 +4,7 @@
             "name": "Neighbours",
             "hint": "Help/Description about setting",
             "type": "int",
-            "value": 3
+            "value": "3"
         },
 
         {
