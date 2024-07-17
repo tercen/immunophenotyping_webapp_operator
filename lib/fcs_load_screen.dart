@@ -374,13 +374,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Column(
-        children: [
-          addAlignedWidget(
-            // const Text("Immunophenotyping Workflow", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),)
-            TextField(
+    RightScreenLayout layout = RightScreenLayout()
+    ..addWidget(
+          TextField(
               controller: workflowTfController,
               onTapOutside: null, // Should check availability
               decoration: 
@@ -389,11 +385,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
                 ),
             )
-          ),
-
-          addSeparator(),
-
-          addAlignedWidget(ElevatedButton(
+          )
+    ..addWidget(
+          ElevatedButton(
               child: const Text("Select Team"),
               onPressed: ()  async {
                 String team = ( await showPickerDialog(
@@ -408,120 +402,98 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                 });
                 // teamTfController.text = selectedTeam;
               }
-            ),
-          ),
-
-
-          addSeparator(spacing: "small"),
-          
-
-          addAlignedWidget(Material( 
-              child: 
-              Text(
-                selectedTeam, 
-                style: 
-                  const TextStyle(fontSize: 16, color: Colors.black)
+            )
+          )
+    ..addWidget(
+      Text( // Might need to encapsulate in Material
+        selectedTeam, 
+        style: 
+          const TextStyle(fontSize: 16, color: Colors.black)
+      )
+    )
+    ..addWidget(
+      const Text("Upload FCS Files.", style: TextStyle(fontSize: 16, color: Colors.black),)
+    )
+    ..addWidget(
+      Table(
+        columnWidths: const {
+          0: FixedColumnWidth(30),
+          1: IntrinsicColumnWidth()
+        },
+        children: [
+          TableRow(
+            children: [
+              Material( 
+                child: InkWell(
+                  onTap: () async {
+                    result = (await FilePicker.platform.pickFiles())!;
+                  },
+                  child: const Icon(Icons.add_circle_outline_rounded),
+                )
               ),
-            ) 
-          ),
-         
-
-          addSeparator(spacing: "intermediate"),
-
-          addAlignedWidget(const Text("Upload FCS Files.", style: TextStyle(fontSize: 16, color: Colors.black),)),
-
-          addSeparator(spacing: "small"),
-
-          addAlignedWidget(
-            Table(
-              columnWidths: const {
-                0: FixedColumnWidth(30),
-                1: IntrinsicColumnWidth()
-              },
-              children: [
-                TableRow(
-                  children: [
-                    Material( 
-                      child: InkWell(
-                        onTap: () async {
-                          result = (await FilePicker.platform.pickFiles())!;
-                        },
-                        child: const Icon(Icons.add_circle_outline_rounded),
-                      )
-                    ),
-                    const Text("Choose Files", style: TextStyle(fontSize: 16, color: Colors.black),)
-                  ]
-                )
-              ],
-            )
-          ),
-
-
-          addSeparator(spacing: "small"),
-
-
-          addAlignedWidget(
-            Stack(
-              children: [
-                SizedBox(
-                  height: 200,
-                  width: 400,
-
-                  child: Container(
-                    decoration: BoxDecoration(border: Border.all(color: Colors.blueGrey), borderRadius: BorderRadius.circular(2.0),color: dvBackground,),
-                    child: ListView(
-                      scrollDirection: Axis.vertical,
-                      children: _buildFileList(),
-                    ),
-                  )
-                ),
-
-                SizedBox(
-                  height: 200,
-                  width: 400,
-                  child: 
-                    DropzoneView(
-                      
-                      operation: DragOperation.copy,
-                      onCreated: (ctrl) => dvController = ctrl,
-                      onLeave: () {
-                        setState(() {
-                          dvBackground = Colors.white;
-                        });
-                      },
-                      onHover: () {
-                        setState(() {
-                          dvBackground = Colors.cyan.shade50;
-                        });
-                      },
-                      onDrop:  (ev) async => _processSingleFileDrop(ev),
-                      onDropMultiple: (dynamic ev) => (List<dynamic> ev) => print('Drop multiple: $ev'),
-                    ),
-                )
-              ],
-            )
-          ),
-
-          addSeparator(spacing: "small"),
-
-          addAlignedWidget(
-            ElevatedButton(
-                style: enableUpload 
-                ? setButtonStyle("enabled")
-                : setButtonStyle("disabled"),
-                onPressed: () {
-                  enableUpload 
-                  ? _doUpload()
-                  : null;
-                },
- 
-                child: const Text("Upload")
-            )
-          ),
-
+              const Text("Choose Files", style: TextStyle(fontSize: 16, color: Colors.black),)
+            ]
+          )
         ],
-      ),
+      )
+    )
+    ..addWidget(
+      Stack(
+        children: [
+          SizedBox(
+            height: 200,
+            width: 400,
+
+            child: Container(
+              decoration: BoxDecoration(border: Border.all(color: Colors.blueGrey), borderRadius: BorderRadius.circular(2.0),color: dvBackground,),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: _buildFileList(),
+              ),
+            )
+          ),
+
+          SizedBox(
+            height: 200,
+            width: 400,
+            child: 
+              DropzoneView(
+                
+                operation: DragOperation.copy,
+                onCreated: (ctrl) => dvController = ctrl,
+                onLeave: () {
+                  setState(() {
+                    dvBackground = Colors.white;
+                  });
+                },
+                onHover: () {
+                  setState(() {
+                    dvBackground = Colors.cyan.shade50;
+                  });
+                },
+                onDrop:  (ev) async => _processSingleFileDrop(ev),
+                onDropMultiple: (dynamic ev) => (List<dynamic> ev) => print('Drop multiple: $ev'),
+              ),
+          )
+        ],
+      )
+    )
+    ..addWidget(
+      ElevatedButton(
+          style: enableUpload 
+          ? setButtonStyle("enabled")
+          : setButtonStyle("disabled"),
+          onPressed: () {
+            enableUpload 
+            ? _doUpload()
+            : null;
+          },
+
+          child: const Text("Upload")
+      )
     );
+
+    return layout.buildScreenWidget();
  
   }
 

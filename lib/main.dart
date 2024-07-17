@@ -49,23 +49,23 @@ class LeftMenuItem {
 class _TwoColumnHomeState extends State<TwoColumnHome>{
   static const String FCS_LOAD_SCREEN = "FcsLoadScreen";
   static const String ANNOTATION_SCREEN = "AnnotationScreen";
+  static const String SETTINGS_SCREEN = "SettingsScreen";
 
   List<LeftMenuItem> leftMenuList = [];
 
-  final Widget _verticalDivider = Expanded(child: Container(constraints: const BoxConstraints(maxHeight: 1000, maxWidth: 5, minHeight: 50), color: Colors.black,) );
+  // final Widget _verticalDivider = Expanded(child: Container(constraints: const BoxConstraints(maxHeight: 1000, maxWidth: 5, minHeight: 50), color: Colors.black,) );
 
   final Map<String, Object> crossScreenData = {};
   final AppData appData = AppData();
-  // late Widget _buildLeftTab;
   String selectedScreen = _TwoColumnHomeState.FCS_LOAD_SCREEN;
-  // static const Widget _fcsLoadScreen = FcsLoadScreen();
-  // static const Widget _annotationScreen = FcsLoadScreen();
+
   
   @override
   initState() {
     super.initState();
     leftMenuList.add( LeftMenuItem(Icons.home_rounded, "FCS Files", _TwoColumnHomeState.FCS_LOAD_SCREEN, true));
     leftMenuList.add( LeftMenuItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN, false));
+    leftMenuList.add( LeftMenuItem(Icons.settings, "Settings", _TwoColumnHomeState.SETTINGS_SCREEN, false));
 
     Timer.periodic(const Duration(milliseconds: 500), (tmr){
       if(appData.channelAnnotationDoc.id != "" && leftMenuList[1].enabled == false){

@@ -1,4 +1,5 @@
   import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 
 
@@ -50,4 +51,41 @@ ButtonStyle setButtonStyle(String state){
         )
       );
   }
+}
+
+
+
+class RightScreenLayout {
+  static const double spacingSmall = 10;
+  static const double spacingMedium = 20;
+  static const double spacingLarge = 30;
+  List<Widget> children = [];
+
+  void addWidget(Widget wdg, {double paddingAbove = RightScreenLayout.spacingMedium}){
+    children.add(SizedBox(height: paddingAbove,));
+    children.add(_createAlignedWidget(wdg));
+   
+  }
+
+  Widget buildScreenWidget(){
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Column(
+        children: children
+      )
+    );
+
+  }
+
+  Widget _createAlignedWidget(Widget wdg){
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: 
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: wdg,
+        ),
+    );
+  }
+
 }

@@ -1,5 +1,6 @@
 
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
@@ -14,6 +15,7 @@ import 'package:sci_tercen_model/sci_model_base.dart' as model;
 import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
 import 'package:tson/tson.dart' as tson;
 import 'package:immunophenotyping_template_assistant/data.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 
 class AnnotationScreen extends StatefulWidget {
   final AppData appData;
@@ -75,7 +77,10 @@ class AnnotationDataSource extends DataTableSource{
 class _AnnotationScreenState extends State<AnnotationScreen>{
   // late Map<String, Object> dataHandler;
   final factory = tercen.ServiceFactory();
+  late ProgressDialog progressDialog = ProgressDialog(context: context);
   late sci.Schema annotSch;
+
+  bool finishedUpdate = false;
   
   Future<sci.Table> _readTable() async {
     annotSch = await factory.tableSchemaService.get(widget.appData.channelAnnotationDoc.id);
@@ -123,18 +128,26 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                         ElevatedButton(
                           style: setButtonStyle("enabled"),
                           onPressed: (){
-                            // sci.ProjectDocument chanAnnotDoc =  widget.appData.channelAnnotationDoc;
+                            progressDialog.show(
+                                msg: "Updating annotation table, please wait", 
+                                barrierColor: const Color.fromARGB(125, 0, 0, 0),
+                            );
+
+                            Timer.periodic(const Duration(milliseconds: 250), (tmr){
+                            if( finishedUpdate == true){
+                              tmr.cancel();
+
+                              if( progressDialog.isOpen()){
+                                progressDialog.close();
+                              }
+                              
+                            }
+                          });
+
+
                             sci.Table tbl = snapshot.requireData;
                             
                             if(dataSource.changedRows.isNotEmpty){
-                              print("Creating new column...");
-                              // sci.Column newCol = sci.Column();
-                              // newCol.values = List.from(tbl.columns[1].values);
-                              // newCol.name = tbl.columns[1].name;
-                              // newCol.id = tbl.columns[1].id;
-                              // newCol.nRows = tbl.columns[1].nRows;
-                              // newCol.type = tbl.columns[1].type;
-                              // newCol.size = -1;
                               List<String> newAnnotations = List.from(tbl.columns[1].values);
                               for(int idx in dataSource.changedRows ){
 
@@ -156,18 +169,13 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                                   ..name = tbl.columns[1].name
                                   ..values = tson.CStringList.fromList(newAnnotations));
 
-                              print("Setting new column");
-                              
-                              print(annotationTable.toJson());
-
-                              print("Uploading new table");
                               uploadTable(annotationTable, 
                                         annotationTable.properties.name, 
                                         widget.appData.channelAnnotationDoc.projectId, 
-                                        widget.appData.channelAnnotationDoc.acl.owner
+                                        widget.appData.channelAnnotationDoc.acl.owner,
                                         widget.appData.channelAnnotationDoc.folderId
                               );
-                              print("Deleting old table");
+
                               factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
                               
                               // factory.tableSchemaService.update(tbl.)
