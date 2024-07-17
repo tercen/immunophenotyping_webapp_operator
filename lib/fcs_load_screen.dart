@@ -438,7 +438,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                 )
               ),
               const Align(
-                alignment: Alignment.center,
+                alignment: Alignment.bottomLeft,
                 child: Text("Choose Files", style: Styles.text),
               )
               
