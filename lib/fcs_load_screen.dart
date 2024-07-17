@@ -378,6 +378,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     ..addWidget(
           TextField(
               controller: workflowTfController,
+              style: Styles.textH1,
               onTapOutside: null, // Should check availability
               decoration: 
                 const InputDecoration(
@@ -387,8 +388,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
             )
           )
     ..addWidget(
+          paddingAbove: RightScreenLayout.paddingLarge,
           ElevatedButton(
-              child: const Text("Select Team"),
+              style: Styles.buttonEnabled,
+              child: const Text("Select Team", style: Styles.textH2,),
               onPressed: ()  async {
                 String team = ( await showPickerDialog(
                   context: context,
@@ -402,19 +405,22 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                 });
                 // teamTfController.text = selectedTeam;
               }
-            )
+            ),
+            
           )
     ..addWidget(
-      Text( // Might need to encapsulate in Material
+      paddingAbove: RightScreenLayout.paddingSmall,
+      Text( 
         selectedTeam, 
-        style: 
-          const TextStyle(fontSize: 16, color: Colors.black)
+        style: Styles.text
       )
     )
     ..addWidget(
-      const Text("Upload FCS Files.", style: TextStyle(fontSize: 16, color: Colors.black),)
+      paddingAbove: RightScreenLayout.paddingLarge,
+      const Text("Upload FCS Files.", style: Styles.textH2)
     )
     ..addWidget(
+      paddingAbove: RightScreenLayout.paddingLarge,
       Table(
         columnWidths: const {
           0: FixedColumnWidth(30),
@@ -431,13 +437,14 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                   child: const Icon(Icons.add_circle_outline_rounded),
                 )
               ),
-              const Text("Choose Files", style: TextStyle(fontSize: 16, color: Colors.black),)
+              const Text("Choose Files", style: Styles.text)
             ]
           )
         ],
       )
     )
     ..addWidget(
+      paddingAbove: RightScreenLayout.paddingSmall,
       Stack(
         children: [
           SizedBox(
@@ -479,17 +486,18 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       )
     )
     ..addWidget(
+      paddingAbove: RightScreenLayout.paddingLarge,
       ElevatedButton(
           style: enableUpload 
-          ? setButtonStyle("enabled")
-          : setButtonStyle("disabled"),
+            ? Styles.buttonEnabled
+            : Styles.buttonDisabled,
           onPressed: () {
             enableUpload 
             ? _doUpload()
             : null;
           },
 
-          child: const Text("Upload")
+          child: const Text("Upload", style: Styles.text,)
       )
     );
 
