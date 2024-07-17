@@ -58,6 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     List<SettingsEntry> entries = [];    
     print("Loading config file");
     String settingsStr = await DefaultAssetBundle.of(context).loadString("assets/cfg/workflow_settings.json");
+    print(settingsStr);
     print("Decoding config file");
     final settingsMap = jsonDecode(settingsStr); 
 
