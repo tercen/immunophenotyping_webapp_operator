@@ -188,7 +188,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
         
 
-        projectTask = factory.taskService.create(projectTask) as sci.GitProjectTask;
+        projectTask = await factory.taskService.create(projectTask) as sci.GitProjectTask;
         await factory.taskService.runTask(projectTask.id);
         await factory.taskService.waitDone(projectTask.id);
       
