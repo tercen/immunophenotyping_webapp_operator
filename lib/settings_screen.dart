@@ -58,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
   // late Map<String, Object> dataHandler;
   final factory = tercen.ServiceFactory();
   late ProgressDialog progressDialog = ProgressDialog(context: context);
-  late sci.Schema annotSch;
+  // late sci.Schema annotSch;
   late StreamSubscription<sci.TaskEvent> sub;
 
   bool finishedRunning = false;
@@ -154,8 +154,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
   Future<void> _runWorkflow() async {
     
     List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: 
-                    [annotSch.projectId, "ufff0", "ufff0"], 
-                    endKey: [annotSch.projectId, "", ""]
+                    [widget.appData.channelAnnotationDoc.projectId, "ufff0", "ufff0"], 
+                    endKey: [widget.appData.channelAnnotationDoc.projectId, "", ""]
     );
     List<sci.Workflow>? workflows = projObjs.where((po) => po.kind.toLowerCase() == "workflow") as List<sci.Workflow>;
 
