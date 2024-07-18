@@ -174,11 +174,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
         sci.GitProjectTask projectTask = sci.GitProjectTask.json({
           "owner":selectedTeam,
-          "state":sci.InitState(),
-          "meta":projectMeta
-        });
-            // ..owner = selectedTeam
-            // ..state = sci.InitState();
+          "meta": projectMeta
+        })
+        ..state = sci.InitState();
+
         projectTask = factory.taskService.create(projectTask) as sci.GitProjectTask;
         await factory.taskService.runTask(projectTask.id);
         await factory.taskService.waitDone(projectTask.id);
@@ -525,7 +524,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     ..addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
         SizedBox(
-          width: Styles.tfWidthMedium,
+          width: Styles.tfWidthLarge,
           child: 
             TextField(
               controller: patController,
