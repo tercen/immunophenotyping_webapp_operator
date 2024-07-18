@@ -44,9 +44,12 @@ class SettingsEntry{
   }
 
   void addOptions(List<String> opt){
-    print("Adding options $opt to ${options}");
-    opt.map((o) => options.add(o));
-    print("Added options to ${options}");
+
+    for( var o in opt ){
+      options.add(o);
+    }
+    
+
 
   }
 }
