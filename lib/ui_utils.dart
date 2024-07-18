@@ -37,9 +37,10 @@ ButtonStyle setButtonStyle(String state){
   switch (state) {
     case "disabled":
       return Styles.buttonDisabled;
-
+    case "enabled":
+      return Styles.buttonEnabled;
     default:
-      return Styles.buttonDisabled;
+      return Styles.buttonEnabled;
   }
 }
 
@@ -50,6 +51,10 @@ class Styles {
   static const white = Color.fromARGB(255, 240, 240, 230);
 
   static final BorderRadius borderRounding = BorderRadius.circular(8.0); 
+
+  static const double tfWidthSmall = 80;
+  static const double tfWidthMedium = 200;
+  static const double tfWidthLarge = 400;
   
   //TODO Read from configuration at some point, perhaps
   static const textH1 = TextStyle(fontSize: 20, color: Styles.black, fontWeight: FontWeight.bold);

@@ -58,18 +58,14 @@ class _SettingsScreenState extends State<SettingsScreen>{
   
   Future<List<SettingsEntry>> _readSettings() async {
     List<SettingsEntry> entries = [];    
-    print("Loading config file");
+
     String settingsStr = await DefaultAssetBundle.of(context).loadString("assets/cfg/workflow_settings.json");
     try {
       final jsonString = JsonString(settingsStr);
-      print("Decoding config file");
-      print(jsonString);
       final settingsMap = jsonString.decodedValueAsMap;
-      print(settingsMap);
-      print(settingsMap.length);
+
       
       for(int i = 0; i < settingsMap["settings"].length; i++){
-        print(i);
         Map<String, dynamic> jsonEntry = settingsMap["settings"][i];  
         SettingsEntry setting = SettingsEntry(
           jsonEntry["name"],
@@ -83,19 +79,14 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
         entries.add(setting);
       }
-    // ...
+
     } on Exception catch (e) {
         print('Invalid JSON: $e');
     }
-    
-    
-    
-    // final settingsMap = jsonDecode(settingsStr); 
-
 
     
 
-    print("done");
+
     return entries;
   }
 
@@ -110,6 +101,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
     );
 
     if( settings.type == "ListSingle"){
+      print("List value is ${settings.value}");
+      print("Options value is ${settings.options}");
       layout.addWidget(
         DropdownButton(
           value: settings.value,
@@ -132,15 +125,19 @@ class _SettingsScreenState extends State<SettingsScreen>{
     }else{
       layout.addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
-        TextField(
-          controller: settings.controller,
-          style: Styles.text,
-          decoration: 
-            InputDecoration(
-              border: OutlineInputBorder(borderRadius: Styles.borderRounding ),
+        SizedBox(
+          width: Styles.tfWidthMedium,
+          child: 
+            TextField(
+              controller: settings.controller,
+              style: Styles.text,
+              decoration: 
+                InputDecoration(
+                  border: OutlineInputBorder(borderRadius: Styles.borderRounding ),
 
-          )
-        )
+              )
+            ),
+        )   
       );
     }
 
