@@ -332,6 +332,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     }
 
     sci.Table measurementTbl = await factory.tableSchemaService.select(measurementSch.id, colNames, 0, measurementSch.nRows);
+    measurementTbl.properties.name = "Measurements";
     widget.appData.measurementsTbl = measurementTbl;
 
     uploadTable(measurementTbl, "FCS_Measurements",

@@ -161,6 +161,12 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     print("Found ${workflows.length} workflows");
 
+    for(sci.Step stp in workflows[0].steps){
+      if(stp.kind == "TableStep"){
+        print(stp.toJson());
+      }
+    }
+
     //1. Update annotation table step
 
     //2. Update data table step
@@ -170,7 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
 
 
-    
+
     // sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask();
     // var taskStream = factory.eventService.listenTaskChannel(compTask.id, true).asBroadcastStream();
     
