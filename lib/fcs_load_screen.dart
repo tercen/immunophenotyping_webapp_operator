@@ -172,11 +172,21 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       //TODO finish importing template
       
 
-        sci.GitProjectTask projectTask = sci.GitProjectTask.json({
-          "owner":selectedTeam,
-          "meta": projectMeta
-        })
-        ..state = sci.InitState();
+        sci.GitProjectTask projectTask = sci.GitProjectTask()
+           ..state = sci.InitState()
+           ..owner = selectedTeam;
+
+        projectTask.meta.add(sci.Pair.from("PROJECT_ID", project.id));
+        projectTask.meta.add(sci.Pair.from("PROJECT_REV", project.rev));
+        projectTask.meta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
+        projectTask.meta.add(sci.Pair.from("GIT_PAT", patController.text));
+        projectTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template"));
+        projectTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.3"));
+        projectTask.meta.add(sci.Pair.from("GIT_BRANCH", "main"));
+        projectTask.meta.add(sci.Pair.from("GIT_MESSAGE", ""));
+          // ..meta = projectMeta;
+
+        
 
         projectTask = factory.taskService.create(projectTask) as sci.GitProjectTask;
         await factory.taskService.runTask(projectTask.id);
