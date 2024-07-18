@@ -17,6 +17,8 @@ import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
 import 'package:tson/tson.dart' as tson;
 import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
+import 'package:json_string/json_string.dart';
+
 
 class SettingsScreen extends StatefulWidget {
   final AppData appData;
@@ -58,24 +60,35 @@ class _SettingsScreenState extends State<SettingsScreen>{
     List<SettingsEntry> entries = [];    
     print("Loading config file");
     String settingsStr = await DefaultAssetBundle.of(context).loadString("assets/cfg/workflow_settings.json");
-    print(settingsStr);
-    print("Decoding config file");
-    final settingsMap = jsonDecode(settingsStr); 
+    try {
+      final jsonString = JsonString(settingsStr);
+      print("Decoding config file");
+      final settingsMap = jsonString.decodedValue;
+      for(int i = 0; i < settingsMap["settings"].length; i++){
+        Map<String, dynamic> jsonEntry = settingsMap["settings"];
+        SettingsEntry setting = SettingsEntry(
+          jsonEntry["name"],
+          jsonEntry["hint"],
+          jsonEntry["type"], 
+          jsonEntry["value"]);
 
-    for(int i = 0; i < settingsMap["settings"].length; i++){
-      Map<String, dynamic> jsonEntry = settingsMap["settings"];
-      SettingsEntry setting = SettingsEntry(
-        jsonEntry["name"],
-        jsonEntry["hint"],
-        jsonEntry["type"], 
-        jsonEntry["value"]);
+        if( jsonEntry.keys.contains("options") ){
+          setting.addOptions(jsonEntry["options"]);
+        }
 
-      if( jsonEntry.keys.contains("options") ){
-        setting.addOptions(jsonEntry["options"]);
+        entries.add(setting);
       }
-
-      entries.add(setting);
+    // ...
+    } on JsonFormatException catch (e) {
+        print('Invalid JSON format: $e');
     }
+    
+    
+    
+    // final settingsMap = jsonDecode(settingsStr); 
+
+
+    
 
     print("done");
     return entries;
