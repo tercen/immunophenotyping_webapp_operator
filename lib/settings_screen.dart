@@ -157,6 +157,10 @@ class _SettingsScreenState extends State<SettingsScreen>{
                     [widget.appData.channelAnnotationDoc.projectId, "ufff0", "ufff0"], 
                     endKey: [widget.appData.channelAnnotationDoc.projectId, "", ""]
     );
+
+    for( sci.ProjectDocument po in projObjs ){
+      print("${po.name} is a ${po.kind}");
+    }
     List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.kind.toLowerCase() == "workflow").toList() as List<sci.ProjectDocument>;
 
     print("Found ${workflows.length} workflows");
