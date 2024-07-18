@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:immunophenotyping_template_assistant/ui_utils.dart';
+import 'package:immunophenotyping_template_assistant/util.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
@@ -308,20 +309,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   void _getComputedRelation(String taskId) async{
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
     sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
-    
-    
-    // sci.SimpleRelation cr = rel.joinOperators[0].rightRelation as sci.SimpleRelation;
-    // sci.Schema sch = await factory.tableSchemaService.get(cr.id);
-    
-    // print(cr.joinOperators.length);
-    // 
-    
     sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
-    sci.Schema sch = await factory.tableSchemaService.get(cr.joinOperators[0].rightRelation.id);
-    print(sch.name);
-    sch = await factory.tableSchemaService.get(cr.mainRelation.id);
-    print(sch.name);
+    sci.Schema measurementSch = await factory.tableSchemaService.get(cr.mainRelation.id);
 
+    sci.Table measurementTbl = sci.Table.json(measurementSch.toJson());
+    widget.appData.measurementsTbl = measurementTbl;
+
+    uploadTable(measurementTbl, "FCS_Measurements",
+                 compTask.projectId, 
+                 compTask.owner,
+                 "");
 
     List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
 
