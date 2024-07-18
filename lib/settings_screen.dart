@@ -161,7 +161,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     for( sci.ProjectDocument po in projObjs ){
       print("${po.name} is a ${po.kind}, subkind: ${po.subKind}");
     }
-    List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.kind.toLowerCase() == "workflow").toList() as List<sci.ProjectDocument>;
+    List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.subKind == "Workflow").toList();
 
     print("Found ${workflows.length} workflows");
     sci.Workflow wkf = await factory.workflowService.get(workflows[0].id);
