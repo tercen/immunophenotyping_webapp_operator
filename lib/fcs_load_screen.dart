@@ -59,10 +59,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   late DropzoneViewController dvController;
   late FilePickerResult result;
   String selectedTeam = "Please select a team";
+
   Color dvBackground = Colors.white;
   List<UploadFile> filesToUpload = [UploadFile("Drag Files Here", false)];
   List<web.File> htmlFileList = [];
   var workflowTfController = TextEditingController(text: "Immunophenotyping Workflow");
+  var patController = TextEditingController(text: "");
 
   final List<String> teamNameList = [];
   sci.Project project = sci.Project();
@@ -155,6 +157,31 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         project.acl.owner = selectedTeam;
         project = await factory.projectService.create(project);
       }
+
+      // Import the immunophenotyping workflow
+      List<sci.Pair> projectMeta = [];
+      projectMeta.add(sci.Pair.from("PROJECT_ID", project.id));
+      projectMeta.add(sci.Pair.from("PROJECT_REV", project.rev));
+      projectMeta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
+      projectMeta.add(sci.Pair.from("GIT_PAT", patController.text));
+      projectMeta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template"));
+      projectMeta.add(sci.Pair.from("GIT_TAG", "0.1.3"));
+      projectMeta.add(sci.Pair.from("GIT_BRANCH", "main"));
+      projectMeta.add(sci.Pair.from("GIT_MESSAGE", ""));
+
+      //TODO finish importing template
+      
+
+        sci.GitProjectTask projectTask = sci.GitProjectTask.json({
+          "owner":selectedTeam,
+          "state":sci.InitState(),
+          "meta":projectMeta
+        });
+            // ..owner = selectedTeam
+            // ..state = sci.InitState();
+        projectTask = factory.taskService.create(projectTask) as sci.GitProjectTask;
+        await factory.taskService.runTask(projectTask.id);
+        await factory.taskService.waitDone(projectTask.id);
       
     }
 
@@ -491,6 +518,26 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         ],
       )
     )
+    ..addWidget(
+      paddingAbove: RightScreenLayout.paddingLarge,
+      const Text("Github Token", style: Styles.textH2)
+    )
+    ..addWidget(
+        paddingAbove: RightScreenLayout.paddingSmall,
+        SizedBox(
+          width: Styles.tfWidthMedium,
+          child: 
+            TextField(
+              controller: patController,
+              style: Styles.text,
+              decoration: 
+                InputDecoration(
+                  border: OutlineInputBorder(borderRadius: Styles.borderRounding ),
+
+              )
+            ),
+        )   
+      )
     ..addWidget(
       paddingAbove: RightScreenLayout.paddingLarge,
       ElevatedButton(

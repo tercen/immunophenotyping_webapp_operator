@@ -60,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
   late ProgressDialog progressDialog = ProgressDialog(context: context);
   late sci.Schema annotSch;
 
-  bool finishedUpdate = false;
+  bool finishedRunning = false;
   
   Future<List<SettingsEntry>> _readSettings() async {
     List<SettingsEntry> entries = [];    
@@ -107,11 +107,10 @@ class _SettingsScreenState extends State<SettingsScreen>{
     );
 
     if( settings.type == "ListSingle"){
-      print("List value is ${settings.value}");
-      print("Options value is ${settings.options}");
       layout.addWidget(
         DropdownButton(
           value: settings.value,
+          onTap: null,
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
           items: settings.options.map<DropdownMenuItem<String>>((String value) {
@@ -146,9 +145,13 @@ class _SettingsScreenState extends State<SettingsScreen>{
         )   
       );
     }
+  }
 
 
-
+  Future<void> _runWorkflow() async {
+    
+    sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask();
+    
   }
 
   @override
@@ -181,7 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
 
                 Timer.periodic(const Duration(milliseconds: 250), (tmr){
-                if( finishedUpdate == true){
+                if( finishedRunning == true){
                   tmr.cancel();
 
                   if( progressDialog.isOpen()){
@@ -191,6 +194,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
                 }
               });
 
+              _runWorkflow();
+
+              // factory.workflowService.
               // sci.Table tbl = snapshot.requireData;
               // List<String> changedText = [];
               // for( var idx in dataSource.changedRows ){
