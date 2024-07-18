@@ -66,8 +66,11 @@ class _SettingsScreenState extends State<SettingsScreen>{
       print(jsonString);
       final settingsMap = jsonString.decodedValueAsMap;
       print(settingsMap);
+      print(settingsMap.length);
+      
       for(int i = 0; i < settingsMap["settings"].length; i++){
-        Map<String, dynamic> jsonEntry = settingsMap["settings"];
+        print(i);
+        Map<String, dynamic> jsonEntry = settingsMap["settings"][i];  
         SettingsEntry setting = SettingsEntry(
           jsonEntry["name"],
           jsonEntry["hint"],
