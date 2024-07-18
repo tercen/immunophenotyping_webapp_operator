@@ -159,7 +159,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     );
 
     for( sci.ProjectDocument po in projObjs ){
-      print("${po.name} is a ${po.kind}");
+      print("${po.name} is a ${po.kind}, subkind: ${po.subKind}");
     }
     List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.kind.toLowerCase() == "workflow").toList() as List<sci.ProjectDocument>;
 
