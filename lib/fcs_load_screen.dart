@@ -311,8 +311,27 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
     sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
     sci.Schema measurementSch = await factory.tableSchemaService.get(cr.mainRelation.id);
+      // var annotationTable = sci.Table()
+      //     ..properties.name = widget.appData.channelAnnotationDoc.name;
+                              
+      // annotationTable.columns
+      //   ..add(sci.Column()
+      //     ..type = 'string'
+      //     ..name = tbl.columns[0].name
+      //     ..values =
+      //         tson.CStringList.fromList(List.from(tbl.columns[0].values)))
+      //   ..add(sci.Column()
+      //     ..type = 'string'
+      //     ..name = tbl.columns[1].name
+      //     ..values = tson.CStringList.fromList(newAnnotations));
+    
+    
+    List<String> colNames = [];
+    for( var col in measurementSch.columns ){
+      colNames.add(col.name);
+    }
 
-    sci.Table measurementTbl = sci.Table.json(measurementSch.toJson());
+    sci.Table measurementTbl = await factory.tableSchemaService.select(measurementSch.id, colNames, 0, measurementSch.nRows);
     widget.appData.measurementsTbl = measurementTbl;
 
     uploadTable(measurementTbl, "FCS_Measurements",
