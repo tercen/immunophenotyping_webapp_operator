@@ -157,11 +157,13 @@ class _SettingsScreenState extends State<SettingsScreen>{
                     [widget.appData.channelAnnotationDoc.projectId, "ufff0", "ufff0"], 
                     endKey: [widget.appData.channelAnnotationDoc.projectId, "", ""]
     );
-    List<sci.Workflow>? workflows = projObjs.where((po) => po.kind.toLowerCase() == "workflow").toList() as List<sci.Workflow>;
+    List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.kind.toLowerCase() == "workflow").toList() as List<sci.ProjectDocument>;
 
     print("Found ${workflows.length} workflows");
+    sci.Workflow wkf = await factory.workflowService.get(workflows[0].id);
+    
 
-    for(sci.Step stp in workflows[0].steps){
+    for(sci.Step stp in wkf.steps){
       if(stp.kind == "TableStep"){
         print(stp.toJson());
       }
