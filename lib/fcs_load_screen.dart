@@ -310,9 +310,13 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
     
     print(rel.joinOperators[1].toJson());
-    sci.CompositeRelation cr = rel.joinOperators[1].rightRelation as sci.CompositeRelation;
-    print(cr.joinOperators.length);
-    sci.Schema sch = await factory.tableSchemaService.get(cr.joinOperators[0].rightRelation.id);
+    sci.SimpleRelation cr = rel.joinOperators[1].rightRelation as sci.SimpleRelation;
+
+    sci.Schema sch = await factory.tableSchemaService.get(cr.id);
+    
+    // sci.CompositeRelation cr = rel.joinOperators[1].rightRelation as sci.CompositeRelation;
+    // print(cr.joinOperators.length);
+    // sci.Schema sch = await factory.tableSchemaService.get(cr.joinOperators[0].rightRelation.id);
     
     print(sch.toJson());
 
