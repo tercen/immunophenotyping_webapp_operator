@@ -309,16 +309,18 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
     sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
     
-    print(rel.toJson());
-    sci.SimpleRelation cr = rel.joinOperators[1].rightRelation as sci.SimpleRelation;
-
-    sci.Schema sch = await factory.tableSchemaService.get(cr.id);
     
-    // sci.CompositeRelation cr = rel.joinOperators[1].rightRelation as sci.CompositeRelation;
+    // sci.SimpleRelation cr = rel.joinOperators[0].rightRelation as sci.SimpleRelation;
+    // sci.Schema sch = await factory.tableSchemaService.get(cr.id);
+    
     // print(cr.joinOperators.length);
-    // sci.Schema sch = await factory.tableSchemaService.get(cr.joinOperators[0].rightRelation.id);
+    // 
     
-    print(sch.toJson());
+    sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
+    sci.Schema sch = await factory.tableSchemaService.get(cr.joinOperators[0].rightRelation.id);
+    print(sch.name);
+    sch = await factory.tableSchemaService.get(cr.mainRelation.id);
+    print(sch.name);
 
 
     List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
