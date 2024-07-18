@@ -63,7 +63,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
     try {
       final jsonString = JsonString(settingsStr);
       print("Decoding config file");
-      final settingsMap = jsonString.decodedValue;
+      print(jsonString);
+      final settingsMap = jsonString.decodedValueAsMap;
+      print(settingsMap);
       for(int i = 0; i < settingsMap["settings"].length; i++){
         Map<String, dynamic> jsonEntry = settingsMap["settings"];
         SettingsEntry setting = SettingsEntry(
@@ -79,8 +81,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
         entries.add(setting);
       }
     // ...
-    } on JsonFormatException catch (e) {
-        print('Invalid JSON format: $e');
+    } on Exception catch (e) {
+        print('Invalid JSON: $e');
     }
     
     
