@@ -171,26 +171,26 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
       //TODO finish importing template
       
+      progressDialog.update(msg: "Importing workflow");
+      sci.GitProjectTask projectTask = sci.GitProjectTask()
+          ..state = sci.InitState()
+          ..owner = selectedTeam;
 
-        sci.GitProjectTask projectTask = sci.GitProjectTask()
-           ..state = sci.InitState()
-           ..owner = selectedTeam;
+      projectTask.meta.add(sci.Pair.from("PROJECT_ID", project.id));
+      projectTask.meta.add(sci.Pair.from("PROJECT_REV", project.rev));
+      projectTask.meta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
+      projectTask.meta.add(sci.Pair.from("GIT_PAT", patController.text));
+      projectTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template"));
+      projectTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.3"));
+      projectTask.meta.add(sci.Pair.from("GIT_BRANCH", "main"));
+      projectTask.meta.add(sci.Pair.from("GIT_MESSAGE", ""));
+        // ..meta = projectMeta;
 
-        projectTask.meta.add(sci.Pair.from("PROJECT_ID", project.id));
-        projectTask.meta.add(sci.Pair.from("PROJECT_REV", project.rev));
-        projectTask.meta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
-        projectTask.meta.add(sci.Pair.from("GIT_PAT", patController.text));
-        projectTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template"));
-        projectTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.3"));
-        projectTask.meta.add(sci.Pair.from("GIT_BRANCH", "main"));
-        projectTask.meta.add(sci.Pair.from("GIT_MESSAGE", ""));
-          // ..meta = projectMeta;
+      
 
-        
-
-        projectTask = await factory.taskService.create(projectTask) as sci.GitProjectTask;
-        await factory.taskService.runTask(projectTask.id);
-        await factory.taskService.waitDone(projectTask.id);
+      projectTask = await factory.taskService.create(projectTask) as sci.GitProjectTask;
+      await factory.taskService.runTask(projectTask.id);
+      await factory.taskService.waitDone(projectTask.id);
       
     }
 
@@ -206,6 +206,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
               ..projectId = project.id
               ..acl.owner = selectedTeam;
 
+      progressDialog.update(msg: "Uploading ${file.name}");
       uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) ) );
 
       setState(() {
@@ -217,6 +218,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     }
 
     // Reading FCS
+    progressDialog.update(msg: "Checking ReadFCS Operator");
     // 1. Get operator
     var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '');
     sci.Document op = sci.Document();
@@ -283,52 +285,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     compTask = await factory.taskService.create(compTask) as sci.RunComputationTask;
 
-
+    progressDialog.update(msg: "Reading FCS files");
     var taskStream = factory.eventService.listenTaskChannel(compTask.id, true).asBroadcastStream();
     
-    //{kind: TaskProgressEvent, id: , isDeleted: false, rev: ,
-    // date: {kind: Date, value: 2024-07-11T16:29:54.226033Z}, taskId: 3adc6ed4b2e0e95f81fa2488033fb5f9, message: measurement, total: 8, actual: 2}
-    // var currentFile = "";
-
 
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
       if(evtMap["kind"] == "TaskProgressEvent"){
-        // setState(() {
-        //   print(evtMap);
-        //   if( currentFile != uploadedDocs[0].name){
-        //     currentFile = uploadedDocs[0].name;
-        //     if(progressDialog.isOpen()){
-        //       progressDialog.close();
-        //     }
-            
-        //     progressDialog.show(
-        //           completed: null,
-        //           msg: "Processing file ${uploadedDocs[0].name}", 
-        //           max: evtMap["total"] as int,
-        //           barrierColor: const Color.fromARGB(125, 0, 0, 0));
-        //   }
-        //   progressDialog.update(value: evtMap["actual"] as int);
-        // });
+        //Process event log
       }
     });
-
-
-      
-// try {
-//   await for (var evt in stream) {
-//     state.taskState = evt.state;
-//   }
-// } catch (e) {
-//   state
-//     ..taskId = ''
-//     ..taskState = FailedState.fromError(e);
-
-//   (state.taskState as FailedState).throwError();
-
-//   return;
-// }
-      
 
     sub.onDone((){
       _getComputedRelation(compTask.id);
@@ -340,7 +306,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
 
   void _getComputedRelation(String taskId) async{
-    var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
+    // var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
     // sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
     // print(rel.toJson());
     // sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
@@ -359,14 +325,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         widget.appData.channelAnnotationDoc = po;
       }
     }
-    // print("Selecting");
-    // sci.Table tbl = await factory.tableSchemaService.select(sch.id, ["filename", ".content"], 0, 1);
-    // print(tbl.toJson());
-    // _tryToPrint(rel.mainRelation.id, "rel.mainRelation.id");
-    // 
-    // _tryToPrint(cr.joinOperators[0].rightRelation.id, "rel.joinOperators[0]...rightRelation.id"); 
-    // _tryToPrint(rel.joinOperators[1].rightRelation.id, "rel.joinOperators[1].rightRelation.id"); // Summary
-    
+
   }
 
   
@@ -375,8 +334,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       setState(() {
         _updateFilesToUpload(ev);
       });
-      // final bytes = await controller1.getFileData(ev);
-      // print(bytes.sublist(0, min(bytes.length, 20)));
     } 
   }
 
@@ -385,7 +342,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
 
     progressDialog.show(
-                msg: "Reading FCS files, please wait", 
+                msg: "Starting upload, please wait", 
                 barrierColor: const Color.fromARGB(125, 0, 0, 0),
     );
     

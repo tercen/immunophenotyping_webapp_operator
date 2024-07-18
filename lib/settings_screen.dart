@@ -59,6 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
   final factory = tercen.ServiceFactory();
   late ProgressDialog progressDialog = ProgressDialog(context: context);
   late sci.Schema annotSch;
+  late StreamSubscription<sci.TaskEvent> sub;
 
   bool finishedRunning = false;
   
@@ -148,10 +149,44 @@ class _SettingsScreenState extends State<SettingsScreen>{
   }
 
 
+
+
   Future<void> _runWorkflow() async {
     
-    sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask();
+    List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: 
+                    [annotSch.projectId, "ufff0", "ufff0"], 
+                    endKey: [annotSch.projectId, "", ""]
+    );
+    List<sci.Workflow>? workflows = projObjs.where((po) => po.kind.toLowerCase() == "workflow") as List<sci.Workflow>;
+
+    print("Found ${workflows.length} workflows");
+
+    //1. Update annotation table step
+
+    //2. Update data table step
+
+
+    //3. Run Workflow task
+
+
+
     
+    // sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask();
+    // var taskStream = factory.eventService.listenTaskChannel(compTask.id, true).asBroadcastStream();
+    
+
+    // sub = taskStream.listen((evt){
+    //   var evtMap = evt.toJson();
+    //   if(evtMap["kind"] == "TaskProgressEvent"){
+    //     //Process event log
+    //   }
+    // });
+
+    // sub.onDone((){
+    //   _getComputedRelation(compTask.id);
+      
+    //   finishedUploading = true;
+    // });
   }
 
   @override
