@@ -335,9 +335,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Schema measurementSch = await factory.tableSchemaService.get(cr.mainRelation.id);
 
     List<sci.SimpleRelation> relations = _getSimpleRelations(compTask.computedRelation);
+    relations[0]; //MEasurements
+    relations[1]; //Observations == check by name
     for(var r in relations ){
       sci.Schema sch = await factory.tableSchemaService.get(r.id);
+      // if( r.name == "Measurements"){
+
+      // }
+      
       print(sch.name);
+      print(sch.toJson());
     }
 
     List<String> colNames = [];
