@@ -393,7 +393,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       //TODO Need to check for && po.name.contains(uploadedFiledoc name ...)
       if(po.name.contains( "Channel-Descriptions" )  ){
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
-        sci.Table res = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description"], 0, sch.nRows);
+        sci.Table res = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description", "channel_id"], 0, sch.nRows);
         widget.appData.channelAnnotationTbl = res;
         widget.appData.channelAnnotationDoc = po;
       }

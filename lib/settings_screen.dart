@@ -110,9 +110,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     if( settings.type == "ListSingle"){
       layout.addWidget(
-        DropdownButton(
+        DropdownButton <String>(
           value: settings.value,
-          onTap: null,
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
           items: settings.options.map<DropdownMenuItem<String>>((String value) {
@@ -122,9 +121,10 @@ class _SettingsScreenState extends State<SettingsScreen>{
                   );
                 }).toList(), 
           onChanged: (String? value){
-            setState(() {
-              settings.value = value!;
-            });
+            print(value);
+            // setState(() {
+              // settings.value = value!;
+            // });
           }
         )
       );
