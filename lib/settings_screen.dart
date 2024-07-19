@@ -175,44 +175,49 @@ class _SettingsScreenState extends State<SettingsScreen>{
           tmpStp.model.relation = rel;
           tmpStp.state.taskState = sci.DoneState();
           stp = tmpStp;
-          // tmpStp.model.relation = widget.appData.measurementsTbl;
 
         }
 
         if(stp.name == "Marker Annotation"){
-          
+          sci.InMemoryRelation rel = sci.InMemoryRelation()
+                ..inMemoryTable = widget.appData.channelAnnotationTbl;
+          sci.TableStep tmpStp = stp as sci.TableStep;
+          tmpStp.model.relation = rel;
+          tmpStp.state.taskState = sci.DoneState();
+          stp = tmpStp;
         }
       }
     }
 
     await factory.workflowService.update(wkf);
-
-    //1. Update annotation table step
-
-    //2. Update data table step
+    
 
 
     //3. Run Workflow task
-
-
-
-
-    // sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask();
-    // var taskStream = factory.eventService.listenTaskChannel(compTask.id, true).asBroadcastStream();
+    sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask()
+          ..state = sci.InitState()
+          ..owner = wkf.acl.owner
+          ..projectId = wkf.projectId
+          ..workflowId = wkf.id
+          ..workflowRev = wkf.rev;
     
 
-    // sub = taskStream.listen((evt){
-    //   var evtMap = evt.toJson();
-    //   if(evtMap["kind"] == "TaskProgressEvent"){
-    //     //Process event log
-    //   }
-    // });
 
-    // sub.onDone((){
-    //   _getComputedRelation(compTask.id);
-      
-    //   finishedUploading = true;
-    // });
+
+    
+    var taskStream = factory.eventService.listenTaskChannel(workflowTask.id, true).asBroadcastStream();
+    
+
+    sub = taskStream.listen((evt){
+      var evtMap = evt.toJson();
+      if(evtMap["kind"] == "TaskProgressEvent"){
+        print(evtMap);
+      }
+    });
+
+    sub.onDone((){
+      finishedRunning = true;
+    });
   }
 
   @override
@@ -224,7 +229,6 @@ class _SettingsScreenState extends State<SettingsScreen>{
       builder: (context, snapshot ){
 
         if( snapshot.hasData ){
-          print("Bu8ilding screen");
           RightScreenLayout layout = RightScreenLayout();
 
           for( SettingsEntry setting in snapshot.data!){

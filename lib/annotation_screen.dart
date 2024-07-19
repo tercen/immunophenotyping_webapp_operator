@@ -112,6 +112,8 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                 widget.appData.channelAnnotationDoc.folderId
       );
 
+      widget.appData.channelAnnotationTbl = annotationTable;
+
       factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
     }
   }
