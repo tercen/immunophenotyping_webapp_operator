@@ -344,7 +344,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       // }
       
       print(sch.name);
-      print(sch.toJson());
+      for(var col in sch.columns){
+        print(col.name);
+      }
     }
 
     List<String> colNames = [];
