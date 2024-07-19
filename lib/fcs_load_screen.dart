@@ -365,7 +365,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       }
     }
     for( var i = 0; i < measurementTbl.nRows; i++){
-      filenames.add(filesToUpload[measurementTbl.columns[fileColIdx].values[i]].filename);
+      filenames.add(filesToUpload[measurementTbl.columns[fileColIdx].values[i]-1].filename); // Starts at 1
     }
 
     print("Creating column");
