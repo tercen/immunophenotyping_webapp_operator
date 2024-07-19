@@ -203,7 +203,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     
 
 
-
+    workflowTask = await factory.taskService.create(workflowTask) as sci.RunWorkflowTask;
     
     var taskStream = factory.eventService.listenTaskChannel(workflowTask.id, true).asBroadcastStream();
     
