@@ -328,9 +328,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     List<String> colNames = [];
     for( var col in measurementSch.columns ){
+      print(col.name);
       colNames.add(col.name);
     }
-
+    print(measurementSch.toJson());
     sci.Table measurementTbl = await factory.tableSchemaService.select(measurementSch.id, colNames, 0, measurementSch.nRows);
     measurementTbl.properties.name = "Measurements";
     widget.appData.measurementsTbl = measurementTbl;
