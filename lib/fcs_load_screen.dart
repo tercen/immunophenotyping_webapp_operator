@@ -330,23 +330,23 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // Works for zip file...
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
     print(compTask.computedRelation.toJson());
-    sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
-    sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
-    sci.Schema measurementSch = await factory.tableSchemaService.get(cr.mainRelation.id);
+    // sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
+    // sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
+    
 
     List<sci.SimpleRelation> relations = _getSimpleRelations(compTask.computedRelation);
     relations[0]; //MEasurements
     relations[1]; //Observations == check by name
+    sci.Schema measurementSch = sci.Schema();
+    // sci.Schema observationsSch = sci.Schema();
     for(var r in relations ){
       sci.Schema sch = await factory.tableSchemaService.get(r.id);
-      // if( r.name == "Measurements"){
-
-      // }
-      
-      print(sch.name);
-      for(var col in sch.columns){
-        print(col.name);
+      if( sch.name == "Measurements"){
+        measurementSch = sch;
       }
+      // if( sch.name == "Observations"){
+        // observationsSch = sch;
+      // }
     }
 
     List<String> colNames = [];
@@ -355,6 +355,24 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     }
 
     sci.Table measurementTbl = await factory.tableSchemaService.select(measurementSch.id, colNames, 0, measurementSch.nRows);
+    // sci.Table observationTbl = await factory.tableSchemaService.select(observationsSch.id, ["eventId", "filename"], 0, observationsSch.nRows);
+
+    List<String> filenames = [];
+    int fileColIdx = 0;
+    for( var i = 0; i < measurementTbl.columns.length; i++){
+      if(measurementTbl.columns[i].name == "fileId"){
+        fileColIdx = i;
+      }
+    }
+    for( var i = 0; i < measurementTbl.nRows; i++){
+      filenames.add(filesToUpload[measurementTbl.columns[fileColIdx].values[i]].filename);
+    }
+
+    sci.Column fileCol = sci.Column()
+          ..type = "string"
+          ..name = "filename"
+          ..values = tson.CStringList.fromList(filenames);
+    measurementTbl.columns.add(fileCol);
     measurementTbl.properties.name = "Measurements";
     
     widget.appData.measurementsTbl = measurementTbl;
