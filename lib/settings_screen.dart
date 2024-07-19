@@ -232,7 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
       future: _readSettings(), 
       builder: (context, snapshot ){
 
-        if( snapshot.hasData ){
+        if( snapshot.hasData && snapshot.data!=null && snapshot.data!.isNotEmpty ){
           RightScreenLayout layout = RightScreenLayout();
 
           for( SettingsEntry setting in snapshot.data!){
