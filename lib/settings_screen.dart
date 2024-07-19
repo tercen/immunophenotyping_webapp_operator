@@ -167,9 +167,25 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     for(sci.Step stp in wkf.steps){
       if(stp.kind == "TableStep" ){
-        print(stp.toJson());
+        if(stp.name == "FCS Data"){
+          
+          sci.InMemoryRelation rel = sci.InMemoryRelation()
+                ..inMemoryTable = widget.appData.measurementsTbl;
+          sci.TableStep tmpStp = stp as sci.TableStep;
+          tmpStp.model.relation = rel;
+          tmpStp.state.taskState = sci.DoneState();
+          stp = tmpStp;
+          // tmpStp.model.relation = widget.appData.measurementsTbl;
+
+        }
+
+        if(stp.name == "Marker Annotation"){
+          
+        }
       }
     }
+
+    await factory.workflowService.update(wkf);
 
     //1. Update annotation table step
 
