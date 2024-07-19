@@ -305,6 +305,26 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   }
 
+  List<sci.SimpleRelation> _getSimpleRelations(sci.Relation relation){
+    List<sci.SimpleRelation> l = [];
+
+    switch (relation.kind) {
+      case "SimpleRelation":
+        l.add(relation as sci.SimpleRelation);
+        break;
+      case "CompositeRelation":
+        sci.CompositeRelation cr = relation as sci.CompositeRelation;
+        List<sci.JoinOperator> joList = cr.joinOperators;
+        l.addAll(_getSimpleRelations(cr.mainRelation));
+        for(var jo in joList){
+          l.addAll(_getSimpleRelations(jo.rightRelation));
+        }
+        // 
+      default:
+    }
+
+    return l;
+  }
 
   void _getComputedRelation(String taskId) async{
     // Works for zip file...
@@ -314,14 +334,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
     sci.Schema measurementSch = await factory.tableSchemaService.get(cr.mainRelation.id);
 
-    sci.SimpleRelation sr = rel.joinOperators[1].rightRelation as sci.SimpleRelation;
-    sci.Schema fileSch = await factory.tableSchemaService.get(sr.id);
-    
+    List<sci.SimpleRelation> relations = _getSimpleRelations(compTask.computedRelation);
+    for(var r in relations ){
+      sci.Schema sch = await factory.tableSchemaService.get(r.id);
+      print(sch.name);
+    }
 
-    sci.Schema fileSch2 = await factory.tableSchemaService.get(rel.mainRelation.id);
-
-    print(fileSch.toJson());
-    print(fileSch2.toJson());
     List<String> colNames = [];
     for( var col in measurementSch.columns ){
       colNames.add(col.name);
