@@ -368,15 +368,20 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       filenames.add(filesToUpload[measurementTbl.columns[fileColIdx].values[i]].filename);
     }
 
+    print("Creating column");
     sci.Column fileCol = sci.Column()
           ..type = "string"
           ..name = "filename"
+          ..id = "filename"
+          ..nRows = filenames.length
+          ..size = -1
           ..values = tson.CStringList.fromList(filenames);
     measurementTbl.columns.add(fileCol);
     measurementTbl.properties.name = "Measurements";
     
     widget.appData.measurementsTbl = measurementTbl;
 
+    print("Uploading table");
     uploadTable(measurementTbl, "FCS_Measurements",
                  compTask.projectId, 
                  compTask.owner,
