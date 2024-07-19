@@ -314,10 +314,14 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
     sci.Schema measurementSch = await factory.tableSchemaService.get(cr.mainRelation.id);
 
-    cr = rel.joinOperators[1].rightRelation as sci.CompositeRelation;
-    sci.Schema fileSch = await factory.tableSchemaService.get(cr.mainRelation.id);
+    sci.SimpleRelation sr = rel.joinOperators[1].rightRelation as sci.SimpleRelation;
+    sci.Schema fileSch = await factory.tableSchemaService.get(sr.id);
     
+
+    sci.Schema fileSch2 = await factory.tableSchemaService.get(rel.mainRelation.id);
+
     print(fileSch.toJson());
+    print(fileSch2.toJson());
     List<String> colNames = [];
     for( var col in measurementSch.columns ){
       colNames.add(col.name);
