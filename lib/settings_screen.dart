@@ -18,6 +18,7 @@ import 'package:tson/tson.dart' as tson;
 import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:json_string/json_string.dart';
+import 'package:uuid/uuid.dart';
 
 
 class SettingsScreen extends StatefulWidget {
@@ -164,12 +165,13 @@ class _SettingsScreenState extends State<SettingsScreen>{
     print("Found ${workflows.length} workflows");
     sci.Workflow wkf = await factory.workflowService.get(workflows[0].id);
     
-
+    var uuid = const Uuid();
     for(sci.Step stp in wkf.steps){
       if(stp.kind == "TableStep" ){
         if(stp.name == "FCS Data"){
           
           sci.InMemoryRelation rel = sci.InMemoryRelation()
+                ..id = uuid.v4()
                 ..inMemoryTable = widget.appData.measurementsTbl;
           sci.TableStep tmpStp = stp as sci.TableStep;
           tmpStp.model.relation = rel;
@@ -180,6 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
         if(stp.name == "Marker Annotation"){
           sci.InMemoryRelation rel = sci.InMemoryRelation()
+                ..id = uuid.v4()
                 ..inMemoryTable = widget.appData.channelAnnotationTbl;
           sci.TableStep tmpStp = stp as sci.TableStep;
           tmpStp.model.relation = rel;
@@ -210,8 +213,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
+      print(evtMap);
       if(evtMap["kind"] == "TaskProgressEvent"){
-        print(evtMap);
+
       }
     });
 
