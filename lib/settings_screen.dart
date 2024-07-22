@@ -172,8 +172,10 @@ class _SettingsScreenState extends State<SettingsScreen>{
     print(tileWidgets.children.length);
     layout.addWidget(
        ExpansionTile(
+        
           title: Text(settingsSection[0].section, style: Styles.textH1,),
-          children:tileWidgets.children,
+          // children:tileWidgets.children,
+          children:[Text("WIP")],
     ));
   }
 
@@ -275,11 +277,11 @@ class _SettingsScreenState extends State<SettingsScreen>{
           }
 
           for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
-            print(entry.key);
-            for( SettingsEntry e in entry.value ){
-              print(e.info());
-            }
-            // _addSettingsSection(layout, entry.value);
+            // print(entry.key);
+            // for( SettingsEntry e in entry.value ){
+            //   print(e.info());
+            // }
+            _addSettingsSection(layout, entry.value);
           }
 
           
