@@ -162,8 +162,6 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
   //TODO Move this function to ui_utils.dart
   void _addSettingsSection(RightScreenLayout layout, List<SettingsEntry> settingsSection ){
-    print("Inserting section ${settingsSection[0].section}");
-
     RightScreenLayout tileWidgets = RightScreenLayout();
     for( SettingsEntry setting in settingsSection ){
       _createSettingsWidget(tileWidgets, setting);
@@ -272,44 +270,39 @@ class _SettingsScreenState extends State<SettingsScreen>{
             }
             sections[setting.section]?.add(setting);
           }
-          print("Done");
-          print(sections.toString());
 
           for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
             _addSettingsSection(layout, entry.value);
           }
 
           
-          print("Layout has ${layout.children.length} widgets");
-          layout.addWidget(
-            paddingAbove: RightScreenLayout.paddingLarge,
-            ElevatedButton(
-              style: setButtonStyle("enabled"),
-              onPressed: (){
-                progressDialog.show(
-                    msg: "Running the workflow. Please wait.", 
-                    barrierColor: const Color.fromARGB(125, 0, 0, 0),
-                );
+          // layout.addWidget(
+          //   paddingAbove: RightScreenLayout.paddingLarge,
+          //   ElevatedButton(
+          //     style: setButtonStyle("enabled"),
+          //     onPressed: (){
+          //       progressDialog.show(
+          //           msg: "Running the workflow. Please wait.", 
+          //           barrierColor: const Color.fromARGB(125, 0, 0, 0),
+          //       );
 
+          //       Timer.periodic(const Duration(milliseconds: 250), (tmr){
+          //       if( finishedRunning == true){
+          //         tmr.cancel();
 
-
-                Timer.periodic(const Duration(milliseconds: 250), (tmr){
-                if( finishedRunning == true){
-                  tmr.cancel();
-
-                  if( progressDialog.isOpen()){
-                    progressDialog.close();
-                  }
+          //         if( progressDialog.isOpen()){
+          //           progressDialog.close();
+          //         }
                   
-                }
-              });
+          //       }
+          //     });
 
-              _runWorkflow();
+          //     _runWorkflow();
                
-              }, 
-              child: const Text("Run Analysis", style: Styles.textButton,)
-           )
-          );
+          //     }, 
+          //     child: const Text("Run Analysis", style: Styles.textButton,)
+          //  )
+          // );
 
           return layout.buildScreenWidget();
               
