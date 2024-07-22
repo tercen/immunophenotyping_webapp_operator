@@ -171,16 +171,19 @@ class _SettingsScreenState extends State<SettingsScreen>{
     }
     // print(tileWidgets.children.length);
     print("Printing children");
+    List<Widget> tmp = [];
     for( Widget wdg in tileWidgets.children ){
-      layout.addWidget(wdg);
+      // layout.addWidget(wdg);
+      tmp.add(Container(child: (wdg),));
     }
-    // layout.addWidget(
-    //    ExpansionTile(
+    print(".");
+    layout.addWidget(
+       ExpansionTile(
 
-    //       title: Text(settingsSection[0].section, style: Styles.textH1,),
-    //       // children:tileWidgets.children,
-    //       children:[Text("WIP")],
-    // ));
+          title: Text(settingsSection[0].section, style: Styles.textH1,),
+          // children:tileWidgets.children,
+          children: tmp,
+    ));
   }
 
 
