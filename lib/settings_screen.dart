@@ -176,13 +176,14 @@ class _SettingsScreenState extends State<SettingsScreen>{
       // layout.addWidget(wdg);
       tmp.add(Container(child: (wdg),));
     }
-    print(".");
+
     layout.addWidget(
        ExpansionTile(
 
           title: Text(settingsSection[0].section, style: Styles.textH1,),
+          subtitle: Text(""),
           // children:tileWidgets.children,
-          children: tmp,
+          children: <Widget>[Text("Test")],
     ));
   }
 
