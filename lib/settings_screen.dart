@@ -250,7 +250,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
       future: _readSettings(), 
       builder: (context, snapshot ){
 
-        if( snapshot.hasData && snapshot.data!=null && snapshot.data!.isNotEmpty ){
+        if( snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty ){
           RightScreenLayout layout = RightScreenLayout();
 
           Map<String, List<SettingsEntry>> sections = {};
@@ -258,20 +258,20 @@ class _SettingsScreenState extends State<SettingsScreen>{
           for( SettingsEntry setting in snapshot.data!){
             if(!sections.keys.contains(setting.section)){
               sections[setting.section] = [];
+              print("Adding section ${setting.section}");
             }
             sections[setting.section]?.add(setting);
           }
 
           print("Adding settings");
           for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
+            print(entry);
             _addSettingsSection(layout, entry.value);
           }
 
           print("OK");
 
-          // for( SettingsEntry setting in snapshot.data!){
-            
-          // }
+          
 
           layout.addWidget(
             
