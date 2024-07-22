@@ -261,48 +261,48 @@ class _SettingsScreenState extends State<SettingsScreen>{
         if( snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty ){
           RightScreenLayout layout = RightScreenLayout();
 
-          Map<String, List<SettingsEntry>> sections = {};
+          // Map<String, List<SettingsEntry>> sections = {};
 
-          for( SettingsEntry setting in snapshot.data!){
-            if(!sections.keys.contains(setting.section)){
-              sections[setting.section] = [];
-              print("Will add section ${setting.section}");
-            }
-            sections[setting.section]?.add(setting);
-          }
+          // for( SettingsEntry setting in snapshot.data!){
+          //   if(!sections.keys.contains(setting.section)){
+          //     sections[setting.section] = [];
+          //     print("Will add section ${setting.section}");
+          //   }
+          //   sections[setting.section]?.add(setting);
+          // }
 
-          for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
-            _addSettingsSection(layout, entry.value);
-          }
+          // for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
+          //   _addSettingsSection(layout, entry.value);
+          // }
 
           
-          // layout.addWidget(
-          //   paddingAbove: RightScreenLayout.paddingLarge,
-          //   ElevatedButton(
-          //     style: setButtonStyle("enabled"),
-          //     onPressed: (){
-          //       progressDialog.show(
-          //           msg: "Running the workflow. Please wait.", 
-          //           barrierColor: const Color.fromARGB(125, 0, 0, 0),
-          //       );
+          layout.addWidget(
+            paddingAbove: RightScreenLayout.paddingLarge,
+            ElevatedButton(
+              style: setButtonStyle("enabled"),
+              onPressed: (){
+                progressDialog.show(
+                    msg: "Running the workflow. Please wait.", 
+                    barrierColor: const Color.fromARGB(125, 0, 0, 0),
+                );
 
-          //       Timer.periodic(const Duration(milliseconds: 250), (tmr){
-          //       if( finishedRunning == true){
-          //         tmr.cancel();
+                Timer.periodic(const Duration(milliseconds: 250), (tmr){
+                if( finishedRunning == true){
+                  tmr.cancel();
 
-          //         if( progressDialog.isOpen()){
-          //           progressDialog.close();
-          //         }
+                  if( progressDialog.isOpen()){
+                    progressDialog.close();
+                  }
                   
-          //       }
-          //     });
+                }
+              });
 
-          //     _runWorkflow();
+              _runWorkflow();
                
-          //     }, 
-          //     child: const Text("Run Analysis", style: Styles.textButton,)
-          //  )
-          // );
+              }, 
+              child: const Text("Run Analysis", style: Styles.textButton,)
+           )
+          );
 
           return layout.buildScreenWidget();
               
