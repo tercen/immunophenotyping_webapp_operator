@@ -169,10 +169,15 @@ class _SettingsScreenState extends State<SettingsScreen>{
     for( SettingsEntry setting in settingsSection ){
       tileWidgets = _createSettingsWidget(tileWidgets, setting);
     }
-    print(tileWidgets.children.length);
+    // print(tileWidgets.children.length);
+    print("Printing children");
+    for( Widget wdg in tileWidgets.children ){
+      print("wdg");
+      print(wdg.toStringShort());
+    }
     layout.addWidget(
        ExpansionTile(
-        
+
           title: Text(settingsSection[0].section, style: Styles.textH1,),
           // children:tileWidgets.children,
           children:[Text("WIP")],
