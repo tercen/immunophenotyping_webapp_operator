@@ -108,7 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
   RightScreenLayout _createSettingsWidget(RightScreenLayout tile, SettingsEntry setting){
     tile.addWidget(
-      paddingAbove: RightScreenLayout.paddingLarge,
+      paddingAbove: RightScreenLayout.paddingMedium,
       Text(
         setting.name,
         style: Styles.textH2,
@@ -170,21 +170,23 @@ class _SettingsScreenState extends State<SettingsScreen>{
       tileWidgets = _createSettingsWidget(tileWidgets, setting);
     }
     // print(tileWidgets.children.length);
-    print("Printing children");
-    List<Widget> tmp = [];
+
+
+    layout.addWidget(paddingAbove: RightScreenLayout.paddingLarge,
+              Text(settingsSection[0].section, style: Styles.textH1)
+    );
+
     for( Widget wdg in tileWidgets.children ){
-      // layout.addWidget(wdg);
-      tmp.add(Container(child: (wdg),));
+      layout.addWidget(wdg);
     }
+    // layout.addWidget(
+    //    ExpansionTile(
 
-    layout.addWidget(
-       ExpansionTile(
-
-          title: Text(settingsSection[0].section, style: Styles.textH1,),
-          subtitle: Text(""),
-          // children:tileWidgets.children,
-          children: <Widget>[Text("Test")],
-    ));
+    //       title: Text(settingsSection[0].section, style: Styles.textH1,),
+    //       subtitle: Text(""),
+    //       // children:tileWidgets.children,
+    //       children: <Widget>[Text("Test")],
+    // ));
   }
 
 
