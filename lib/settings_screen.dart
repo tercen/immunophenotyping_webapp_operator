@@ -276,8 +276,10 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
           for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
             print(entry.key);
-            print(entry.value);
-          //   _addSettingsSection(layout, entry.value);
+            for( SettingsEntry e in entry.value ){
+              print(e.info());
+            }
+            // _addSettingsSection(layout, entry.value);
           }
 
           
