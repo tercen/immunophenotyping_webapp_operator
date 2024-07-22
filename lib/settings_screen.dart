@@ -52,6 +52,13 @@ class SettingsEntry{
       options.add(o);
     }
   }
+
+  String info(){
+    return "Name: $name" + 
+          "\nType: $type" +
+          "\nValue: $value" +
+          "\nSection: $section";
+  }
 }
 
 class _SettingsScreenState extends State<SettingsScreen>{
@@ -76,9 +83,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
         Map<String, dynamic> jsonEntry = settingsMap["settings"][i];  
         SettingsEntry setting = SettingsEntry(
           jsonEntry["name"],
-          jsonEntry["hint"],
           jsonEntry["section"],
           jsonEntry["setting_name"],
+          jsonEntry["hint"],
           jsonEntry["type"], 
           jsonEntry["value"]);
 
@@ -254,27 +261,25 @@ class _SettingsScreenState extends State<SettingsScreen>{
           RightScreenLayout layout = RightScreenLayout();
 
           Map<String, List<SettingsEntry>> sections = {};
-          print("Build sections");
+
           for( SettingsEntry setting in snapshot.data!){
             if(!sections.keys.contains(setting.section)){
               sections[setting.section] = [];
-              print("Adding section ${setting.section}");
+
             }
             sections[setting.section]?.add(setting);
           }
 
-          print("Adding settings");
+
           for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
-            print(entry);
             _addSettingsSection(layout, entry.value);
           }
 
-          print("OK");
-
-          
+          for( var child in layout.children ){
+            print(child.toString());
+          }
 
           layout.addWidget(
-            
             paddingAbove: RightScreenLayout.paddingLarge,
             ElevatedButton(
               style: setButtonStyle("enabled"),
@@ -298,16 +303,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
               });
 
               _runWorkflow();
-
-              // factory.workflowService.
-              // sci.Table tbl = snapshot.requireData;
-              // List<String> changedText = [];
-              // for( var idx in dataSource.changedRows ){
-              //   changedText.add(dataSource.controllerList[idx].text);
-              // }
-              // _updateAnnotations(tbl, dataSource.changedRows, changedText);
-                
-                
+               
               }, 
               child: const Text("Run Analysis", style: Styles.textButton,)
            )
