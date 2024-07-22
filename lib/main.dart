@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:immunophenotyping_template_assistant/annotation_screen.dart';
 import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:immunophenotyping_template_assistant/fcs_load_screen.dart';
+import 'package:immunophenotyping_template_assistant/results_screen.dart';
 import 'package:immunophenotyping_template_assistant/settings_screen.dart';
 import 'package:immunophenotyping_template_assistant/util.dart';
 
@@ -51,6 +52,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   static const String FCS_LOAD_SCREEN = "FcsLoadScreen";
   static const String ANNOTATION_SCREEN = "AnnotationScreen";
   static const String SETTINGS_SCREEN = "SettingsScreen";
+  static const String RESULTS_SCREEN = "ResultsScreen";
 
   List<LeftMenuItem> leftMenuList = [];
 
@@ -67,6 +69,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     leftMenuList.add( LeftMenuItem(Icons.home_rounded, "FCS Files", _TwoColumnHomeState.FCS_LOAD_SCREEN, true));
     leftMenuList.add( LeftMenuItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN, false));
     leftMenuList.add( LeftMenuItem(Icons.settings, "Settings", _TwoColumnHomeState.SETTINGS_SCREEN, false));
+    leftMenuList.add( LeftMenuItem(Icons.file_present_rounded, "Results", _TwoColumnHomeState.RESULTS_SCREEN, false));
 
     Timer.periodic(const Duration(milliseconds: 500), (tmr){
       if(appData.channelAnnotationDoc.id != "" && leftMenuList[1].enabled == false){
@@ -76,7 +79,15 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         });
         tmr.cancel();  
       }
-      
+    });
+
+    Timer.periodic(const Duration(milliseconds: 1000), (tmr){
+      if(appData.workflowRun == true && leftMenuList[3].enabled == false){
+        setState(() {
+          leftMenuList[3].enabled = true;  
+        });
+        tmr.cancel();  
+      }
     });
   }
 
@@ -150,6 +161,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         return AnnotationScreen(appData: appData,);
       case _TwoColumnHomeState.SETTINGS_SCREEN:
         return SettingsScreen(appData: appData,);
+      case _TwoColumnHomeState.RESULTS_SCREEN:
+        return ResultsScreen(appData: appData,);
       default:
         return FcsLoadScreen( appData: appData  );
     }
@@ -160,27 +173,33 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
   @override
   Widget build(BuildContext context) {
-    var wdg = Align(
-      alignment: Alignment.topLeft,
+    var wdg = 
+    Container(
+      decoration: const BoxDecoration(color: Colors.white),
       child: 
-      //#TODO Might need to switch to row....
-      Table(
-        columnWidths: 
-          const {
-            0: FixedColumnWidth(250.0),
-            // 1: FixedColumnWidth(5.0),
-            2: IntrinsicColumnWidth(),
-          },
-        children: [
-          TableRow(
+        Align(
+          alignment: Alignment.topLeft,
+          child: 
+          //#TODO Might need to switch to row....
+          Table(
+
+            columnWidths: 
+              const {
+                0: FixedColumnWidth(250.0),
+                // 1: FixedColumnWidth(5.0),
+                2: IntrinsicColumnWidth(),
+              },
             children: [
-              _buildLeftTab(),
-              // _verticalDivider,
-              _buildRightScreen(),
-            ]
-          )
-        ],
-      ),
+              TableRow(
+                children: [
+                  _buildLeftTab(),
+                  // _verticalDivider,
+                  _buildRightScreen(),
+                ]
+              )
+            ],
+          ),
+        ),
     );
 
 

@@ -7,7 +7,8 @@ class AppData {
 
   sci.ProjectDocument channelAnnotationDoc = sci.ProjectDocument();
   sci.ProjectDocument measurementsDoc = sci.ProjectDocument();
-  
 
+   
+  bool workflowRun = false;
   
 }

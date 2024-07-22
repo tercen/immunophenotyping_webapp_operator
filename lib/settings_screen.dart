@@ -36,11 +36,13 @@ class SettingsEntry{
   final String name;
   final String hint;
   final String type;
+  final String section;
+  final String settingName;
   late String value;
   late List<String> options = [];
   late TextEditingController controller;
 
-  SettingsEntry(this.name, this.hint, this.type, this.value) {
+  SettingsEntry(this.name, this.section, this.settingName, this.hint, this.type, this.value) {
     controller = TextEditingController(text: value); 
   }
 
@@ -49,9 +51,6 @@ class SettingsEntry{
     for( var o in opt ){
       options.add(o);
     }
-    
-
-
   }
 }
 
@@ -78,6 +77,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
         SettingsEntry setting = SettingsEntry(
           jsonEntry["name"],
           jsonEntry["hint"],
+          jsonEntry["section"],
+          jsonEntry["setting_name"],
           jsonEntry["type"], 
           jsonEntry["value"]);
 
@@ -98,30 +99,32 @@ class _SettingsScreenState extends State<SettingsScreen>{
     return entries;
   }
 
-  //TODO Move this function to ui_utils.dart
-  void _addSettings(RightScreenLayout layout, SettingsEntry settings ){
-    layout.addWidget(
+  void _createSettingsWidget(RightScreenLayout tile, SettingsEntry setting){
+    tile.addWidget(
       paddingAbove: RightScreenLayout.paddingLarge,
       Text(
-        settings.name,
+        setting.name,
         style: Styles.textH2,
       )
     );
 
-    if( settings.type == "ListSingle"){
-      layout.addWidget(
+    if( setting.type == "ListSingle"){
+      tile.addWidget(
         DropdownButton <String>(
-          value: settings.value,
+          value: setting.value,
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
-          items: settings.options.map<DropdownMenuItem<String>>((String value) {
+          items: setting.options.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(), 
           onChanged: (String? value){
-            print(value);
+            if( value != null ){
+              print(value);
+            }
+            
             // setState(() {
               // settings.value = value!;
             // });
@@ -130,13 +133,13 @@ class _SettingsScreenState extends State<SettingsScreen>{
       );
 
     }else{
-      layout.addWidget(
+      tile.addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
         SizedBox(
           width: Styles.tfWidthMedium,
           child: 
             TextField(
-              controller: settings.controller,
+              controller: setting.controller,
               style: Styles.text,
               decoration: 
                 InputDecoration(
@@ -147,6 +150,23 @@ class _SettingsScreenState extends State<SettingsScreen>{
         )   
       );
     }
+  }
+
+  //TODO Move this function to ui_utils.dart
+  void _addSettingsSection(RightScreenLayout layout, List<SettingsEntry> settingsSection ){
+    List<Widget> settingsWidgetList = [];
+
+    RightScreenLayout tileWidgets = RightScreenLayout();
+    for( SettingsEntry setting in settingsSection ){
+      
+      _createSettingsWidget(tileWidgets, setting);
+    }
+
+    layout.addWidget(
+       ExpansionTile(
+          title: Text(settingsSection[0].section, style: Styles.textH1,),
+          children:tileWidgets.children,
+    ));
   }
 
 
@@ -221,6 +241,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     sub.onDone((){
       finishedRunning = true;
+      widget.appData.workflowRun = true;
     });
   }
 
@@ -235,9 +256,21 @@ class _SettingsScreenState extends State<SettingsScreen>{
         if( snapshot.hasData && snapshot.data!=null && snapshot.data!.isNotEmpty ){
           RightScreenLayout layout = RightScreenLayout();
 
+          Map<String, List<SettingsEntry>> sections = {};
           for( SettingsEntry setting in snapshot.data!){
-            _addSettings(layout, setting);
+            if(!sections.keys.contains(setting.section)){
+              sections[setting.section] = [];
+            }
+            sections[setting.section]?.add(setting);
           }
+
+          for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
+            _addSettingsSection(layout, entry.value);
+          }
+
+          // for( SettingsEntry setting in snapshot.data!){
+            
+          // }
 
           layout.addWidget(
             

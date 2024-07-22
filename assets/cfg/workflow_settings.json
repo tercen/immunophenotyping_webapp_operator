@@ -2,20 +2,43 @@
     "settings":[
         {
             "name": "Neighbours",
+            "section": "UMAP",
+            "step": "Dimension Reduction: UMAP",
+            "setting_name":"n_neighbors",
             "hint": "Help/Description about setting",
             "type": "int",
             "value": "3"
         },
+        {
+            "name": "Min. Distance",
+            "section": "UMAP",
+            "step": "Dimension Reduction: UMAP",
+            "setting_name":"min_dist",
+            "hint": "Help/Description about setting",
+            "type": "double",
+            "value": "0.5"
+        },
 
         {
-            "name": "Metric",
+            "name": "k",
+            "section": "PhenoGraph",
+            "step": "Clustering: PhenoGraph",
+            "setting_name":"k",
+            "hint": "Help/Description about setting",
+            "type": "int",
+            "value": "30"
+        },
+
+        {
+            "name": "Implementation",
+            "section": "PhenoGraph",
+            "setting_name":"implementation",
             "hint": "Help/Description about setting",
             "type": "ListSingle",
             "value": "Euclidean",
             "options": [
-                "Euclidean",
-                "Mahalanobis",
-                "Cosine"
+                "FastPG",
+                "Rphenograph"
             ]
         }
     ]

@@ -29,13 +29,15 @@ class FcsLoadScreen extends StatefulWidget {
 
 }
 
+//FIXME Differential analysis has a filter called first channel which uses annot.channel_id. This, however, is unavailable as a factor. 
+// Nonetheless, this works with the default data. Check this with Faris on Monday
 
 //TODO Improve general screen layout
 //TODO Fix progress message
 //TODO Check existing progress name
 //TODO Check file types for drop
 //TODO better upload/finished feedback
-
+//TODO add filename as a second table in the CSVTask
 class UploadFile {
   String filename;
   bool uploaded;
@@ -165,8 +167,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       projectMeta.add(sci.Pair.from("PROJECT_REV", project.rev));
       projectMeta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
       projectMeta.add(sci.Pair.from("GIT_PAT", patController.text));
-      projectMeta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template"));
-      projectMeta.add(sci.Pair.from("GIT_TAG", "0.1.3"));
+      projectMeta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template_demo"));
+      projectMeta.add(sci.Pair.from("GIT_TAG", "0.1.0"));
       projectMeta.add(sci.Pair.from("GIT_BRANCH", "main"));
       projectMeta.add(sci.Pair.from("GIT_MESSAGE", ""));
 
@@ -394,6 +396,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       if(po.name.contains( "Channel-Descriptions" )  ){
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
         sci.Table res = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description", "channel_id"], 0, sch.nRows);
+        // res.columns[2].type = "string";
         widget.appData.channelAnnotationTbl = res;
         widget.appData.channelAnnotationDoc = po;
       }

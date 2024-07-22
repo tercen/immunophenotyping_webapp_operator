@@ -44,6 +44,44 @@ ButtonStyle setButtonStyle(String state){
   }
 }
 
+
+
+  Widget addTextWithIcon( IconData icon, String label, TextStyle textStyle, Function? onClick){
+    var inset = const EdgeInsets.symmetric(vertical: 5, horizontal: 5);
+
+    
+    var tbl = Align(
+      alignment: Alignment.centerLeft,
+      child: Table(
+      columnWidths: const {
+        0: FixedColumnWidth(32),
+        1: IntrinsicColumnWidth()
+      },
+
+
+      children: [
+        TableRow(
+          children: [
+            Padding(padding: inset, child:Icon(icon)),
+            Padding(padding: inset, child:
+                InkWell(
+                  onTap: (){
+                    onClick;
+                  },
+                  child: Text(label, style: textStyle,),
+                )
+                
+            ),
+          ]
+
+        )
+        
+      ],
+    ),
+    );
+    return tbl;
+  }
+
 class Styles {
   static const black = Color.fromARGB(255, 26, 26, 41);
   static const gray = Color.fromARGB(255, 180, 180, 190);
