@@ -142,23 +142,23 @@ class _SettingsScreenState extends State<SettingsScreen>{
       );
 
     }else{
-    //   tile.addWidget(
-    //     paddingAbove: RightScreenLayout.paddingSmall,
-    //     SizedBox(
-    //       width: Styles.tfWidthMedium,
-    //       child: 
-    //         TextField(
-    //           controller: setting.controller,
-    //           style: Styles.text,
-    //           decoration: 
-    //             InputDecoration(
-    //               border: OutlineInputBorder(borderRadius: Styles.borderRounding ),
+      tile.addWidget(
+        paddingAbove: RightScreenLayout.paddingSmall,
+        SizedBox(
+          width: Styles.tfWidthMedium,
+          child: 
+            TextField(
+              controller: setting.controller,
+              style: Styles.text,
+              decoration: 
+                InputDecoration(
+                  border: OutlineInputBorder(borderRadius: Styles.borderRounding ),
 
-    //           )
-    //         ),
-    //     )   
-    //   );
-    // }
+              )
+            ),
+        )   
+      );
+    }
 
     return tile;
   }
@@ -274,9 +274,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
             sections[setting.section]?.add(setting);
           }
 
-          for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
-            _addSettingsSection(layout, entry.value);
-          }
+          // for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
+          //   _addSettingsSection(layout, entry.value);
+          // }
 
           
           layout.addWidget(
