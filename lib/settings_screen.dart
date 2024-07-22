@@ -115,12 +115,13 @@ class _SettingsScreenState extends State<SettingsScreen>{
       )
     );
 
-    if( setting.type == "ListSingle"){
+    if( setting.type == "ListSingle2"){
       tile.addWidget(
         DropdownButton <String>(
           value: setting.value,
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
+          onTap: null,
           items: setting.options.map<DropdownMenuItem<String>>((String value) {
                   print("Adding $value to the dropdown menu");
                   return DropdownMenuItem<String>(
@@ -129,9 +130,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
                   );
                 }).toList(), 
           onChanged: (String? value){
-            if( value != null ){
-              print(value);
-            }
+            // if( value != null ){
+            //   print(value);
+            // }
             
             // setState(() {
               // settings.value = value!;
@@ -168,6 +169,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     for( SettingsEntry setting in settingsSection ){
       tileWidgets = _createSettingsWidget(tileWidgets, setting);
     }
+    print(tileWidgets.children.length);
     layout.addWidget(
        ExpansionTile(
           title: Text(settingsSection[0].section, style: Styles.textH1,),
