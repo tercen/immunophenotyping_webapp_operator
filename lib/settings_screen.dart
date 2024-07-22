@@ -122,6 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
           items: setting.options.map<DropdownMenuItem<String>>((String value) {
+                  print("Adding $value to the dropdown menu");
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -161,6 +162,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
   //TODO Move this function to ui_utils.dart
   void _addSettingsSection(RightScreenLayout layout, List<SettingsEntry> settingsSection ){
+    print("Inserting section ${settingsSection[0].section}");
+
     RightScreenLayout tileWidgets = RightScreenLayout();
     for( SettingsEntry setting in settingsSection ){
       _createSettingsWidget(tileWidgets, setting);
@@ -265,20 +268,19 @@ class _SettingsScreenState extends State<SettingsScreen>{
           for( SettingsEntry setting in snapshot.data!){
             if(!sections.keys.contains(setting.section)){
               sections[setting.section] = [];
-
+              print("Will add section ${setting.section}");
             }
             sections[setting.section]?.add(setting);
           }
-
+          print("Done");
+          print(sections.toString());
 
           for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
             _addSettingsSection(layout, entry.value);
           }
 
-          for( var child in layout.children ){
-            print(child.toString());
-          }
-
+          
+          print("Layout has ${layout.children.length} widgets");
           layout.addWidget(
             paddingAbove: RightScreenLayout.paddingLarge,
             ElevatedButton(
