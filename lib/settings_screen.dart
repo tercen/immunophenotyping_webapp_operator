@@ -106,7 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     return entries;
   }
 
-  void _createSettingsWidget(RightScreenLayout tile, SettingsEntry setting){
+  RightScreenLayout _createSettingsWidget(RightScreenLayout tile, SettingsEntry setting){
     tile.addWidget(
       paddingAbove: RightScreenLayout.paddingLarge,
       Text(
@@ -158,15 +158,16 @@ class _SettingsScreenState extends State<SettingsScreen>{
         )   
       );
     }
+
+    return tile;
   }
 
   //TODO Move this function to ui_utils.dart
   void _addSettingsSection(RightScreenLayout layout, List<SettingsEntry> settingsSection ){
     RightScreenLayout tileWidgets = RightScreenLayout();
     for( SettingsEntry setting in settingsSection ){
-      _createSettingsWidget(tileWidgets, setting);
+      tileWidgets = _createSettingsWidget(tileWidgets, setting);
     }
-
     layout.addWidget(
        ExpansionTile(
           title: Text(settingsSection[0].section, style: Styles.textH1,),
@@ -261,19 +262,19 @@ class _SettingsScreenState extends State<SettingsScreen>{
         if( snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty ){
           RightScreenLayout layout = RightScreenLayout();
 
-          // Map<String, List<SettingsEntry>> sections = {};
+          Map<String, List<SettingsEntry>> sections = {};
 
-          // for( SettingsEntry setting in snapshot.data!){
-          //   if(!sections.keys.contains(setting.section)){
-          //     sections[setting.section] = [];
-          //     print("Will add section ${setting.section}");
-          //   }
-          //   sections[setting.section]?.add(setting);
-          // }
+          for( SettingsEntry setting in snapshot.data!){
+            if(!sections.keys.contains(setting.section)){
+              sections[setting.section] = [];
+              print("Will add section ${setting.section}");
+            }
+            sections[setting.section]?.add(setting);
+          }
 
-          // for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
-          //   _addSettingsSection(layout, entry.value);
-          // }
+          for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
+            _addSettingsSection(layout, entry.value);
+          }
 
           
           layout.addWidget(
