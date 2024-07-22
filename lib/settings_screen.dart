@@ -274,9 +274,11 @@ class _SettingsScreenState extends State<SettingsScreen>{
             sections[setting.section]?.add(setting);
           }
 
-          // for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
+          for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
+            print(entry.key);
+            print(entry.value);
           //   _addSettingsSection(layout, entry.value);
-          // }
+          }
 
           
           layout.addWidget(
