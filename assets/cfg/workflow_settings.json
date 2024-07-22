@@ -35,7 +35,7 @@
             "setting_name":"implementation",
             "hint": "Help/Description about setting",
             "type": "ListSingle",
-            "value": "Euclidean",
+            "value": "FastPG",
             "options": [
                 "FastPG",
                 "Rphenograph"
