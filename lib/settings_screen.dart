@@ -154,11 +154,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
   //TODO Move this function to ui_utils.dart
   void _addSettingsSection(RightScreenLayout layout, List<SettingsEntry> settingsSection ){
-    List<Widget> settingsWidgetList = [];
-
     RightScreenLayout tileWidgets = RightScreenLayout();
     for( SettingsEntry setting in settingsSection ){
-      
       _createSettingsWidget(tileWidgets, setting);
     }
 
@@ -257,6 +254,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
           RightScreenLayout layout = RightScreenLayout();
 
           Map<String, List<SettingsEntry>> sections = {};
+          print("Build sections");
           for( SettingsEntry setting in snapshot.data!){
             if(!sections.keys.contains(setting.section)){
               sections[setting.section] = [];
@@ -264,9 +262,12 @@ class _SettingsScreenState extends State<SettingsScreen>{
             sections[setting.section]?.add(setting);
           }
 
+          print("Adding settings");
           for( MapEntry<String, List<SettingsEntry>> entry in sections.entries){
             _addSettingsSection(layout, entry.value);
           }
+
+          print("OK");
 
           // for( SettingsEntry setting in snapshot.data!){
             
