@@ -300,6 +300,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       _getComputedRelation(compTask.id);
       
       finishedUploading = true;
+      widget.appData.uploadRun = true;
     });
 
   }

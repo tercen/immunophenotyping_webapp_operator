@@ -10,6 +10,7 @@ class AppData {
 
    
   bool workflowRun = false;
+  bool uploadRun = false;
   sci.Workflow workflow = sci.Workflow();
   
 }

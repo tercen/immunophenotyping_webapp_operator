@@ -308,7 +308,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
       future: _readSettings(), 
       builder: (context, snapshot ){
 
-        if(  snapshot.hasData ){
+        if(  snapshot.hasData && widget.appData.uploadRun ){
           List<SettingsEntry> settingsList = [];
           if( snapshot.data != null ){
             settingsList = snapshot.data!;
