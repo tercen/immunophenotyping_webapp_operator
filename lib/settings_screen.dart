@@ -121,18 +121,18 @@ class _SettingsScreenState extends State<SettingsScreen>{
     if( setting.type == "ListSingle"){
       print("Adding list ${setting.name}");
       tile.addWidget(
-        DropdownButton <String>(
+        paddingAbove: RightScreenLayout.paddingSmall,
+        DropdownButton (
           value: setting.value,
-          isExpanded: true,
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
-          items: setting.options.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
+          items: setting.options.map<DropdownMenuItem>((String value) {
+                  return DropdownMenuItem(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(), 
-          onChanged: (String? value){
+          onChanged: (var value){
             if( value != null ){
                print(value);
             }
