@@ -162,17 +162,17 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       }
 
       // Import the immunophenotyping workflow
-      List<sci.Pair> projectMeta = [];
-      projectMeta.add(sci.Pair.from("PROJECT_ID", project.id));
-      projectMeta.add(sci.Pair.from("PROJECT_REV", project.rev));
-      projectMeta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
-      projectMeta.add(sci.Pair.from("GIT_PAT", patController.text));
-      projectMeta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template_demo"));
-      projectMeta.add(sci.Pair.from("GIT_TAG", "0.1.0"));
-      projectMeta.add(sci.Pair.from("GIT_BRANCH", "main"));
-      projectMeta.add(sci.Pair.from("GIT_MESSAGE", ""));
+      // List<sci.Pair> projectMeta = [];
+      // projectMeta.add(sci.Pair.from("PROJECT_ID", project.id));
+      // projectMeta.add(sci.Pair.from("PROJECT_REV", project.rev));
+      // projectMeta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
+      // projectMeta.add(sci.Pair.from("GIT_PAT", patController.text));
+      // projectMeta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template_demo"));
+      // projectMeta.add(sci.Pair.from("GIT_TAG", "0.1.0"));
+      // projectMeta.add(sci.Pair.from("GIT_BRANCH", "main"));
+      // projectMeta.add(sci.Pair.from("GIT_MESSAGE", ""));
 
-      //TODO finish importing template
+      // //TODO finish importing template
       
       progressDialog.update(msg: "Importing workflow");
       sci.GitProjectTask projectTask = sci.GitProjectTask()
@@ -183,8 +183,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       projectTask.meta.add(sci.Pair.from("PROJECT_REV", project.rev));
       projectTask.meta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
       projectTask.meta.add(sci.Pair.from("GIT_PAT", patController.text));
-      projectTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template"));
-      projectTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.3"));
+      projectTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template_demo"));
+      projectTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.0"));
       projectTask.meta.add(sci.Pair.from("GIT_BRANCH", "main"));
       projectTask.meta.add(sci.Pair.from("GIT_MESSAGE", ""));
         // ..meta = projectMeta;

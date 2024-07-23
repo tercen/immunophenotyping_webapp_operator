@@ -125,15 +125,14 @@ class _SettingsScreenState extends State<SettingsScreen>{
         dropDownValues[setting.name] = setting.value;
       }
       
-      print("Adding list ${setting.name} with value ${dropDownValues[setting.name]}");
-      
+     
       tile.addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
         DropdownButton (
           value: dropDownValues[setting.name],
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
-          items: ["FastPG", "SlowPG"].map<DropdownMenuItem>((String value) {
+          items: setting.options.map<DropdownMenuItem>((String value) {
                   return DropdownMenuItem(
                     value: value,
                     onTap: () {
@@ -205,7 +204,12 @@ class _SettingsScreenState extends State<SettingsScreen>{
         for( var i = 0; i < stp.model.operatorSettings.operatorRef.propertyValues.length; i++){
           // print("${stp.model.operatorSettings.operatorRef.propertyValues[i].name} vs ${setting.settingName}");
           if( stp.model.operatorSettings.operatorRef.propertyValues[i].name == setting.settingName ){
-            stp.model.operatorSettings.operatorRef.propertyValues[i].value = setting.value;
+            if( setting.type == "ListSingle"){
+              stp.model.operatorSettings.operatorRef.propertyValues[i].value = dropDownValues[setting.name]!;
+            }else{
+              stp.model.operatorSettings.operatorRef.propertyValues[i].value = setting.controller.text;
+            }
+            
             return true;
           }
         }
@@ -282,15 +286,17 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
-      print(evtMap);
+      //TODO HAndle progress messages better
+      // print(evtMap);
       if(evtMap["kind"] == "TaskProgressEvent"){
 
       }
     });
 
-    sub.onDone((){
+    sub.onDone(() async {
       finishedRunning = true;
       widget.appData.workflowRun = true;
+      widget.appData.workflow = await factory.workflowService.get(wkf.id);
     });
   }
 
@@ -314,7 +320,6 @@ class _SettingsScreenState extends State<SettingsScreen>{
           for( SettingsEntry setting in settingsList){
             if(!sections.keys.contains(setting.section)){
               sections[setting.section] = [];
-              print("Will add section ${setting.section}");
             }
             sections[setting.section]?.add(setting);
           }

@@ -40,6 +40,13 @@ class _ResultsScreenState extends State<ResultsScreen>{
     
   }
 
+  Future<bool> _readWorkflow() async{
+    for( sci.Step stp in widget.appData.workflow.steps){
+      print(stp.name);
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     
@@ -56,7 +63,20 @@ class _ResultsScreenState extends State<ResultsScreen>{
       })
     );
 
-    return layout.buildScreenWidget();
+    // return layout.buildScreenWidget();
+    return FutureBuilder(
+      future: _readWorkflow(), 
+      builder: (context, snapshot ){
+        if( snapshot.hasData ){
+          return Text("WIP");
+        }else{
+          return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+        }
+        
+      }
+    );
 
   }
 }
