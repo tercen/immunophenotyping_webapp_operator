@@ -95,11 +95,11 @@ class _ResultsScreenState extends State<ResultsScreen>{
           }
 
           if( col.name.contains("mimetype")){
-            resultInfo.filenameCol = col.name;
+            resultInfo.mimetypeCol = col.name;
           }
 
           if( col.name.contains("content")){
-            resultInfo.filenameCol = col.name;
+            resultInfo.contentCol = col.name;
           }
           
         }
@@ -111,10 +111,11 @@ class _ResultsScreenState extends State<ResultsScreen>{
   }
 
   void _doDownload(ResultSchemaInfo info) async {
+    print("Selecting ${info.filenameCol}, ${info.mimetypeCol}, ${info.contentCol}");
     sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
           
     final _mimetype = contentTable.columns[1].values[0];
-    final _filename = contentTable.columns[2].values[0];
+    final _filename = contentTable.columns[0].values[0];
     print("Will download $_filename");
     // final _base64 = base64Encode(contentTable.columns[2].values[0]);
     final _base64 = contentTable.columns[2].values[0];
