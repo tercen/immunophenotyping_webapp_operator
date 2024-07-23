@@ -121,14 +121,15 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     if( setting.type == "ListSingle"){
       
-      dropDownValues[setting.name] = setting.value;
+      if(!dropDownValues.containsKey(setting.name)){
+        dropDownValues[setting.name] = setting.value;
+      }
+      
       print("Adding list ${setting.name} with value ${dropDownValues[setting.name]}");
       
       tile.addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
-        MouseRegion(
-      cursor: SystemMouseCursors.basic,
-      child: DropdownButton (
+        DropdownButton (
           value: dropDownValues[setting.name],
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
@@ -146,7 +147,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
           onChanged: (var value){
            
           }
-        ))
+        )
       );
 
     }else{
