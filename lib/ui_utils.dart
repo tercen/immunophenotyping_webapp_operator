@@ -65,10 +65,9 @@ ButtonStyle setButtonStyle(String state){
             Padding(padding: inset, child:Icon(icon)),
             Padding(padding: inset, child:
                 InkWell(
-                  
+                  onHover: null,
                   onTap: (){
-                    print("On tap");
-                    // onClick;
+                    onClick;
                   },
                   child: Text(label, style: textStyle,),
                 )

@@ -144,10 +144,13 @@ class _ResultsScreenState extends State<ResultsScreen>{
       builder: (BuildContext context, AsyncSnapshot snapshot ){
         if( snapshot.connectionState == ConnectionState.done && snapshot.hasData && widget.appData.workflowRun == true){
           print("Adding widget (snapshot data is ${snapshot.data})");
+          ResultSchemaInfo info = snapshot.data;
+          print("Info is ${info.nRows}, ${info.filenameCol}");
           layout.addWidget(
           paddingAbove: RightScreenLayout.paddingSmall,
           addTextWithIcon(Icons.download, "Download Report", Styles.text, (){
-              print("Trying to download (snapshot data is ${snapshot.data})");
+              print("download func");
+              print("Trying to download (snapshot data is $info)");
 
             // try {
               // ResultSchemaInfo info = snapshot.data;
