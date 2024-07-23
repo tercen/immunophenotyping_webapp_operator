@@ -38,11 +38,12 @@ class SettingsEntry{
   final String type;
   final String section;
   final String settingName;
+  final String step;
   late String value;
   late List<String> options = [];
   late TextEditingController controller;
 
-  SettingsEntry(this.name, this.section, this.settingName, this.hint, this.type, this.value) {
+  SettingsEntry(this.name, this.section, this.settingName, this.step, this.hint, this.type, this.value) {
     controller = TextEditingController(text: value); 
   }
 
@@ -67,11 +68,12 @@ class _SettingsScreenState extends State<SettingsScreen>{
   late ProgressDialog progressDialog = ProgressDialog(context: context);
   // late sci.Schema annotSch;
   late StreamSubscription<sci.TaskEvent> sub;
+  late List<SettingsEntry> settingsList; 
 
   bool finishedRunning = false;
   
   Future<List<SettingsEntry>> _readSettings() async {
-    List<SettingsEntry> entries = [];    
+    settingsList = [];    
 
     String settingsStr = await DefaultAssetBundle.of(context).loadString("assets/cfg/workflow_settings.json");
     try {
@@ -85,6 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
           jsonEntry["name"],
           jsonEntry["section"],
           jsonEntry["setting_name"],
+          jsonEntry["step"],
           jsonEntry["hint"],
           jsonEntry["type"], 
           jsonEntry["value"]);
@@ -93,7 +96,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
           setting.addOptions(jsonEntry["options"]);
         }
 
-        entries.add(setting);
+        settingsList.add(setting);
       }
 
     } on Exception catch (e) {
@@ -103,7 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     
 
 
-    return entries;
+    return settingsList;
   }
 
   RightScreenLayout _createSettingsWidget(RightScreenLayout tile, SettingsEntry setting){
@@ -177,7 +180,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     );
 
     for( Widget wdg in tileWidgets.children ){
-      layout.addWidget(wdg);
+      layout.addWidget(paddingAbove: RightScreenLayout.paddingSmall , wdg);
     }
     // layout.addWidget(
     //    ExpansionTile(
@@ -190,7 +193,14 @@ class _SettingsScreenState extends State<SettingsScreen>{
   }
 
 
+  void _updateOperatorSettings(sci.Step stp){
+    for( var setting in settingsList ){
+      if( stp.name == setting.step ){
+        print(stp.toJson());
 
+      }
+    }
+  }
 
   Future<void> _runWorkflow() async {
     
@@ -207,6 +217,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
     
     var uuid = const Uuid();
     for(sci.Step stp in wkf.steps){
+      
+      _updateOperatorSettings(stp);
       if(stp.kind == "TableStep" ){
         if(stp.name == "FCS Data"){
           
