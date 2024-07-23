@@ -19,7 +19,8 @@ import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:json_string/json_string.dart';
 import 'package:uuid/uuid.dart';
-
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html';
 
 class ResultsScreen extends StatefulWidget {
   final AppData appData;
@@ -30,6 +31,16 @@ class ResultsScreen extends StatefulWidget {
 
 }
 
+
+class ResultSchemaInfo {
+  String filenameCol = "";
+  String mimetypeCol = "";
+  String contentCol = "";
+  String schemaId;
+  int nRows;
+
+  ResultSchemaInfo(this.schemaId, this.nRows);
+}
 
 class _ResultsScreenState extends State<ResultsScreen>{
   final factory = tercen.ServiceFactory();
@@ -66,7 +77,8 @@ class _ResultsScreenState extends State<ResultsScreen>{
   }
 
 
-  Future<bool> _readWorkflow() async{
+  Future<ResultSchemaInfo> _readWorkflowResultInfo() async{
+    
     for( sci.Step stp in widget.appData.workflow.steps){
       if(stp.name == "Export Report"){
         sci.DataStep expStp = stp as sci.DataStep;
@@ -74,34 +86,80 @@ class _ResultsScreenState extends State<ResultsScreen>{
         
         print("Found ${simpleRels.length} relations");
         sci.Schema reportSchema =  await factory.tableSchemaService.get( simpleRels[0].id );
-        print(reportSchema.toJson());
+
+        ResultSchemaInfo resultInfo = ResultSchemaInfo( simpleRels[0].id, reportSchema.nRows );
+        for( sci.ColumnSchema col in reportSchema.columns){
+          
+          if( col.name.contains("filename")){
+            resultInfo.filenameCol = col.name;
+          }
+
+          if( col.name.contains("mimetype")){
+            resultInfo.filenameCol = col.name;
+          }
+
+          if( col.name.contains("content")){
+            resultInfo.filenameCol = col.name;
+          }
+          
+        }
+
+        return resultInfo;
       }
     }
-    return true;
+    return ResultSchemaInfo("", 0) ;
+  }
+
+  void _doDownload(ResultSchemaInfo info) async {
+    sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
+          
+          final _mimetype = contentTable.columns[1].values[0];
+          final _filename = contentTable.columns[2].values[0];
+          // final _base64 = base64Encode(contentTable.columns[2].values[0]);
+          final _base64 = contentTable.columns[2].values[0];
+
+          //   // Create the link with the file
+          // final anchor =
+          AnchorElement(href: 'data:$_mimetype;base64,$_base64')
+            ..target = 'blank'
+            ..download = _filename
+            ..click();
+          // trigger download
+          // document.body.append(anchor);
+          // anchor.click();
+          // anchor.remove();
+
   }
 
   @override
   Widget build(BuildContext context) {
     
-    layout.addWidget(
-      paddingAbove: RightScreenLayout.paddingLarge,
-      addTextWithIcon(Icons.download, "Download Report", Styles.text, (){
 
-      })
-    );
-    layout.addWidget(
-      paddingAbove: RightScreenLayout.paddingMedium,
-      addTextWithIcon(Icons.link_rounded, "Go to Project", Styles.text, (){
-        //TODO
-      })
-    );
 
     // return layout.buildScreenWidget();
     return FutureBuilder(
-      future: _readWorkflow(), 
+      future: _readWorkflowResultInfo(), 
       builder: (context, snapshot ){
         if( snapshot.hasData ){
-          return Text("WIP");
+          layout.addWidget(
+          paddingAbove: RightScreenLayout.paddingLarge,
+          addTextWithIcon(Icons.download, "Download Report", Styles.text, (){
+            ResultSchemaInfo info = snapshot.data!;
+            _doDownload(info);
+          })
+        );
+        layout.addWidget(
+          paddingAbove: RightScreenLayout.paddingMedium,
+          addTextWithIcon(Icons.link_rounded, "Go to Project", Styles.text, (){
+            
+            //TODO
+              //              html.AnchorElement anchorElement =  new html.AnchorElement(href: url);
+              //  anchorElement.download = url;
+              //  anchorElement.click();
+          })
+        );
+
+          return layout.buildScreenWidget();
         }else{
           return const Center(
                     child: CircularProgressIndicator(),
