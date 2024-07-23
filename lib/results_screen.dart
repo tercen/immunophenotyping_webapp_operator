@@ -147,15 +147,15 @@ class _ResultsScreenState extends State<ResultsScreen>{
           paddingAbove: RightScreenLayout.paddingSmall,
           addTextWithIcon(Icons.download, "Download Report", Styles.text, (){
             
-            try {
+            // try {
               ResultSchemaInfo info = snapshot.data!;
               if( info.nRows > 0 ){
                 print("Trying to download");
                 _doDownload(info);
               }  
-            } catch (e) {
-              print("Waiting...");
-            }
+            // } catch (e) {
+              // print("Waiting...");
+            // }
             
             
           })
