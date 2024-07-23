@@ -124,13 +124,21 @@ class _SettingsScreenState extends State<SettingsScreen>{
           value: setting.value,
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
-          onTap: null,
-          items: setting.options.map<DropdownMenuItem<String>>((String value) {
+          items: setting.options.map<DropdownMenuItem<String>>((String? value) {
                   print("Adding $value to the dropdown menu");
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
+                  if( value != null){
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  } else {
+                    return DropdownMenuItem<String>(
+                      value: "Null",
+                      child: Text(""),
+                    );
+                  }
+
+                  
                 }).toList(), 
           onChanged: (String? value){
             if( value != null ){
@@ -175,7 +183,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     // print(tileWidgets.children.length);
 
 
-    layout.addWidget(paddingAbove: RightScreenLayout.paddingLarge,
+    layout.addWidget(paddingAbove: RightScreenLayout.paddingSmall,
               Text(settingsSection[0].section, style: Styles.textH1)
     );
 
@@ -193,13 +201,18 @@ class _SettingsScreenState extends State<SettingsScreen>{
   }
 
 
-  void _updateOperatorSettings(sci.Step stp){
+  bool _updateOperatorSettings(sci.DataStep stp){
     for( var setting in settingsList ){
       if( stp.name == setting.step ){
-        print(stp.toJson());
-
+        for( var i = 0; i < stp.model.operatorSettings.operatorRef.propertyValues.length; i++){
+          if( stp.model.operatorSettings.operatorRef.propertyValues[i].name == setting.settingName ){
+            stp.model.operatorSettings.operatorRef.propertyValues[i].value = setting.value;
+            return true;
+          }
+        }
       }
     }
+    return false;
   }
 
   Future<void> _runWorkflow() async {
@@ -217,8 +230,15 @@ class _SettingsScreenState extends State<SettingsScreen>{
     
     var uuid = const Uuid();
     for(sci.Step stp in wkf.steps){
+      if(stp.kind == "DataStep" ){
+        bool updated = _updateOperatorSettings(stp as sci.DataStep);
+        if(updated){
+          print(stp.toJson());
+        }
+        
+      }
       
-      _updateOperatorSettings(stp);
+      
       if(stp.kind == "TableStep" ){
         if(stp.name == "FCS Data"){
           
