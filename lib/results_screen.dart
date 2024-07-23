@@ -42,7 +42,10 @@ class _ResultsScreenState extends State<ResultsScreen>{
 
   Future<bool> _readWorkflow() async{
     for( sci.Step stp in widget.appData.workflow.steps){
-      print(stp.name);
+      if(stp.name == "Export Report"){
+        sci.DataStep expStp = stp as sci.DataStep;
+        print(expStp.computedRelation.toJson());
+      }
     }
     return true;
   }
