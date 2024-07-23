@@ -215,7 +215,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Document op = sci.Document();
     for( var o in installedOperators ){
       if( o.name == "FCS"){
-        print("Found FCS operator installed");
+        print("Found FCS operator installed (version ${op.version})");
         op = o;
       }
     }
@@ -226,6 +226,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     query.operatorSettings.operatorRef.operatorId = op.id;
     query.operatorSettings.operatorRef.operatorKind = op.kind;
     query.operatorSettings.operatorRef.name = op.name;
+    query.operatorSettings.operatorRef.version = op.version;
 
     // Query Projection
     sci.Factor docFactor = sci.Factor()
