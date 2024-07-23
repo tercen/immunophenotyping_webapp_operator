@@ -54,6 +54,10 @@ class _ResultsScreenState extends State<ResultsScreen>{
         for(var jo in joList){
           l.addAll(_getSimpleRelations(jo.rightRelation));
         }
+      case "RenameRelation":
+        sci.RenameRelation rr = relation as sci.RenameRelation;
+        l.addAll(_getSimpleRelations(rr.relation));
+
         // 
       default:
     }
