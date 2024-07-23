@@ -115,8 +115,10 @@ class _ResultsScreenState extends State<ResultsScreen>{
           
           final _mimetype = contentTable.columns[1].values[0];
           final _filename = contentTable.columns[2].values[0];
+          print("Will download $_filename");
           // final _base64 = base64Encode(contentTable.columns[2].values[0]);
           final _base64 = contentTable.columns[2].values[0];
+          print("Will download $_base64");
 
           //   // Create the link with the file
           // final anchor =
@@ -142,22 +144,32 @@ class _ResultsScreenState extends State<ResultsScreen>{
       builder: (context, snapshot ){
         if( snapshot.hasData ){
           layout.addWidget(
-          paddingAbove: RightScreenLayout.paddingLarge,
+          paddingAbove: RightScreenLayout.paddingSmall,
           addTextWithIcon(Icons.download, "Download Report", Styles.text, (){
-            ResultSchemaInfo info = snapshot.data!;
-            _doDownload(info);
-          })
-        );
-        layout.addWidget(
-          paddingAbove: RightScreenLayout.paddingMedium,
-          addTextWithIcon(Icons.link_rounded, "Go to Project", Styles.text, (){
             
-            //TODO
-              //              html.AnchorElement anchorElement =  new html.AnchorElement(href: url);
-              //  anchorElement.download = url;
-              //  anchorElement.click();
+            try {
+              ResultSchemaInfo info = snapshot.data!;
+              if( info.nRows > 0 ){
+                print("Trying to download");
+                _doDownload(info);
+              }  
+            } catch (e) {
+              print("Waiting...");
+            }
+            
+            
           })
         );
+        // layout.addWidget(
+        //   paddingAbove: RightScreenLayout.paddingMedium,
+        //   addTextWithIcon(Icons.link_rounded, "Go to Project", Styles.text, (){
+            
+        //     //TODO
+        //       //              html.AnchorElement anchorElement =  new html.AnchorElement(href: url);
+        //       //  anchorElement.download = url;
+        //       //  anchorElement.click();
+        //   })
+        // );
 
           return layout.buildScreenWidget();
         }else{
