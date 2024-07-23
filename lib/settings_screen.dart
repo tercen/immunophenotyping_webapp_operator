@@ -68,12 +68,12 @@ class _SettingsScreenState extends State<SettingsScreen>{
   late ProgressDialog progressDialog = ProgressDialog(context: context);
   // late sci.Schema annotSch;
   late StreamSubscription<sci.TaskEvent> sub;
-  late List<SettingsEntry> settingsList; 
+
 
   bool finishedRunning = false;
   
   Future<List<SettingsEntry>> _readSettings() async {
-    settingsList = [];    
+    List<SettingsEntry> settingsList = [];    
 
     String settingsStr = await DefaultAssetBundle.of(context).loadString("assets/cfg/workflow_settings.json");
     try {
@@ -192,11 +192,11 @@ class _SettingsScreenState extends State<SettingsScreen>{
   }
 
 
-  bool _updateOperatorSettings(sci.DataStep stp){
+  bool _updateOperatorSettings(sci.DataStep stp, List<SettingsEntry> settingsList){
     for( var setting in settingsList ){
       if( stp.name == setting.step ){
         for( var i = 0; i < stp.model.operatorSettings.operatorRef.propertyValues.length; i++){
-          print("${stp.model.operatorSettings.operatorRef.propertyValues[i].name} vs ${setting.settingName}");
+          // print("${stp.model.operatorSettings.operatorRef.propertyValues[i].name} vs ${setting.settingName}");
           if( stp.model.operatorSettings.operatorRef.propertyValues[i].name == setting.settingName ){
             stp.model.operatorSettings.operatorRef.propertyValues[i].value = setting.value;
             return true;
@@ -207,7 +207,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     return false;
   }
 
-  Future<void> _runWorkflow() async {
+  Future<void> _runWorkflow(List<SettingsEntry> settingsList) async {
     
     List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: 
                     [widget.appData.channelAnnotationDoc.projectId, "ufff0", "ufff0"], 
@@ -223,10 +223,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
     var uuid = const Uuid();
     for(sci.Step stp in wkf.steps){
       if(stp.kind == "DataStep" ){
-        bool updated = _updateOperatorSettings(stp as sci.DataStep);
-        if(updated){
-          print(stp.model.operatorSettings.toJson());
-        }
+        _updateOperatorSettings(stp as sci.DataStep, settingsList);
+
         
       }
       
@@ -297,12 +295,16 @@ class _SettingsScreenState extends State<SettingsScreen>{
       future: _readSettings(), 
       builder: (context, snapshot ){
 
-        if( snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty ){
+        if(  snapshot.hasData ){
+          List<SettingsEntry> settingsList = [];
+          if( snapshot.data != null ){
+            settingsList = snapshot.data!;
+          }
           RightScreenLayout layout = RightScreenLayout();
 
           Map<String, List<SettingsEntry>> sections = {};
 
-          for( SettingsEntry setting in snapshot.data!){
+          for( SettingsEntry setting in settingsList){
             if(!sections.keys.contains(setting.section)){
               sections[setting.section] = [];
               print("Will add section ${setting.section}");
@@ -340,7 +342,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
                 }
               });
 
-              _runWorkflow();
+              _runWorkflow(settingsList);
                
               }, 
               child: const Text("Run Analysis", style: Styles.textButton,)
