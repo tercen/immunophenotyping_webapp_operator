@@ -296,6 +296,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       var evtMap = evt.toJson();
       if(evtMap["kind"] == "TaskProgressEvent"){
         //Process event log
+        print(evtMap);
       }
     });
 
@@ -321,12 +322,17 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         for(var jo in joList){
           l.addAll(_getSimpleRelations(jo.rightRelation));
         }
+      case "RenameRelation":
+        sci.RenameRelation rr = relation as sci.RenameRelation;
+        l.addAll(_getSimpleRelations(rr.relation));
+
         // 
       default:
     }
 
     return l;
   }
+
 
   void _getComputedRelation(String taskId) async{
     // Works for zip file...
