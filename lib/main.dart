@@ -67,28 +67,28 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   initState() {
     super.initState();
     leftMenuList.add( LeftMenuItem(Icons.home_rounded, "FCS Files", _TwoColumnHomeState.FCS_LOAD_SCREEN, true));
-    leftMenuList.add( LeftMenuItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN, false));
-    leftMenuList.add( LeftMenuItem(Icons.settings, "Settings", _TwoColumnHomeState.SETTINGS_SCREEN, false));
-    leftMenuList.add( LeftMenuItem(Icons.file_present_rounded, "Results", _TwoColumnHomeState.RESULTS_SCREEN, false));
+    // leftMenuList.add( LeftMenuItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN, false));
+    // leftMenuList.add( LeftMenuItem(Icons.settings, "Settings", _TwoColumnHomeState.SETTINGS_SCREEN, false));
+    // leftMenuList.add( LeftMenuItem(Icons.file_present_rounded, "Results", _TwoColumnHomeState.RESULTS_SCREEN, false));
 
-    Timer.periodic(const Duration(milliseconds: 500), (tmr){
-      if(appData.channelAnnotationDoc.id != "" && leftMenuList[1].enabled == false){
-        setState(() {
-          leftMenuList[1].enabled = true;  
-          leftMenuList[2].enabled = true;  
-        });
-        tmr.cancel();  
-      }
-    });
+    // Timer.periodic(const Duration(milliseconds: 500), (tmr){
+    //   if(appData.channelAnnotationDoc.id != "" && leftMenuList[1].enabled == false){
+    //     setState(() {
+    //       leftMenuList[1].enabled = true;  
+    //       leftMenuList[2].enabled = true;  
+    //     });
+    //     tmr.cancel();  
+    //   }
+    // });
 
-    Timer.periodic(const Duration(milliseconds: 1000), (tmr){
-      if(appData.workflowRun == true && leftMenuList[3].enabled == false){
-        setState(() {
-          leftMenuList[3].enabled = true;  
-        });
-        tmr.cancel();  
-      }
-    });
+    // Timer.periodic(const Duration(milliseconds: 1000), (tmr){
+    //   if(appData.workflowRun == true && leftMenuList[3].enabled == false){
+    //     setState(() {
+    //       leftMenuList[3].enabled = true;  
+    //     });
+    //     tmr.cancel();  
+    //   }
+    // });
   }
 
   Widget _buildLeftTab(){

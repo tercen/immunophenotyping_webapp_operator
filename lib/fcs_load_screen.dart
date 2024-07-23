@@ -162,18 +162,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       }
 
       // Import the immunophenotyping workflow
-      // List<sci.Pair> projectMeta = [];
-      // projectMeta.add(sci.Pair.from("PROJECT_ID", project.id));
-      // projectMeta.add(sci.Pair.from("PROJECT_REV", project.rev));
-      // projectMeta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
-      // projectMeta.add(sci.Pair.from("GIT_PAT", patController.text));
-      // projectMeta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template_demo"));
-      // projectMeta.add(sci.Pair.from("GIT_TAG", "0.1.0"));
-      // projectMeta.add(sci.Pair.from("GIT_BRANCH", "main"));
-      // projectMeta.add(sci.Pair.from("GIT_MESSAGE", ""));
-
-      // //TODO finish importing template
-      
       progressDialog.update(msg: "Importing workflow");
       sci.GitProjectTask projectTask = sci.GitProjectTask()
           ..state = sci.InitState()
@@ -287,28 +275,27 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     progressDialog.update(msg: "Reading FCS files");
     compTask = await factory.taskService.create(compTask) as sci.RunComputationTask;
-    await factory.taskService.runTask(compTask.id);
-    await factory.taskService.waitDone(compTask.id);
+
 
     
-    // var taskStream = factory.eventService.listenTaskChannel(compTask.id, true).asBroadcastStream();
+    var taskStream = factory.eventService.listenTaskChannel(compTask.id, true).asBroadcastStream();
     
 
-    // sub = taskStream.listen((evt){
-    //   var evtMap = evt.toJson();
-    //   // print(evtMap);
-    //   if(evtMap["kind"] == "TaskProgressEvent"){
-    //     //Process event log
+    sub = taskStream.listen((evt){
+      var evtMap = evt.toJson();
+      print(evtMap);
+      if(evtMap["kind"] == "TaskProgressEvent"){
+        //Process event log
         
-    //   }
-    // });
+      }
+    });
 
-    _getComputedRelation(compTask.id);
-    // sub.onDone((){
-    //   _getComputedRelation(compTask.id);
+
+    sub.onDone((){
+      _getComputedRelation(compTask.id);
       
-    //   finishedUploading = true;
-    // });
+      finishedUploading = true;
+    });
 
   }
 
@@ -340,7 +327,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _getComputedRelation(String taskId) async{
     // Works for zip file...
-    var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
+    var compTask = await factory.taskService.get(taskId, useFactory: true) as sci.RunComputationTask;
     print(compTask.toJson());
     print(compTask.computedRelation.toJson());
     // sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
@@ -348,8 +335,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
 
     List<sci.SimpleRelation> relations = _getSimpleRelations(compTask.computedRelation);
-    relations[0]; //MEasurements
-    relations[1]; //Observations == check by name
+    // relations[0]; //MEasurements
+    // relations[1]; //Observations == check by name
     sci.Schema measurementSch = sci.Schema();
     // sci.Schema observationsSch = sci.Schema();
     for(var r in relations ){
