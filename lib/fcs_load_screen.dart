@@ -215,6 +215,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Document op = sci.Document();
     for( var o in installedOperators ){
       if( o.name == "FCS"){
+        print("Found FCS operator installed");
         op = o;
       }
     }
@@ -287,9 +288,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       print(evtMap);
       if(evtMap["kind"] == "TaskStateEvent"){
         if( evtMap["state"]["kind"] == "DoneState" ){
-          _getComputedRelation(compTask.id, compTask.taskHash);
-      
-          finishedUploading = true;
         }
         //Process event log
         
@@ -298,9 +296,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
 
     sub.onDone((){
-      // _getComputedRelation(compTask.id, compTask.taskHash);
+      _getComputedRelation(compTask.id);
       
-      // finishedUploading = true;
+      finishedUploading = true;
     });
 
   }
@@ -331,20 +329,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   }
 
 
-  void _getComputedRelation(String taskId, String taskHash) async{
+  void _getComputedRelation(String taskId) async{
     // Works for zip file...
-    List<sci.Task> taskByHash = await factory.taskService.findByHash(startKey: taskHash, endKey: taskHash);
-    print("Found ${taskByHash.length} tasks by hash");
-    if(taskByHash.length > 0){
-      var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
-      var permObjs = await factory.persistentService.getDependentObjects(taskId);
-      for(var o in permObjs){
-        print(o.subKind);
-      }
-      print(compTask.toJson());
-    }
+
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
-    print(compTask.toJson());
+
     print(compTask.computedRelation.toJson());
     // sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
     // sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
