@@ -120,6 +120,7 @@ class Styles {
 
 
 class RightScreenLayout {
+  static const double paddingNone = 0;
   static const double paddingSmall = 10;
   static const double paddingMedium = 20;
   static const double paddingLarge = 40;

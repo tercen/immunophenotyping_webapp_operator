@@ -111,7 +111,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
   RightScreenLayout _createSettingsWidget(RightScreenLayout tile, SettingsEntry setting){
     tile.addWidget(
-      paddingAbove: RightScreenLayout.paddingMedium,
+      paddingAbove: RightScreenLayout.paddingSmall,
       Text(
         setting.name,
         style: Styles.textH2,
@@ -122,6 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
       tile.addWidget(
         DropdownButton <String>(
           value: setting.value,
+
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
           items: setting.options.map<DropdownMenuItem<String>>((String? value) {
@@ -183,12 +184,12 @@ class _SettingsScreenState extends State<SettingsScreen>{
     // print(tileWidgets.children.length);
 
 
-    layout.addWidget(paddingAbove: RightScreenLayout.paddingSmall,
+    layout.addWidget(paddingAbove: RightScreenLayout.paddingMedium,
               Text(settingsSection[0].section, style: Styles.textH1)
     );
 
     for( Widget wdg in tileWidgets.children ){
-      layout.addWidget(paddingAbove: RightScreenLayout.paddingSmall , wdg);
+      layout.addWidget(paddingAbove: RightScreenLayout.paddingNone , wdg);
     }
     // layout.addWidget(
     //    ExpansionTile(
@@ -225,7 +226,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.subKind == "Workflow" && po.folderId == "").toList();
 
-    print("Found ${workflows.length} workflows");
+
     sci.Workflow wkf = await factory.workflowService.get(workflows[0].id);
     
     var uuid = const Uuid();
