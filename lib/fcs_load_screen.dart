@@ -285,27 +285,30 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..projectId = project.id;
     
     
-
-    compTask = await factory.taskService.create(compTask) as sci.RunComputationTask;
-
     progressDialog.update(msg: "Reading FCS files");
-    var taskStream = factory.eventService.listenTaskChannel(compTask.id, true).asBroadcastStream();
+    compTask = await factory.taskService.create(compTask) as sci.RunComputationTask;
+    await factory.taskService.runTask(compTask.id);
+    await factory.taskService.waitDone(compTask.id);
+
+    
+    // var taskStream = factory.eventService.listenTaskChannel(compTask.id, true).asBroadcastStream();
     
 
-    sub = taskStream.listen((evt){
-      var evtMap = evt.toJson();
-      // print(evtMap);
-      if(evtMap["kind"] == "TaskProgressEvent"){
-        //Process event log
+    // sub = taskStream.listen((evt){
+    //   var evtMap = evt.toJson();
+    //   // print(evtMap);
+    //   if(evtMap["kind"] == "TaskProgressEvent"){
+    //     //Process event log
         
-      }
-    });
+    //   }
+    // });
 
-    sub.onDone((){
-      _getComputedRelation(compTask.id);
+    _getComputedRelation(compTask.id);
+    // sub.onDone((){
+    //   _getComputedRelation(compTask.id);
       
-      finishedUploading = true;
-    });
+    //   finishedUploading = true;
+    // });
 
   }
 
