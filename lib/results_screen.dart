@@ -143,20 +143,21 @@ class _ResultsScreenState extends State<ResultsScreen>{
       future: _readWorkflowResultInfo(), 
       builder: (BuildContext context, AsyncSnapshot snapshot ){
         if( snapshot.connectionState == ConnectionState.done && snapshot.hasData && widget.appData.workflowRun == true){
-          print("Adding widget");
+          print("Adding widget (snapshot data is ${snapshot.data})");
           layout.addWidget(
           paddingAbove: RightScreenLayout.paddingSmall,
           addTextWithIcon(Icons.download, "Download Report", Styles.text, (){
-              print("In response");
+              print("Trying to download (snapshot data is ${snapshot.data})");
+
             // try {
-              ResultSchemaInfo info = snapshot.data;
-              print("Will do download for ${info.filenameCol}");
-              if( info.nRows > 0 ){
-                print("Trying to download");
-                _doDownload(info);
-              }else{
-                print("No rows");
-              }
+              // ResultSchemaInfo info = snapshot.data;
+              // print("Will do download for ${info.filenameCol}");
+              // if( info.nRows > 0 ){
+                // print("Trying to download");
+                // _doDownload(info);
+              // }else{
+                // print("No rows");
+              // }
             // } catch (e) {
               // print("Waiting...");
             // }

@@ -46,7 +46,7 @@ ButtonStyle setButtonStyle(String state){
 
 
 
-  Widget addTextWithIcon( IconData icon, String label, TextStyle textStyle, Function? onClick){
+  Widget addTextWithIcon( IconData icon, String label, TextStyle textStyle, Function onClick){
     var inset = const EdgeInsets.symmetric(vertical: 5, horizontal: 5);
 
     
