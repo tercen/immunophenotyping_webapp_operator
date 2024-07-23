@@ -293,7 +293,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
 
     sub.onDone((){
-      _getComputedRelation(compTask.id);
+      _getComputedRelation(compTask.id, compTask.taskHash);
       
       finishedUploading = true;
     });
@@ -326,8 +326,13 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   }
 
 
-  void _getComputedRelation(String taskId) async{
+  void _getComputedRelation(String taskId, String taskHash) async{
     // Works for zip file...
+    List<sci.Task> taskByHash = await factory.taskService.findByHash(startKey: taskHash, endKey: taskHash);
+    print("Found ${taskByHash.length} tasks by hash");
+    if(taskByHash.length > 0){
+      print(taskByHash[0].toJson());
+    }
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
     print(compTask.toJson());
     print(compTask.computedRelation.toJson());
