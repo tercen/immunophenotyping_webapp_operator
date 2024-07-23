@@ -44,7 +44,9 @@ class _ResultsScreenState extends State<ResultsScreen>{
     for( sci.Step stp in widget.appData.workflow.steps){
       if(stp.name == "Export Report"){
         sci.DataStep expStp = stp as sci.DataStep;
-        print(expStp.computedRelation.toJson());
+        sci.CompositeRelation cr = expStp.computedRelation as sci.CompositeRelation;
+        sci.Schema reportSchema =  await factory.tableSchemaService.get( cr.joinOperators[0].rightRelation.id );
+        print(reportSchema.toJson());
       }
     }
     return true;
