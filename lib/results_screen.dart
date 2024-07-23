@@ -133,6 +133,48 @@ class _ResultsScreenState extends State<ResultsScreen>{
 
   }
 
+    Widget _addTextWithIcon( IconData icon, String label, TextStyle textStyle, ResultSchemaInfo info){
+    var inset = const EdgeInsets.symmetric(vertical: 5, horizontal: 5);
+
+    
+    var tbl = Align(
+      alignment: Alignment.centerLeft,
+      child: Table(
+      columnWidths: const {
+        0: FixedColumnWidth(32),
+        1: IntrinsicColumnWidth()
+      },
+
+
+      children: [
+        TableRow(
+          children: [
+            Padding(padding: inset, child:Icon(icon)),
+            Padding(padding: inset, child:
+                Material(
+                  child: 
+                  InkWell(
+                    onHover: null,
+                    onTap: (){
+                      print("Info: ${info.filenameCol}");
+                      _doDownload(info);
+                    },
+                    child: Text(label, style: textStyle,),
+                  ),
+                )
+                
+                
+            ),
+          ]
+
+        )
+        
+      ],
+    ),
+    );
+    return tbl;
+  }
+
   @override
   Widget build(BuildContext context) {
     
@@ -148,25 +190,7 @@ class _ResultsScreenState extends State<ResultsScreen>{
           print("Info is ${info.nRows}, ${info.filenameCol}");
           layout.addWidget(
           paddingAbove: RightScreenLayout.paddingSmall,
-          addTextWithIcon(Icons.download, "Download Report", Styles.text, (){
-              print("download func");
-              print("Trying to download (snapshot data is $info)");
-
-            // try {
-              // ResultSchemaInfo info = snapshot.data;
-              // print("Will do download for ${info.filenameCol}");
-              // if( info.nRows > 0 ){
-                // print("Trying to download");
-                // _doDownload(info);
-              // }else{
-                // print("No rows");
-              // }
-            // } catch (e) {
-              // print("Waiting...");
-            // }
-            
-            
-          })
+          _addTextWithIcon(Icons.download, "Download Report", Styles.text, info)
         );
         // layout.addWidget(
         //   paddingAbove: RightScreenLayout.paddingMedium,
