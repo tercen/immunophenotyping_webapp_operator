@@ -103,7 +103,7 @@ class _ResultsScreenState extends State<ResultsScreen>{
           }
           
         }
-
+        print("Read result info");
         return resultInfo;
       }
     }
@@ -113,23 +113,23 @@ class _ResultsScreenState extends State<ResultsScreen>{
   void _doDownload(ResultSchemaInfo info) async {
     sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
           
-          final _mimetype = contentTable.columns[1].values[0];
-          final _filename = contentTable.columns[2].values[0];
-          print("Will download $_filename");
-          // final _base64 = base64Encode(contentTable.columns[2].values[0]);
-          final _base64 = contentTable.columns[2].values[0];
-          print("Will download $_base64");
+    final _mimetype = contentTable.columns[1].values[0];
+    final _filename = contentTable.columns[2].values[0];
+    print("Will download $_filename");
+    // final _base64 = base64Encode(contentTable.columns[2].values[0]);
+    final _base64 = contentTable.columns[2].values[0];
+    print("Will download $_base64");
 
-          //   // Create the link with the file
-          // final anchor =
-          AnchorElement(href: 'data:$_mimetype;base64,$_base64')
-            ..target = 'blank'
-            ..download = _filename
-            ..click();
-          // trigger download
-          // document.body.append(anchor);
-          // anchor.click();
-          // anchor.remove();
+    //   // Create the link with the file
+    // final anchor =
+    AnchorElement(href: 'data:$_mimetype;base64,$_base64')
+      ..target = 'blank'
+      ..download = _filename
+      ..click();
+    // trigger download
+    // document.body.append(anchor);
+    // anchor.click();
+    // anchor.remove();
 
   }
 
@@ -142,17 +142,20 @@ class _ResultsScreenState extends State<ResultsScreen>{
     return FutureBuilder(
       future: _readWorkflowResultInfo(), 
       builder: (context, snapshot ){
-        if( snapshot.hasData ){
+        if( snapshot.hasData && widget.appData.workflowRun == true){
           layout.addWidget(
           paddingAbove: RightScreenLayout.paddingSmall,
           addTextWithIcon(Icons.download, "Download Report", Styles.text, (){
             
             // try {
               ResultSchemaInfo info = snapshot.data!;
+              print("Will do download for ${info.filenameCol}");
               if( info.nRows > 0 ){
                 print("Trying to download");
                 _doDownload(info);
-              }  
+              }else{
+                print("No rows");
+              }
             // } catch (e) {
               // print("Waiting...");
             // }
