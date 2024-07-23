@@ -68,6 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
   late ProgressDialog progressDialog = ProgressDialog(context: context);
   // late sci.Schema annotSch;
   late StreamSubscription<sci.TaskEvent> sub;
+  Map<String, String> dropDownValues = {};
 
 
   bool finishedRunning = false;
@@ -120,12 +121,13 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     if( setting.type == "ListSingle"){
       print("Adding list ${setting.name}");
+      dropDownValues[setting.name] = setting.value;
       tile.addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
         MouseRegion(
       cursor: SystemMouseCursors.basic,
       child: DropdownButton (
-          value: "FastPG",
+          value: dropDownValues[setting.name],
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
           items: ["FastPG", "SlowPG"].map<DropdownMenuItem>((String value) {
@@ -135,9 +137,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
                   );
                 }).toList(), 
           onChanged: (var value){
-            // setState(() {
-            //   setting.value = value;
-            // });
+            setState(() {
+              dropDownValues[setting.name] = value;
+            });
           }
         ))
       );
