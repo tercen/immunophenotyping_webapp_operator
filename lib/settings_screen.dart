@@ -125,19 +125,19 @@ class _SettingsScreenState extends State<SettingsScreen>{
         MouseRegion(
       cursor: SystemMouseCursors.basic,
       child: DropdownButton (
-          value: setting.value,
+          value: "FastPG",
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
-          items: setting.options.map<DropdownMenuItem>((String value) {
+          items: ["FastPG", "SlowPG"].map<DropdownMenuItem>((String value) {
                   return DropdownMenuItem(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(), 
           onChanged: (var value){
-            setState(() {
-              setting.value = value;
-            });
+            // setState(() {
+            //   setting.value = value;
+            // });
           }
         ))
       );
