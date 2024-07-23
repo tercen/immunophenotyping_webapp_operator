@@ -128,7 +128,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
      
       tile.addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
-        DropdownButton (
+        Material(
+          child:         DropdownButton (
           value: dropDownValues[setting.name],
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
@@ -146,7 +147,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
           onChanged: (var value){
            
           }
+        ) ,
         )
+
       );
 
     }else{
