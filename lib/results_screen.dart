@@ -40,12 +40,36 @@ class _ResultsScreenState extends State<ResultsScreen>{
     
   }
 
+  List<sci.SimpleRelation> _getSimpleRelations(sci.Relation relation){
+    List<sci.SimpleRelation> l = [];
+
+    switch (relation.kind) {
+      case "SimpleRelation":
+        l.add(relation as sci.SimpleRelation);
+        break;
+      case "CompositeRelation":
+        sci.CompositeRelation cr = relation as sci.CompositeRelation;
+        List<sci.JoinOperator> joList = cr.joinOperators;
+        l.addAll(_getSimpleRelations(cr.mainRelation));
+        for(var jo in joList){
+          l.addAll(_getSimpleRelations(jo.rightRelation));
+        }
+        // 
+      default:
+    }
+
+    return l;
+  }
+
+
   Future<bool> _readWorkflow() async{
     for( sci.Step stp in widget.appData.workflow.steps){
       if(stp.name == "Export Report"){
         sci.DataStep expStp = stp as sci.DataStep;
-        sci.CompositeRelation cr = expStp.computedRelation as sci.CompositeRelation;
-        sci.Schema reportSchema =  await factory.tableSchemaService.get( cr.joinOperators[0].rightRelation.id );
+        List<sci.SimpleRelation> simpleRels = _getSimpleRelations(expStp.computedRelation);
+        
+        print("Found ${simpleRels.length} relations");
+        sci.Schema reportSchema =  await factory.tableSchemaService.get( simpleRels[0].id );
         print(reportSchema.toJson());
       }
     }
