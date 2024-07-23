@@ -119,27 +119,17 @@ class _SettingsScreenState extends State<SettingsScreen>{
     );
 
     if( setting.type == "ListSingle"){
+      print("Adding list ${setting.name}");
       tile.addWidget(
         DropdownButton <String>(
-          value: setting.value,
-
+          value: null,
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
-          items: setting.options.map<DropdownMenuItem<String>>((String? value) {
-                  print("Adding $value to the dropdown menu");
-                  if( value != null){
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  } else {
-                    return DropdownMenuItem<String>(
-                      value: "Null",
-                      child: Text(""),
-                    );
-                  }
-
-                  
+          items: setting.options.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
                 }).toList(), 
           onChanged: (String? value){
             if( value != null ){
@@ -206,6 +196,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     for( var setting in settingsList ){
       if( stp.name == setting.step ){
         for( var i = 0; i < stp.model.operatorSettings.operatorRef.propertyValues.length; i++){
+          print("${stp.model.operatorSettings.operatorRef.propertyValues[i].name} vs ${setting.settingName}");
           if( stp.model.operatorSettings.operatorRef.propertyValues[i].name == setting.settingName ){
             stp.model.operatorSettings.operatorRef.propertyValues[i].value = setting.value;
             return true;
@@ -234,7 +225,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
       if(stp.kind == "DataStep" ){
         bool updated = _updateOperatorSettings(stp as sci.DataStep);
         if(updated){
-          print(stp.toJson());
+          print(stp.model.operatorSettings.toJson());
         }
         
       }
