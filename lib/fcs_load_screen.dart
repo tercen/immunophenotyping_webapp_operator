@@ -269,7 +269,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.RunComputationTask compTask = sci.RunComputationTask()
           ..state = sci.InitState()
           ..owner = selectedTeam
-          ..aclContext.username = selectedTeam
           ..query = query
           ..projectId = project.id;
     
@@ -284,8 +283,14 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
+
       print(evtMap);
-      if(evtMap["kind"] == "TaskProgressEvent"){
+      if(evtMap["kind"] == "TaskStateEvent"){
+        if( evtMap["state"]["kind"] == "DoneState" ){
+          _getComputedRelation(compTask.id, compTask.taskHash);
+      
+          finishedUploading = true;
+        }
         //Process event log
         
       }
@@ -293,9 +298,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
 
     sub.onDone((){
-      _getComputedRelation(compTask.id, compTask.taskHash);
+      // _getComputedRelation(compTask.id, compTask.taskHash);
       
-      finishedUploading = true;
+      // finishedUploading = true;
     });
 
   }
