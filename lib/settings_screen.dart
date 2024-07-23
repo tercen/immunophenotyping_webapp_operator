@@ -120,8 +120,10 @@ class _SettingsScreenState extends State<SettingsScreen>{
     );
 
     if( setting.type == "ListSingle"){
-      print("Adding list ${setting.name}");
+      
       dropDownValues[setting.name] = setting.value;
+      print("Adding list ${setting.name} with value ${dropDownValues[setting.name]}");
+      
       tile.addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
         MouseRegion(
@@ -133,13 +135,16 @@ class _SettingsScreenState extends State<SettingsScreen>{
           items: ["FastPG", "SlowPG"].map<DropdownMenuItem>((String value) {
                   return DropdownMenuItem(
                     value: value,
+                    onTap: () {
+                      setState(() {
+                        dropDownValues[setting.name] = value;
+                      });
+                    },
                     child: Text(value),
                   );
                 }).toList(), 
           onChanged: (var value){
-            setState(() {
-              dropDownValues[setting.name] = value;
-            });
+           
           }
         ))
       );
