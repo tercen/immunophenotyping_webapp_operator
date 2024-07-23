@@ -122,7 +122,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
       print("Adding list ${setting.name}");
       tile.addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
-        DropdownButton (
+        MouseRegion(
+      cursor: SystemMouseCursors.basic,
+      child: DropdownButton (
           value: setting.value,
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
@@ -133,15 +135,11 @@ class _SettingsScreenState extends State<SettingsScreen>{
                   );
                 }).toList(), 
           onChanged: (var value){
-            if( value != null ){
-               print(value);
-            }
-            
-            // setState(() {
-              // settings.value = value!;
-            // });
+            setState(() {
+              setting.value = value;
+            });
           }
-        )
+        ))
       );
 
     }else{
