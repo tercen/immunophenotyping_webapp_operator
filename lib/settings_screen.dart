@@ -306,12 +306,12 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     return FutureBuilder(
       future: _readSettings(), 
-      builder: (context, snapshot ){
+      builder: (BuildContext context, AsyncSnapshot snapshot ){
 
-        if(  snapshot.hasData && widget.appData.uploadRun ){
+        if(  snapshot.connectionState == ConnectionState.done && snapshot.hasData && widget.appData.uploadRun ){
           List<SettingsEntry> settingsList = [];
           if( snapshot.data != null ){
-            settingsList = snapshot.data!;
+            settingsList = snapshot.data;
           }
           RightScreenLayout layout = RightScreenLayout();
 
