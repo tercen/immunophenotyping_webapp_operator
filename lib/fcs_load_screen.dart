@@ -294,7 +294,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
-      print(evtMap);
+      // print(evtMap);
       if(evtMap["kind"] == "TaskProgressEvent"){
         //Process event log
         
@@ -338,6 +338,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   void _getComputedRelation(String taskId) async{
     // Works for zip file...
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
+    print(compTask.toJson());
     print(compTask.computedRelation.toJson());
     // sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
     // sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
