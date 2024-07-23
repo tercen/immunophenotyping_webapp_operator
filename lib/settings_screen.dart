@@ -6,7 +6,7 @@ import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dropzone/flutter_dropzone.dart';
+
 import 'package:immunophenotyping_template_assistant/ui_utils.dart';
 import 'package:immunophenotyping_template_assistant/util.dart';
 import 'package:list_picker/list_picker.dart';
@@ -122,7 +122,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
       print("Adding list ${setting.name}");
       tile.addWidget(
         DropdownButton <String>(
-          value: null,
+          value: setting.value,
+          isExpanded: true,
           icon: const Icon(Icons.arrow_downward),
           style: Styles.text,
           items: setting.options.map<DropdownMenuItem<String>>((String value) {
