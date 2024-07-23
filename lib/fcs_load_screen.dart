@@ -269,6 +269,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.RunComputationTask compTask = sci.RunComputationTask()
           ..state = sci.InitState()
           ..owner = selectedTeam
+          ..aclContext.username = selectedTeam
           ..query = query
           ..projectId = project.id;
     
@@ -327,7 +328,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _getComputedRelation(String taskId) async{
     // Works for zip file...
-    var compTask = await factory.taskService.get(taskId, useFactory: true) as sci.RunComputationTask;
+    var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
     print(compTask.toJson());
     print(compTask.computedRelation.toJson());
     // sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
