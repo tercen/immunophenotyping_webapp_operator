@@ -29,15 +29,9 @@ class FcsLoadScreen extends StatefulWidget {
 
 }
 
-//FIXME Differential analysis has a filter called first channel which uses annot.channel_id. This, however, is unavailable as a factor. 
-// Nonetheless, this works with the default data. Check this with Faris on Monday
-
-//TODO Improve general screen layout
-//TODO Fix progress message
-//TODO Check existing progress name
 //TODO Check file types for drop
-//TODO better upload/finished feedback
-//TODO add filename as a second table in the CSVTask
+
+
 class UploadFile {
   String filename;
   bool uploaded;
