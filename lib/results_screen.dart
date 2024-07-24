@@ -216,7 +216,7 @@ class _ResultsScreenState extends State<ResultsScreen>{
         );
         layout.addWidget(
           paddingAbove: RightScreenLayout.paddingMedium,
-          _addTextWithIcon(Icons.link_rounded, "Go to Project", Styles.text, "${Uri.base.scheme}://$host/${widget.appData.selectedTeam}/p/${widget.appData.workflow.projectId}") 
+          _addTextWithIcon(Icons.link_rounded, "Open Project in New Tab", Styles.text, "${Uri.base.scheme}://$host/${widget.appData.selectedTeam}/p/${widget.appData.workflow.projectId}") 
         );
 
           return layout.buildScreenWidget();
