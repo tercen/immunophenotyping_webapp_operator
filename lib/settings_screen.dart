@@ -301,10 +301,11 @@ class _SettingsScreenState extends State<SettingsScreen>{
     wkf = await factory.workflowService.create(wkf);
     
     
-    print("Workflow has ${wkf.steps.length} steps");
     progressDialog.show(
         msg: "Running the workflow. Please wait.", 
         max: wkf.steps.length,
+        progressBgColor: Colors.white,
+        progressValueColor: const Color.fromARGB(255, 76, 18, 211),
         valuePosition: ValuePosition.center,
         valueFontSize: 18.0,
         progressType: ProgressType.valuable,

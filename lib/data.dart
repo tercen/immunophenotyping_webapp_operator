@@ -8,6 +8,7 @@ class AppData {
   sci.ProjectDocument channelAnnotationDoc = sci.ProjectDocument();
   sci.ProjectDocument measurementsDoc = sci.ProjectDocument();
 
+  String selectedTeam = "";
    
   bool workflowRun = false;
   bool uploadRun = false;

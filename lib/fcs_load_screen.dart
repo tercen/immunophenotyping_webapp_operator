@@ -476,6 +476,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
                 setState(() {
                   selectedTeam = team;
                   enableUpload = true;
+                  widget.appData.selectedTeam = selectedTeam;
                 });
                 // teamTfController.text = selectedTeam;
               }

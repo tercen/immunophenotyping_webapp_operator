@@ -47,9 +47,6 @@ class _ResultsScreenState extends State<ResultsScreen>{
   RightScreenLayout layout = RightScreenLayout();
   
 
-  Future<void> _downloadReport() async {
-    
-  }
 
   List<sci.SimpleRelation> _getSimpleRelations(sci.Relation relation){
     List<sci.SimpleRelation> l = [];
@@ -124,14 +121,18 @@ class _ResultsScreenState extends State<ResultsScreen>{
       ..target = 'blank'
       ..download = _filename
       ..click();
-    // trigger download
-    // document.body.append(anchor);
-    // anchor.click();
-    // anchor.remove();
-
   }
 
-    Widget _addTextWithIcon( IconData icon, String label, TextStyle textStyle, ResultSchemaInfo info){
+  void _doRedirect(String destination) async {
+    //   // Create the link with the file
+    // final anchor =
+    AnchorElement(href: destination)
+      // ..target = 'blank'
+      // ..download = _filename
+      .click();
+  }
+
+  Widget _addTextWithIcon( IconData icon, String label, TextStyle textStyle, var info){
     var inset = const EdgeInsets.symmetric(vertical: 5, horizontal: 5);
 
     
@@ -158,7 +159,12 @@ class _ResultsScreenState extends State<ResultsScreen>{
                   InkWell(
                     onHover: null,
                     onTap: (){
-                      _doDownload(info);
+                      if( info is ResultSchemaInfo ){
+                        _doDownload(info);
+                      }else{
+                        _doRedirect(info);
+                      }
+                      
                     },
                     child: Text(label, style: textStyle,),
                   ),
@@ -190,21 +196,18 @@ class _ResultsScreenState extends State<ResultsScreen>{
         if( snapshot.connectionState == ConnectionState.done && snapshot.hasData && widget.appData.workflowRun == true){
           // print("Adding widget (snapshot data is ${snapshot.data})");
           ResultSchemaInfo info = snapshot.data;
+          
+          print("Project link will be ${Uri.base.toString()}/${widget.appData.selectedTeam}/p/${widget.appData.workflow.projectId}"); // 
+
           // print("Info is ${info.nRows}, ${info.filenameCol}");
           layout.addWidget(
           paddingAbove: RightScreenLayout.paddingSmall,
           _addTextWithIcon(Icons.download, "Download Report", Styles.text, info)
         );
-        // layout.addWidget(
-        //   paddingAbove: RightScreenLayout.paddingMedium,
-        //   addTextWithIcon(Icons.link_rounded, "Go to Project", Styles.text, (){
-            
-        //     //TODO
-        //       //              html.AnchorElement anchorElement =  new html.AnchorElement(href: url);
-        //       //  anchorElement.download = url;
-        //       //  anchorElement.click();
-        //   })
-        // );
+        layout.addWidget(
+          paddingAbove: RightScreenLayout.paddingMedium,
+          _addTextWithIcon(Icons.link_rounded, "Go to Project", Styles.text, "") 
+        );
 
           return layout.buildScreenWidget();
         }else{
