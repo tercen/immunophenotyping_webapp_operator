@@ -424,6 +424,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     progressDialog.show(
                 msg: "Starting upload, please wait", 
+                progressBgColor: Colors.white,
+                progressValueColor: const Color.fromARGB(255, 76, 18, 211),
                 barrierColor: const Color.fromARGB(125, 0, 0, 0),
     );
     
@@ -566,26 +568,26 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         ],
       )
     )
-    ..addWidget(
-      paddingAbove: RightScreenLayout.paddingLarge,
-      const Text("Github Token", style: Styles.textH2)
-    )
-    ..addWidget(
-        paddingAbove: RightScreenLayout.paddingSmall,
-        SizedBox(
-          width: Styles.tfWidthLarge,
-          child: 
-            TextField(
-              controller: patController,
-              style: Styles.text,
-              decoration: 
-                InputDecoration(
-                  border: OutlineInputBorder(borderRadius: Styles.borderRounding ),
+    // ..addWidget(
+    //   paddingAbove: RightScreenLayout.paddingLarge,
+    //   const Text("Github Token", style: Styles.textH2)
+    // )
+    // ..addWidget(
+    //     paddingAbove: RightScreenLayout.paddingSmall,
+    //     SizedBox(
+    //       width: Styles.tfWidthLarge,
+    //       child: 
+    //         TextField(
+    //           controller: patController,
+    //           style: Styles.text,
+    //           decoration: 
+    //             InputDecoration(
+    //               border: OutlineInputBorder(borderRadius: Styles.borderRounding ),
 
-              )
-            ),
-        )   
-      )
+    //           )
+    //         ),
+    //     )   
+    //   )
     ..addWidget(
       paddingAbove: RightScreenLayout.paddingLarge,
       ElevatedButton(

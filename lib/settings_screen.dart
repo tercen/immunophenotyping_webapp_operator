@@ -297,7 +297,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     String formattedDate = DateFormat('yyyy_MM_dd_kkmm').format(now);
 
     if(runPrefixController.text != ""){
-      formattedDate = "${runPrefixController}_$formattedDate";
+      formattedDate = "${runPrefixController.text}_$formattedDate";
     }
     // Create a folder for the workflow to run in 
     sci.FolderDocument folder = sci.FolderDocument()
@@ -390,9 +390,8 @@ class _SettingsScreenState extends State<SettingsScreen>{
                   controller: runPrefixController,
                   style: Styles.text,
                   decoration: 
-                    InputDecoration(
-                      border: OutlineInputBorder(borderRadius: Styles.borderRounding ),
-
+                    const InputDecoration(
+                      border: UnderlineInputBorder(),
                   )
                 ),
             )   
