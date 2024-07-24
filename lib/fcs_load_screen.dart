@@ -286,7 +286,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
 
-      print(evtMap);
+      // print(evtMap);
       if(evtMap["kind"] == "TaskStateEvent"){
         if( evtMap["state"]["kind"] == "DoneState" ){
         }

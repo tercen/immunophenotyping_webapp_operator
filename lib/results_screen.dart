@@ -103,7 +103,7 @@ class _ResultsScreenState extends State<ResultsScreen>{
           }
           
         }
-        print("Read result info");
+        // print("Read result info");
         return resultInfo;
       }
     }
@@ -111,15 +111,13 @@ class _ResultsScreenState extends State<ResultsScreen>{
   }
 
   void _doDownload(ResultSchemaInfo info) async {
-    print("Selecting ${info.filenameCol}, ${info.mimetypeCol}, ${info.contentCol}");
+    // print("Selecting ${info.filenameCol}, ${info.mimetypeCol}, ${info.contentCol}");
     sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
           
     final _mimetype = contentTable.columns[1].values[0];
     final _filename = contentTable.columns[0].values[0];
-    print("Will download $_filename");
-    // final _base64 = base64Encode(contentTable.columns[2].values[0]);
     final _base64 = contentTable.columns[2].values[0];
-    print("Will download $_base64");
+
 
     //   // Create the link with the file
     // final anchor =
@@ -191,9 +189,9 @@ class _ResultsScreenState extends State<ResultsScreen>{
       future: _readWorkflowResultInfo(), 
       builder: (BuildContext context, AsyncSnapshot snapshot ){
         if( snapshot.connectionState == ConnectionState.done && snapshot.hasData && widget.appData.workflowRun == true){
-          print("Adding widget (snapshot data is ${snapshot.data})");
+          // print("Adding widget (snapshot data is ${snapshot.data})");
           ResultSchemaInfo info = snapshot.data;
-          print("Info is ${info.nRows}, ${info.filenameCol}");
+          // print("Info is ${info.nRows}, ${info.filenameCol}");
           layout.addWidget(
           paddingAbove: RightScreenLayout.paddingSmall,
           _addTextWithIcon(Icons.download, "Download Report", Styles.text, info)

@@ -314,7 +314,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
       //TODO HAndle progress messages better
-      // print(evtMap);
+      print(evtMap);
       if(evtMap["kind"] == "TaskProgressEvent"){
 
       }
