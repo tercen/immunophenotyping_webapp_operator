@@ -152,17 +152,21 @@ class _ResultsScreenState extends State<ResultsScreen>{
           children: [
             Padding(padding: inset, child:Icon(icon)),
             Padding(padding: inset, child:
+              Container(
+                decoration: const BoxDecoration(color: Colors.white),
+                child:  
                 Material(
                   child: 
                   InkWell(
                     onHover: null,
                     onTap: (){
-                      print("Info: ${info.filenameCol}");
                       _doDownload(info);
                     },
                     child: Text(label, style: textStyle,),
                   ),
                 )
+              )
+               
                 
                 
             ),

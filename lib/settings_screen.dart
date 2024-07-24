@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'package:immunophenotyping_template_assistant/ui_utils.dart';
 import 'package:immunophenotyping_template_assistant/util.dart';
+import 'package:intl/intl.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:web/web.dart' as web;
 import 'package:sci_tercen_client/sci_client.dart' as sci;
@@ -128,27 +129,32 @@ class _SettingsScreenState extends State<SettingsScreen>{
      
       tile.addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
-        Material(
-          child:         DropdownButton (
-          value: dropDownValues[setting.name],
-          icon: const Icon(Icons.arrow_downward),
-          style: Styles.text,
-          items: setting.options.map<DropdownMenuItem>((String value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    onTap: () {
-                      setState(() {
-                        dropDownValues[setting.name] = value;
-                      });
-                    },
-                    child: Text(value),
-                  );
-                }).toList(), 
-          onChanged: (var value){
-           
-          }
-        ) ,
+        Container(
+          decoration: const BoxDecoration(color: Colors.white),
+          child:         
+          Material(
+            child:         DropdownButton (
+            value: dropDownValues[setting.name],
+            icon: const Icon(Icons.arrow_downward),
+            style: Styles.text,
+            items: setting.options.map<DropdownMenuItem>((String value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      onTap: () {
+                        setState(() {
+                          dropDownValues[setting.name] = value;
+                        });
+                      },
+                      child: Text(value),
+                    );
+                  }).toList(), 
+            onChanged: (var value){
+            
+            }
+          ) ,
+          ),
         )
+
 
       );
 
@@ -268,7 +274,19 @@ class _SettingsScreenState extends State<SettingsScreen>{
       }
     }
 
-    await factory.workflowService.update(wkf);
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyy_MM_dd_kkmm').format(now);
+    // Create a folder for the workflow to run in 
+    sci.FolderDocument folder = sci.FolderDocument()
+        ..acl.owner = wkf.acl.owner
+        ..name = formattedDate
+        ..isHidden = false
+        ..projectId = wkf.projectId;
+
+    folder = await factory.folderService.create(folder);
+    wkf.folderId = folder.id;
+
+    wkf = await factory.workflowService.create(wkf);
     
 
 
