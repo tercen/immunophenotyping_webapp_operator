@@ -152,10 +152,11 @@ class _ResultsScreenState extends State<ResultsScreen>{
           children: [
             Padding(padding: inset, child:Icon(icon)),
             Padding(padding: inset, child:
-              Container(
-                decoration: const BoxDecoration(color: Colors.white),
+              Material(
+                
                 child:  
-                Material(
+                Container(
+                  decoration: const BoxDecoration(color: Colors.white),
                   child: 
                   InkWell(
                     onHover: null,

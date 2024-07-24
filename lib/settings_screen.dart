@@ -129,32 +129,34 @@ class _SettingsScreenState extends State<SettingsScreen>{
      
       tile.addWidget(
         paddingAbove: RightScreenLayout.paddingSmall,
-        Container(
-          decoration: const BoxDecoration(color: Colors.white),
-          child:         
+        
           Material(
-            child:         DropdownButton (
-            value: dropDownValues[setting.name],
-            icon: const Icon(Icons.arrow_downward),
-            style: Styles.text,
-            items: setting.options.map<DropdownMenuItem>((String value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      onTap: () {
-                        setState(() {
-                          dropDownValues[setting.name] = value;
-                        });
-                      },
-                      child: Text(value),
-                    );
-                  }).toList(), 
-            onChanged: (var value){
-            
-            }
-          ) ,
+            child:         
+            Container(
+                decoration: const BoxDecoration(color: Colors.white),
+                child:  
+                  DropdownButton (
+                    value: dropDownValues[setting.name],
+                    icon: const Icon(Icons.arrow_downward),
+                    style: Styles.text,
+                    items: setting.options.map<DropdownMenuItem>((String value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            onTap: () {
+                              setState(() {
+                                dropDownValues[setting.name] = value;
+                              });
+                            },
+                            child: Text(value),
+                          );
+                        }).toList(), 
+                  onChanged: (var value){
+                  
+                  }
+                ),
+            )
+            ,
           ),
-        )
-
 
       );
 
@@ -285,6 +287,10 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     folder = await factory.folderService.create(folder);
     wkf.folderId = folder.id;
+    wkf.id = "";
+    wkf.rev = "";
+
+        
 
     wkf = await factory.workflowService.create(wkf);
     
