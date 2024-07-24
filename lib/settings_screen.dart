@@ -71,7 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
   late StreamSubscription<sci.TaskEvent> sub;
   Map<String, String> dropDownValues = {};
   int finishedSteps = 0;
-
+  final TextEditingController runPrefixController = TextEditingController(text: "");
 
   bool finishedRunning = false;
   
@@ -295,6 +295,10 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy_MM_dd_kkmm').format(now);
+
+    if(runPrefixController.text != ""){
+      formattedDate = "${runPrefixController}_$formattedDate";
+    }
     // Create a folder for the workflow to run in 
     sci.FolderDocument folder = sci.FolderDocument()
         ..acl.owner = wkf.acl.owner
@@ -361,11 +365,39 @@ class _SettingsScreenState extends State<SettingsScreen>{
       builder: (BuildContext context, AsyncSnapshot snapshot ){
 
         if(  snapshot.connectionState == ConnectionState.done && snapshot.hasData && widget.appData.uploadRun ){
+
+          
+
           List<SettingsEntry> settingsList = [];
           if( snapshot.data != null ){
             settingsList = snapshot.data;
           }
           RightScreenLayout layout = RightScreenLayout();
+
+          layout.addWidget(
+            paddingAbove: RightScreenLayout.paddingSmall,
+            const Text(
+              "Run Prefix",
+              style: Styles.textH2,
+            )
+          );
+          layout.addWidget(
+           paddingAbove: RightScreenLayout.paddingSmall,
+           SizedBox(
+              width: Styles.tfWidthMedium,
+              child: 
+                TextField(
+                  controller: runPrefixController,
+                  style: Styles.text,
+                  decoration: 
+                    InputDecoration(
+                      border: OutlineInputBorder(borderRadius: Styles.borderRounding ),
+
+                  )
+                ),
+            )   
+          ); 
+        
 
           Map<String, List<SettingsEntry>> sections = {};
 

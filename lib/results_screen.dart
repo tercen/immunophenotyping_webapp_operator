@@ -127,9 +127,10 @@ class _ResultsScreenState extends State<ResultsScreen>{
   void _doRedirect(String destination) async {
     //   // Create the link with the file
     final Uri url = Uri.parse(destination);
-    if (!await launchUrl(url, webOnlyWindowName: '_blank')) {
-        throw Exception('Could not launch $url');
-    }
+    await launchUrl(url, webOnlyWindowName: '_blank');
+    // if (!await launchUrl(url, webOnlyWindowName: '_blank')) {
+        // throw Exception('Could not launch $url');
+    // }
     // final anchor =
     // AnchorElement(href: destination)
       // ..target = 'blank'
