@@ -196,8 +196,13 @@ class _ResultsScreenState extends State<ResultsScreen>{
         if( snapshot.connectionState == ConnectionState.done && snapshot.hasData && widget.appData.workflowRun == true){
           // print("Adding widget (snapshot data is ${snapshot.data})");
           ResultSchemaInfo info = snapshot.data;
-          
-          print("Project link will be ${Uri.base.toString()}/${widget.appData.selectedTeam}/p/${widget.appData.workflow.projectId}"); // 
+          String host = "";
+          if( Uri.base.port != 80 ){
+            host = "${Uri.base.host}:${Uri.base.port}";
+          }else{
+            host = Uri.base.host;
+          }
+          print("Project link will be ${Uri.base.scheme}://$host/${widget.appData.selectedTeam}/p/${widget.appData.workflow.projectId}"); // 
 
           // print("Info is ${info.nRows}, ${info.filenameCol}");
           layout.addWidget(
@@ -206,7 +211,7 @@ class _ResultsScreenState extends State<ResultsScreen>{
         );
         layout.addWidget(
           paddingAbove: RightScreenLayout.paddingMedium,
-          _addTextWithIcon(Icons.link_rounded, "Go to Project", Styles.text, "") 
+          _addTextWithIcon(Icons.link_rounded, "Go to Project", Styles.text, "${Uri.base.scheme}://$host/${widget.appData.selectedTeam}/p/${widget.appData.workflow.projectId}") 
         );
 
           return layout.buildScreenWidget();
