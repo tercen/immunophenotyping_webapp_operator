@@ -84,7 +84,6 @@ class _ResultsScreenState extends State<ResultsScreen>{
         sci.DataStep expStp = stp as sci.DataStep;
         List<sci.SimpleRelation> simpleRels = _getSimpleRelations(expStp.computedRelation);
         
-        print("Found ${simpleRels.length} relations");
         sci.Schema reportSchema =  await factory.tableSchemaService.get( simpleRels[0].id );
 
         ResultSchemaInfo resultInfo = ResultSchemaInfo( simpleRels[0].id, reportSchema.nRows );
