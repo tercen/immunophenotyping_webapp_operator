@@ -231,7 +231,12 @@ class _SettingsScreenState extends State<SettingsScreen>{
   }
 
   Future<void> _runWorkflow(List<SettingsEntry> settingsList) async {
-    
+    finishedRunning = true;
+    widget.appData.workflowRun = false;
+    widget.appData.workflow = sci.Workflow();
+    finishedSteps = 0;
+
+
     List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: 
                     [widget.appData.channelAnnotationDoc.projectId, "ufff0", "ufff0"], 
                     endKey: [widget.appData.channelAnnotationDoc.projectId, "", ""]
@@ -295,11 +300,13 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     wkf = await factory.workflowService.create(wkf);
     
-    progressDialog.close(delay: 1);
-
+    
+    print("Workflow has ${wkf.steps.length} steps");
     progressDialog.show(
         msg: "Running the workflow. Please wait.", 
         max: wkf.steps.length,
+        valuePosition: ValuePosition.center,
+        valueFontSize: 18.0,
         progressType: ProgressType.valuable,
         barrierColor: const Color.fromARGB(125, 0, 0, 0),
     );
@@ -325,7 +332,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
       //TODO Handle progress messages better
-      print(evtMap);
+      // print(evtMap);
       if(evtMap["kind"] == "TaskStateEvent"){
         if( evtMap["state"]["kind"] == "DoneState"){
           finishedSteps += 1;
@@ -338,7 +345,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
       finishedRunning = true;
       widget.appData.workflowRun = true;
       widget.appData.workflow = await factory.workflowService.get(wkf.id);
-      finishedSteps = 0;
+      progressDialog.close();
     });
   }
 
