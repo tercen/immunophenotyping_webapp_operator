@@ -10,6 +10,7 @@ import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:immunophenotyping_template_assistant/ui_utils.dart';
 import 'package:immunophenotyping_template_assistant/util.dart';
 import 'package:list_picker/list_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:web/web.dart' as web;
 import 'package:sci_tercen_client/sci_client.dart' as sci;
 import 'package:sci_tercen_model/sci_model_base.dart' as model;
@@ -125,11 +126,15 @@ class _ResultsScreenState extends State<ResultsScreen>{
 
   void _doRedirect(String destination) async {
     //   // Create the link with the file
+    final Uri url = Uri.parse(destination);
+    if (!await launchUrl(url, webOnlyWindowName: '_blank')) {
+        throw Exception('Could not launch $url');
+    }
     // final anchor =
-    AnchorElement(href: destination)
+    // AnchorElement(href: destination)
       // ..target = 'blank'
       // ..download = _filename
-      .click();
+      // .click();
   }
 
   Widget _addTextWithIcon( IconData icon, String label, TextStyle textStyle, var info){

@@ -247,6 +247,17 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
 
     sci.Workflow wkf = await factory.workflowService.get(workflows[0].id);
+
+    progressDialog.show(
+        msg: "Running the workflow. Please wait.", 
+        max: wkf.steps.length,
+        progressBgColor: Colors.white,
+        progressValueColor: const Color.fromARGB(255, 76, 18, 211),
+        valuePosition: ValuePosition.center,
+        valueFontSize: 18.0,
+        progressType: ProgressType.valuable,
+        barrierColor: const Color.fromARGB(125, 0, 0, 0),
+    );
     
     var uuid = const Uuid();
     for(sci.Step stp in wkf.steps){
@@ -301,16 +312,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
     wkf = await factory.workflowService.create(wkf);
     
     
-    progressDialog.show(
-        msg: "Running the workflow. Please wait.", 
-        max: wkf.steps.length,
-        progressBgColor: Colors.white,
-        progressValueColor: const Color.fromARGB(255, 76, 18, 211),
-        valuePosition: ValuePosition.center,
-        valueFontSize: 18.0,
-        progressType: ProgressType.valuable,
-        barrierColor: const Color.fromARGB(125, 0, 0, 0),
-    );
+
 
 
     //3. Run Workflow task
@@ -388,21 +390,21 @@ class _SettingsScreenState extends State<SettingsScreen>{
             ElevatedButton(
               style: setButtonStyle("enabled"),
               onPressed: (){
-                progressDialog.show(
-                    msg: "Running the workflow. Please wait.", 
-                    barrierColor: const Color.fromARGB(125, 0, 0, 0),
-                );
+                // progressDialog.show(
+                //     msg: "Running the workflow. Please wait.", 
+                //     barrierColor: const Color.fromARGB(125, 0, 0, 0),
+                // );
 
-                Timer.periodic(const Duration(milliseconds: 250), (tmr){
-                if( finishedRunning == true){
-                  tmr.cancel();
+              //   Timer.periodic(const Duration(milliseconds: 250), (tmr){
+              //   if( finishedRunning == true){
+              //     tmr.cancel();
 
-                  if( progressDialog.isOpen()){
-                    progressDialog.close();
-                  }
+              //     if( progressDialog.isOpen()){
+              //       progressDialog.close();
+              //     }
                   
-                }
-              });
+              //   }
+              // });
 
               _runWorkflow(settingsList);
                
