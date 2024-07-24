@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:immunophenotyping_template_assistant/annotation_screen.dart';
 import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:immunophenotyping_template_assistant/fcs_load_screen.dart';
 import 'package:immunophenotyping_template_assistant/results_screen.dart';
 import 'package:immunophenotyping_template_assistant/settings_screen.dart';
 import 'package:immunophenotyping_template_assistant/util.dart';
+
 
 
 //TODO list
@@ -100,11 +100,18 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
       );
     }
     return Material( 
-      child:ListView(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      children: leftItems,
-    ));
+      
+      child:
+        Container(
+          decoration: const BoxDecoration(color: Colors.white),
+          child: 
+          ListView(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            children: leftItems,
+          ),
+      )
+        );
   }
 
   Widget _addItem( IconData icon, String label, String screenTo, bool enabled){
