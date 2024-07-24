@@ -70,6 +70,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
   // late sci.Schema annotSch;
   late StreamSubscription<sci.TaskEvent> sub;
   Map<String, String> dropDownValues = {};
+  int finishedSteps = 0;
 
 
   bool finishedRunning = false;
@@ -294,6 +295,14 @@ class _SettingsScreenState extends State<SettingsScreen>{
 
     wkf = await factory.workflowService.create(wkf);
     
+    progressDialog.close(delay: 1);
+
+    progressDialog.show(
+        msg: "Running the workflow. Please wait.", 
+        max: wkf.steps.length,
+        progressType: ProgressType.valuable,
+        barrierColor: const Color.fromARGB(125, 0, 0, 0),
+    );
 
 
     //3. Run Workflow task
@@ -306,17 +315,22 @@ class _SettingsScreenState extends State<SettingsScreen>{
     
 
 
+
+
     workflowTask = await factory.taskService.create(workflowTask) as sci.RunWorkflowTask;
     
     var taskStream = factory.eventService.listenTaskChannel(workflowTask.id, true).asBroadcastStream();
     
-
+    
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
-      //TODO HAndle progress messages better
+      //TODO Handle progress messages better
       print(evtMap);
-      if(evtMap["kind"] == "TaskProgressEvent"){
-
+      if(evtMap["kind"] == "TaskStateEvent"){
+        if( evtMap["state"]["kind"] == "DoneState"){
+          finishedSteps += 1;
+          progressDialog.update(value: finishedSteps);
+        }
       }
     });
 
@@ -324,6 +338,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
       finishedRunning = true;
       widget.appData.workflowRun = true;
       widget.appData.workflow = await factory.workflowService.get(wkf.id);
+      finishedSteps = 0;
     });
   }
 
