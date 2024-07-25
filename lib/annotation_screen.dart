@@ -213,7 +213,11 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
             )  
           );
           // return layout.buildScreenWidget();
-          return PaginatedDataTable(
+          return 
+                Material(
+                  color: Colors.black87,
+                  child: PaginatedDataTable(
+
                         columns: const <DataColumn>[
                           DataColumn(
 
@@ -226,7 +230,8 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                         ],
                         source: dataSource,
 
-                  );
+                  ),
+                ) ;
               
         }else{
           // TODO better place the loading icon
