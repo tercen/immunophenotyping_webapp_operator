@@ -153,8 +153,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         }
       }
 
-
-      List<sci.ProjectDocument> list1 = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: "", endKey: "Flow Immunophenotyping - PhenoGraph");
+//"Flow Immunophenotyping - PhenoGraph"
+      List<sci.ProjectDocument> list1 = await factory.projectDocumentService.findProjectObjectsByFolderAndName(
+                            startKey: [project.id,  "ufff0", "ufff0"], 
+                            endKey: [project.id,  "", ""]);
       List<sci.ProjectDocument> list2 = await factory.projectDocumentService.findProjectObjectsByLastModifiedDate(startKey: "0000", endKey: "9999");
 
       print("List1:");
