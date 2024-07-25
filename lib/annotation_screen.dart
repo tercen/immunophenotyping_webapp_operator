@@ -216,7 +216,23 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           return 
                 Material(
                   color: Colors.black87,
-                  child: PaginatedDataTable(
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      scaffoldBackgroundColor: Color.fromARGB(255, 155, 0, 0),
+                      cardColor: Colors.lightGreen,
+                      dataTableTheme: DataTableThemeData(
+                        dataRowColor: WidgetStateProperty.resolveWith<Color?>(
+                                              (Set<WidgetState> states) {
+                                            // if (states.contains(WidgetState.selected)) {
+                                            //   return Colors.blue;
+                                            // }
+                                            return Color.fromARGB(255, 50, 200, 200);
+                                          }),
+                      )
+
+                    ),
+                    child: 
+                      PaginatedDataTable(
 
                         columns: const <DataColumn>[
                           DataColumn(
@@ -231,6 +247,8 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                         source: dataSource,
 
                   ),
+                  )
+                  
                 ) ;
               
         }else{
