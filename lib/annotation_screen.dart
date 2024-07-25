@@ -50,7 +50,11 @@ class AnnotationDataSource extends DataTableSource{
               SizedBox.expand(
                 child: Container(
                   color: index % 2 == 0 ? Colors.white : const Color.fromARGB(80, 210, 220, 255),
-                  child: Text(tbl.columns[0].values[index], style: Styles.text,),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(tbl.columns[0].values[index], style: Styles.text,),
+                  )
+                  
                 ),
               )
               
@@ -173,6 +177,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                         surfaceTintColor: Colors.white,
                         color: Colors.white,
                         elevation: 0,
+                        margin: EdgeInsets.all(0)
 
                       ),
                       ),
