@@ -214,25 +214,10 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           );
           // return layout.buildScreenWidget();
           return 
-              Theme(
-                    data: Theme.of(context).copyWith(
-                      scaffoldBackgroundColor: Color.fromARGB(255, 155, 0, 0),
-                      cardColor: Colors.lightGreen,
-                      dataTableTheme: DataTableThemeData(
-                        decoration: const BoxDecoration(color: Colors.white),
-                        dataRowColor: WidgetStateProperty.resolveWith<Color?>(
-                                              (Set<WidgetState> states) {
-                                            if (states.contains(WidgetState.hovered)) {
-                                              return const Color.fromARGB(255, 200, 200, 255);
-                                            }
-                                            
-                                            return Styles.white;
-                                          }),
-                      )
-
-                    ),
-                    child: 
-                      PaginatedDataTable(
+            Material(
+              child: Container(
+                color: Colors.red,
+                child: PaginatedDataTable(
 
                         columns: const <DataColumn>[
                           DataColumn(
@@ -246,9 +231,9 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                         ],
                         source: dataSource,
 
-                  ),
-                ) ;
-              
+                  ) ,
+              )
+            );
         }else{
           // TODO better place the loading icon
           return const Center(
