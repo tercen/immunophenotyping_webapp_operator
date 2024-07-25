@@ -229,7 +229,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     List<sci.FileDocument> uploadedDocs = [];
     List<String> docIds = [];
     List<String> dotDocIds = [];
-    
+    int fti = 0;
     for( int i = 0; i < htmlFileList.length; i++ ){
       web.File file = htmlFileList[i];
       var bytes = await dvController.getFileData(file);
@@ -250,7 +250,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) ) );
 
       setState(() {
-        filesToUpload[i].uploaded = true;
+        filesToUpload[fti].uploaded = true;
+        fti += 1;
       });
 
       docIds.add(uploadedDocs[i].id);
@@ -277,7 +278,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes!]) ) );
 
       setState(() {
-        filesToUpload[i].uploaded = true;
+        filesToUpload[fti].uploaded = true;
+        fti += 1;
       });
 
       docIds.add(uploadedDocs[i].id);
