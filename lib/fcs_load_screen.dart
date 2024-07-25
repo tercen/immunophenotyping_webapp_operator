@@ -217,11 +217,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Document op = sci.Document();
     bool opFound = false;
     for( var teamName in teamNameList ){
-      var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: teamName, endKey: '');
+      var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: teamName, endKey: '', limit: 1000);
       for( var o in installedOperators ){
-        if( o.name == "FCS"){
+        if( o.name == "FCS" && o.version == "2.3.0"){
           print("Found FCS operator installed (version ${op.version})");
           op = o;
+          opFound = true;
           break;
         }
 
