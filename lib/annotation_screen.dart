@@ -105,6 +105,8 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           ..name = tbl.columns[1].name
           ..values = tson.CStringList.fromList(newAnnotations));
 
+
+      print("Uploading channel annotation to folderId ${widget.appData.channelAnnotationDoc.folderId}");
       await uploadTable(annotationTable, 
                 annotationTable.properties.name, 
                 widget.appData.channelAnnotationDoc.projectId, 
