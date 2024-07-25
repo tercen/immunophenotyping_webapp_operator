@@ -254,23 +254,36 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     sci.Document op = sci.Document();
     bool opFound = false;
-    for( var teamName in teamNameList ){
-      
-      var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: teamName, endKey: '', limit: 1000);
-      for( var o in installedOperators ){
-        if( o.name == "FCS" ){
-          print("Found FCS operator installed (version ${op.version})");
-          op = o;
-          opFound = true;
-          break;
-        }
 
-      }
-      if(opFound == true){
+      
+    var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '', limit: 1000);
+    for( var o in installedOperators ){
+      if( o.name == "FCS" && o.version == "2.3.0"){
+        print("Found FCS operator installed (version ${op.version})");
+        op = o;
+        opFound = true;
         break;
       }
+
     }
 
+    if(opFound == false){
+      progressDialog.update(msg: "Installing ReadFCS Operator. Please wait.");
+      sci.CreateGitOperatorTask installTask = sci.CreateGitOperatorTask()
+        ..state = sci.InitState()
+        ..version = "2.3.0"
+        ..testRequired = false
+        ..isDeleted = false
+        ..owner = selectedTeam;
+      installTask.url.uri = "https://github.com/tercen/read_fcs_operator";
+
+      installTask = await factory.taskService.create(installTask) as sci.CreateGitOperatorTask;
+      await factory.taskService.runTask(installTask.id);
+      await factory.taskService.waitDone(installTask.id);
+
+      op = await factory.operatorService.get(installTask.operatorId);
+      
+    }
 
 
     // 2. Prepare the computation task
@@ -338,7 +351,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
 
-      // print(evtMap);
+      print(evtMap);
       if(evtMap["kind"] == "TaskStateEvent"){
         if( evtMap["state"]["kind"] == "DoneState" ){
         }
@@ -388,14 +401,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
 
-    print(compTask.computedRelation.toJson());
-    // sci.CompositeRelation rel = compTask.computedRelation as sci.CompositeRelation;
-    // sci.CompositeRelation cr = rel.joinOperators[0].rightRelation as sci.CompositeRelation;
-    
 
     List<sci.SimpleRelation> relations = _getSimpleRelations(compTask.computedRelation);
-    // relations[0]; //MEasurements
-    // relations[1]; //Observations == check by name
     sci.Schema measurementSch = sci.Schema();
     // sci.Schema observationsSch = sci.Schema();
     for(var r in relations ){
