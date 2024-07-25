@@ -45,7 +45,7 @@ Future<void> uploadTable(
       sci.Table table, String filename, String projectId, String owner, String folderId) async {
     var factory = tercen.ServiceFactory();
     var bytes = tson.encode(table.toJson());
-
+    print("Uplaoding to folderId ${folderId}");
     var resultFile = sci.FileDocument()
       ..name = table.properties.name
       ..isHidden = true

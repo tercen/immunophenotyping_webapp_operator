@@ -82,7 +82,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
 
   bool finishedUpdate = false;
   
-  void _updateAnnotations(sci.Table tbl, List<int> changedRows, List<String> changedText ) {
+  void _updateAnnotations(sci.Table tbl, List<int> changedRows, List<String> changedText ) async {
     if(changedRows.isNotEmpty){
       List<String> newAnnotations = List.from(tbl.columns[1].values);
       
@@ -105,7 +105,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           ..name = tbl.columns[1].name
           ..values = tson.CStringList.fromList(newAnnotations));
 
-      uploadTable(annotationTable, 
+      await uploadTable(annotationTable, 
                 annotationTable.properties.name, 
                 widget.appData.channelAnnotationDoc.projectId, 
                 widget.appData.channelAnnotationDoc.acl.owner,
@@ -114,8 +114,9 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
 
       widget.appData.channelAnnotationTbl = annotationTable;
 
-      print("Deleting ${widget.appData.channelAnnotationDoc}");
-      factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
+      
+      await factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
+      finishedUpdate = true;
     }
   }
 
