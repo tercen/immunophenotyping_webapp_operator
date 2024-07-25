@@ -71,8 +71,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     leftMenuList.add( LeftMenuItem(Icons.settings, "Settings", _TwoColumnHomeState.SETTINGS_SCREEN, false));
     leftMenuList.add( LeftMenuItem(Icons.file_present_rounded, "Results", _TwoColumnHomeState.RESULTS_SCREEN, false));
 
-    Timer.periodic(const Duration(milliseconds: 500), (tmr){
-      if(appData.channelAnnotationDoc.id != "" && leftMenuList[1].enabled == false){
+    Timer.periodic(const Duration(milliseconds: 100), (tmr){
+      if(appData.uploadRun == true && leftMenuList[1].enabled == false){
         setState(() {
           leftMenuList[1].enabled = true;  
           leftMenuList[2].enabled = true;  
@@ -81,7 +81,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
       }
     });
 
-    Timer.periodic(const Duration(milliseconds: 1000), (tmr){
+    Timer.periodic(const Duration(milliseconds: 100), (tmr){
       if(appData.workflowRun == true && leftMenuList[3].enabled == false){
         setState(() {
           leftMenuList[3].enabled = true;  

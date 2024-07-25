@@ -68,9 +68,10 @@ Future<void> uploadTable(
     await factory.taskService.runTask(csvTask.id);
     await factory.taskService.waitDone(csvTask.id);
 
-    // csvTask = await factory.taskService.get(csvTask.id) as sci.CSVTask;
+    csvTask = await factory.taskService.get(csvTask.id) as sci.CSVTask;
 
-    // var schema = await factory.tableSchemaService.get(csvTask.schemaId);
+    var schema = await factory.tableSchemaService.get(csvTask.schemaId);
+    schema.folderId = folderId;
 
     // var computedSchema = sci.ComputedTableSchema()
     //   ..nRows = schema.nRows
