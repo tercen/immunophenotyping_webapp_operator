@@ -46,14 +46,7 @@ class AnnotationDataSource extends DataTableSource{
           cells: <DataCell>[
             
             DataCell(
-              SizedBox.expand(
-                child: 
-                  Container(
-                    color: Styles.white,
-                    child: Text(tbl.columns[0].values[index], style: Styles.text,) ,
-                  ),
-              )
-              
+              Text(tbl.columns[0].values[index], style: Styles.text,)
             ),
             DataCell(
               TextField(
@@ -214,10 +207,16 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           );
           // return layout.buildScreenWidget();
           return 
-            Material(
-              child: Container(
-                color: Colors.red,
-                child: PaginatedDataTable(
+            Theme(
+                    data: ThemeData(
+                      cardTheme: const CardTheme(
+                        surfaceTintColor: Colors.white,
+                        color: Color.fromARGB(255, 100, 20, 0)
+                      ),
+                      ),
+
+                    child: 
+                      PaginatedDataTable(
 
                         columns: const <DataColumn>[
                           DataColumn(
@@ -231,9 +230,8 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                         ],
                         source: dataSource,
 
-                  ) ,
-              )
-            );
+                  ),
+                ) ;
         }else{
           // TODO better place the loading icon
           return const Center(
