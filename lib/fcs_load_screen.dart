@@ -66,7 +66,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   final List<String> teamNameList = [];
   sci.Project project = sci.Project();
   late Map<String, Object> dataHandler;
-
+  late List<sci.ProjectDocument> projectObjects;
 
   List<sci.Project> projectList = [];
 
@@ -139,6 +139,17 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   }
 
 
+  sci.ProjectDocument _findByName(List<sci.ProjectDocument> poList, String name){
+
+    for( var po in poList ){
+      if( po.name == name ){
+        return po;
+      }
+    }
+
+    return sci.ProjectDocument();
+  }
+
   void _uploadFiles() async {
     var uuid = const Uuid();
 
@@ -153,23 +164,22 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         }
       }
 
-//"Flow Immunophenotyping - PhenoGraph"
-      List<sci.ProjectDocument> list1 = await factory.projectDocumentService.findProjectObjectsByFolderAndName(
+//""
+      projectObjects = await factory.projectDocumentService.findProjectObjectsByFolderAndName(
                             startKey: [project.id,  "ufff0", "ufff0"], 
                             endKey: [project.id,  "", ""]);
-      List<sci.ProjectDocument> list2 = await factory.projectDocumentService.findProjectObjectsByLastModifiedDate(startKey: "0000", endKey: "9999");
 
-      print("List1:");
-      for( var po in list1){
-        print("\t${po.name}");
+
+      bool hasWorkflow = false;
+      for( var po in projectObjects){
+        if(po.name == "Flow Immunophenotyping - PhenoGraph"){
+          hasWorkflow = true;
+          break;
+        }
       }
 
-      print("List2:");
-      for( var po in list2){
-        print("\t${po.name}");
-      }
 
-      if( createProject == true ){
+      if( createProject == true || hasWorkflow == false){
         project.name = workflowTfController.text;
         project.acl.owner = selectedTeam;
         project = await factory.projectService.create(project);
@@ -211,6 +221,14 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     for( int i = 0; i < htmlFileList.length; i++ ){
       web.File file = htmlFileList[i];
       var bytes = await dvController.getFileData(file);
+
+      //DELETE file if it exists...
+      
+      var poFile = _findByName(projectObjects, file.name);
+      if( poFile.id != ''){
+        await factory.projectDocumentService.delete(poFile.id, poFile.rev);
+      }
+
       sci.FileDocument docToUpload = sci.FileDocument()
               ..name = file.name
               ..projectId = project.id
@@ -411,7 +429,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       filenames.add(filesToUpload[measurementTbl.columns[fileColIdx].values[i]-1].filename); // Starts at 1
     }
 
-    print("Creating column");
     sci.Column fileCol = sci.Column()
           ..type = "string"
           ..name = "filename"
@@ -424,8 +441,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     widget.appData.measurementsTbl = measurementTbl;
 
-    
-    uploadTable(measurementTbl, "FCS_Measurements",
+    var poFile = _findByName(projectObjects,  "Measurements");
+    if( poFile.id != ''){
+      await factory.projectDocumentService.delete(poFile.id, poFile.rev);
+    }
+    uploadTable(measurementTbl, "Measurements",
                  compTask.projectId, 
                  compTask.owner,
                  "");
