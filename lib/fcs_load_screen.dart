@@ -96,7 +96,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       for( var ace in user.teamAcl.aces){
       teamNameList.add(ace.principals[0].principalId);
     }
-    teamNameList.sort();
+    teamNameList.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
   }
 
 
@@ -142,7 +142,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   void _uploadFiles() async {
     var uuid = const Uuid();
 
+    List<sci.Project> projects = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: selectedTeam, endKey: selectedTeam);
 
+    print("Found projects");
+    for( var p in projects ){
+      print("${p.name}, ${p.url}, ${p.version}");
+    }
     // Create a project to store the workflow
     if( project.id == "" ){
       var projectList = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: selectedTeam, endKey: selectedTeam);
@@ -159,6 +164,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         project.acl.owner = selectedTeam;
         project = await factory.projectService.create(project);
       }
+
+
+
 
       // Import the immunophenotyping workflow
       progressDialog.update(msg: "Importing workflow");
