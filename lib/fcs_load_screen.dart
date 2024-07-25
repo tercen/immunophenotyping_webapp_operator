@@ -86,7 +86,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     var token = Uri.base.queryParameters["token"] ?? '';
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
 
+
     List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["data"]["u"]]);
+    List<sci.Team> teamList2 = await factory.teamService.findTeamByOwner(keys: [""]);
+    print(teamList.length);
+    print(teamList2.length);
 
       for( var team in teamList){
       teamNameList.add(team.name);
@@ -205,6 +209,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // Reading FCS
     progressDialog.update(msg: "Checking ReadFCS Operator");
     // 1. Get operator
+    //decodedToken["data"]["u"]
     var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '');
     sci.Document op = sci.Document();
     for( var o in installedOperators ){

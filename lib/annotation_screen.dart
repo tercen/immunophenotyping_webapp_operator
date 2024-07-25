@@ -137,6 +137,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           RightScreenLayout layout = RightScreenLayout()
           ..addWidget(
             PaginatedDataTable(
+
                 columns: const <DataColumn>[
                   DataColumn(
                     label: Text('Name'),
