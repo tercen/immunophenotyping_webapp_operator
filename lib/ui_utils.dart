@@ -140,9 +140,15 @@ class RightScreenLayout {
   Widget buildScreenWidget(){
     return Align(
       alignment: Alignment.topLeft,
-      child: Column(
-        children: children
-      )
+      child: 
+        Container(
+          color: Colors.white,
+          child: 
+            Column(
+              children: children
+            ),
+        )
+      
     );
 
   }

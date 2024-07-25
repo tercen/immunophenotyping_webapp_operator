@@ -154,10 +154,10 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                   
                   columns: const <DataColumn>[
                     DataColumn(
-                      label: Text('Name'),
+                      label: Text('Name', style: Styles.textH2,),
                     ),
                     DataColumn(
-                      label: Text('Description'),
+                      label: Text('Description', style: Styles.textH2),
                     ),
                     
                   ],
