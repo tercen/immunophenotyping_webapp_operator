@@ -141,8 +141,11 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           RightScreenLayout layout = RightScreenLayout()
           ..addWidget(
             SizedBox(
-              height: 500,
-              width: 600,
+              width: 1000,
+              child: 
+                          Theme(
+              data: Theme.of(context)
+                    .copyWith(cardColor: Styles.white, dividerColor: Styles.gray),
               child: 
                 PaginatedDataTable(
 
@@ -158,7 +161,9 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                   source: dataSource,
               
                 ) ,
+            ),
             )
+
    
           )
           ..addWidget(
@@ -168,6 +173,8 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
               onPressed: (){
                 progressDialog.show(
                     msg: "Updating annotation table, please wait", 
+                    progressBgColor: Colors.white,
+                    progressValueColor: const Color.fromARGB(255, 76, 18, 211),
                     barrierColor: const Color.fromARGB(125, 0, 0, 0),
                 );
 
