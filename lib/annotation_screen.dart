@@ -140,20 +140,26 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           AnnotationDataSource dataSource = AnnotationDataSource(snapshot.requireData);
           RightScreenLayout layout = RightScreenLayout()
           ..addWidget(
-            PaginatedDataTable(
+            SizedBox(
+              height: 500,
+              width: 600,
+              child: 
+                PaginatedDataTable(
 
-                columns: const <DataColumn>[
-                  DataColumn(
-                    label: Text('Name'),
-                  ),
-                  DataColumn(
-                    label: Text('Description'),
-                  ),
-                  
-                ],
-                source: dataSource,
-            
-              )    
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: Text('Name'),
+                    ),
+                    DataColumn(
+                      label: Text('Description'),
+                    ),
+                    
+                  ],
+                  source: dataSource,
+              
+                ) ,
+            )
+   
           )
           ..addWidget(
             paddingAbove: RightScreenLayout.paddingLarge,

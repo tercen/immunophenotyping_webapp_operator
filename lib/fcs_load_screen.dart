@@ -415,13 +415,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       // }
     }
 
+    print("Reading col names");
     List<String> colNames = [];
     for( var col in measurementSch.columns ){
       colNames.add(col.name);
+      print("\t${col.name}");
     }
 
+
+    print("Selecting columnms");
     sci.Table measurementTbl = await factory.tableSchemaService.select(measurementSch.id, colNames, 0, measurementSch.nRows);
-    // sci.Table observationTbl = await factory.tableSchemaService.select(observationsSch.id, ["eventId", "filename"], 0, observationsSch.nRows);
 
     List<String> filenames = [];
     int fileColIdx = 0;
@@ -432,7 +435,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     }
 
     for( var i = 0; i < measurementTbl.nRows; i++){
-      // print("Adding ~ ${}")
       filenames.add(filesToUpload[measurementTbl.columns[fileColIdx].values[i]-1].filename); // Starts at 1
     }
 
