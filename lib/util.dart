@@ -45,7 +45,7 @@ Future<void> uploadTable(
       sci.Table table, String filename, String projectId, String owner, String folderId) async {
     var factory = tercen.ServiceFactory();
     var bytes = tson.encode(table.toJson());
-    print("Uplaoding to folderId ${folderId}");
+    print("Uploading to folderId '${folderId}'");
     var resultFile = sci.FileDocument()
       ..name = table.properties.name
       ..isHidden = true
@@ -70,8 +70,9 @@ Future<void> uploadTable(
 
     csvTask = await factory.taskService.get(csvTask.id) as sci.CSVTask;
 
-    var schema = await factory.tableSchemaService.get(csvTask.schemaId);
-    schema.folderId = folderId;
+    print(csvTask.toJson());
+    // var schema = await factory.tableSchemaService.get(csvTask.schemaId);
+    // schema.folderId = folderId;
 
     // var computedSchema = sci.ComputedTableSchema()
     //   ..nRows = schema.nRows
