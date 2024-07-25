@@ -212,7 +212,21 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
               child: const Text("Update Descriptions", style: Styles.textButton)
             )  
           );
-          return layout.buildScreenWidget();
+          // return layout.buildScreenWidget();
+          return PaginatedDataTable(
+                        columns: const <DataColumn>[
+                          DataColumn(
+
+                            label: Text('Name', style: Styles.textH2,),
+                          ),
+                          DataColumn(
+                            label: Text('Description', style: Styles.textH2),
+                          ),
+                          
+                        ],
+                        source: dataSource,
+
+                  );
               
         }else{
           // TODO better place the loading icon
