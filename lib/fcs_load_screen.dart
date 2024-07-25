@@ -213,7 +213,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
 
     var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '');
-    var installedOperators2 = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: teamNameList, endKey: '');
+    var installedOperators2 = await factory.documentService.findOperatorByUrlAndVersion(startKey: "https://github.com/tercen/read_fcs_operator", endKey: "2.3.0");
     print("Operators ${installedOperators2.length}");
     sci.Document op = sci.Document();
     for( var o in installedOperators ){
