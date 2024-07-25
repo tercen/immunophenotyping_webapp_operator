@@ -48,26 +48,32 @@ class AnnotationDataSource extends DataTableSource{
             DataCell(
               SizedBox.expand(
                 child: Container(
-                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(255, 210, 220, 255),
+                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(80, 210, 220, 255),
                   child: Text(tbl.columns[0].values[index], style: Styles.text,),
                 ),
               )
               
             ),
             DataCell(
-              TextField(
-                onChanged: (txt) {
-                  if( !changedRows.contains(index) ){
-                    changedRows.add(index);
-                  }
-                },
-                controller: ctrl,
-                decoration: 
-                  const InputDecoration(
-                    border: UnderlineInputBorder()
-                  )
-                
+               SizedBox.expand(
+                child: Container(
+                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(80, 210, 220, 255),
+                  child: TextField(
+                    onChanged: (txt) {
+                      if( !changedRows.contains(index) ){
+                        changedRows.add(index);
+                      }
+                    },
+                    controller: ctrl,
+                    decoration: 
+                      const InputDecoration(
+                        border: UnderlineInputBorder()
+                      )
+                    
+                  ),
+                ),
               )
+              
             ),
           ],
         );
@@ -152,14 +158,16 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                 Theme(
                     data: ThemeData(
                       cardTheme: const CardTheme(
+                        shadowColor: Colors.white,
                         surfaceTintColor: Colors.white,
-                        color: Colors.white
+                        color: Colors.white,
+                        elevation: 0
                       ),
                       ),
 
                     child: 
                       PaginatedDataTable(
-
+                        
                         columns: const <DataColumn>[
                           DataColumn(
 
