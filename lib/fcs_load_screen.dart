@@ -385,9 +385,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         fileColIdx = i;
       }
     }
-    for( var fu in filesToUpload ){
-      print("Files in result: ${fu.filename}");
-    }
+
     for( var i = 0; i < measurementTbl.nRows; i++){
       // print("Adding ~ ${}")
       filenames.add(filesToUpload[measurementTbl.columns[fileColIdx].values[i]-1].filename); // Starts at 1
@@ -415,11 +413,13 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
     print("Filenames:");
     
-    var uniqueFilenames = filenames.toSet().toList();
-
-    for(var f in uniqueFilenames ){
-      print("\t$f");
+    List<String> uniqueFilenames = [];
+    for( var fu in filesToUpload ){
+      uniqueFilenames.add(fu.filename);
+      print("\t${fu.filename}");
     }
+     
+
     for( var po in projObjs ){
       //TODO Need to check for && po.name.contains(uploadedFiledoc name ...)
       print(po.name);
