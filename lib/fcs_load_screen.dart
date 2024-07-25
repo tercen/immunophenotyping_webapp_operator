@@ -354,10 +354,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       print(evtMap);
       if(evtMap["kind"] == "TaskProgressEvent"){
         var msg = evtMap["message"];
-        progressDialog.update(msg: "Reading FCS files: $msg");
-
-        if( evtMap["state"]["kind"] == "DoneState" ){
+        if(msg){
+          progressDialog.update(msg: "Reading FCS files: $msg");
         }
+        
         //Process event log
         
       }
@@ -482,10 +482,13 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       print("Channel cols");
       if(po.name.contains( "Channel-Descriptions" ) && anyFilename == true  ){
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
+        List<String> cols = ["channel_name", "channel_description", "channel_id"];
         for( var col in sch.columns){
-          print("\t${col.name}");
+          if(col.name == "channel_id"){
+            cols = ["channel_name", "channel_description"];
+          }
         }
-        sci.Table res = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description", "channel_id"], 0, sch.nRows);
+        sci.Table res = await factory.tableSchemaService.select(sch.id, cols, 0, sch.nRows);
         print("Selected;;;");
         // res.columns[2].type = "string";
         widget.appData.channelAnnotationTbl = res;
