@@ -87,16 +87,16 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
 
     sci.User user = await factory.userService.get(decodedToken["data"]["u"]);
-    print(user.toJson());
-    List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["data"]["u"]]);
-    List<sci.Team> teamList2 = await factory.teamService.findTeamByOwner(keys: []);
-    print(teamList.length);
-    print(teamList2.length);
+    // print(user.toJson());
+    // List<sci.Team> teamList = await factory.teamService.findTeamByOwner(keys: [decodedToken["data"]["u"]]);
+    // List<sci.Team> teamList2 = await factory.teamService.findTeamByOwner(keys: []);
+    // print(teamList.length);
+    // print(teamList2.length);
 
-      for( var team in teamList){
-      teamNameList.add(team.name);
+      for( var ace in user.teamAcl.aces){
+      teamNameList.add(ace.principals[0].principalId);
     }
-
+    teamNameList.sort();
   }
 
 
@@ -210,11 +210,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // Reading FCS
     progressDialog.update(msg: "Checking ReadFCS Operator");
     // 1. Get operator
-    //decodedToken["data"]["u"]
-    var token = Uri.base.queryParameters["token"] ?? '';
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+
+
     var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '');
-    var installedOperators2 = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: decodedToken["data"]["u"], endKey: '');
+    var installedOperators2 = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: teamNameList, endKey: '');
     print("Operators ${installedOperators2.length}");
     sci.Document op = sci.Document();
     for( var o in installedOperators ){
