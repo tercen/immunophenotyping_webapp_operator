@@ -114,6 +114,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
 
       widget.appData.channelAnnotationTbl = annotationTable;
 
+      print("Deleting ${widget.appData.channelAnnotationDoc}");
       factory.projectDocumentService.delete(widget.appData.channelAnnotationDoc.id, widget.appData.channelAnnotationDoc.rev);
     }
   }

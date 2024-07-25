@@ -217,6 +217,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Document op = sci.Document();
     bool opFound = false;
     for( var teamName in teamNameList ){
+      
       var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: teamName, endKey: '', limit: 1000);
       for( var o in installedOperators ){
         if( o.name == "FCS" ){
@@ -411,7 +412,8 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     for( var po in projObjs ){
       //TODO Need to check for && po.name.contains(uploadedFiledoc name ...)
-      if(po.name.contains( "Channel-Descriptions" )  ){
+      print(po.name);
+      if(po.name.contains( "Channel-Descriptions" ) && po.name.contains(filenames[0])  ){
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
         sci.Table res = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description", "channel_id"], 0, sch.nRows);
         // res.columns[2].type = "string";
