@@ -211,17 +211,26 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     progressDialog.update(msg: "Checking ReadFCS Operator");
     // 1. Get operator
 
-
-    var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '');
-    var installedOperators2 = await factory.documentService.findOperatorByUrlAndVersion(startKey: "https://github.com/tercen/read_fcs_operator", endKey: "2.3.0");
-    print("Operators ${installedOperators2.length}");
+    
+    
+    
     sci.Document op = sci.Document();
-    for( var o in installedOperators ){
-      if( o.name == "FCS"){
-        print("Found FCS operator installed (version ${op.version})");
-        op = o;
+    bool opFound = false;
+    for( var teamName in teamNameList ){
+      var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: teamName, endKey: '');
+      for( var o in installedOperators ){
+        if( o.name == "FCS"){
+          print("Found FCS operator installed (version ${op.version})");
+          op = o;
+          break;
+        }
+
+      }
+      if(opFound == true){
+        break;
       }
     }
+
 
 
     // 2. Prepare the computation task
