@@ -351,12 +351,14 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
 
-      print(evtMap);
+      
       if(evtMap["kind"] == "TaskProgressEvent"){
-        var msg = evtMap["message"];
-        if(msg){
+        if( evtMap.keys.contains("message") ){
+          print(evtMap);
+          var msg = evtMap["message"];
           progressDialog.update(msg: "Reading FCS files: $msg");
         }
+
         
         //Process event log
         
@@ -365,10 +367,13 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
 
     sub.onDone((){
-      _getComputedRelation(compTask.id);
+      if( finishedUploading == false){
+        _getComputedRelation(compTask.id);
       
-      finishedUploading = true;
-      widget.appData.uploadRun = true;
+        finishedUploading = true;
+        widget.appData.uploadRun = true;
+      }
+      
     });
 
   }
@@ -401,7 +406,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _getComputedRelation(String taskId) async{
     // Works for zip file...
-
+    print("Getting computed relation");
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
 
 
@@ -479,17 +484,17 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       }
 
 
-      print("Channel cols");
+
       if(po.name.contains( "Channel-Descriptions" ) && anyFilename == true  ){
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
-        List<String> cols = ["channel_name", "channel_description", "channel_id"];
+        List<String> cols = ["channel_name", "channel_description"];
         for( var col in sch.columns){
           if(col.name == "channel_id"){
-            cols = ["channel_name", "channel_description"];
+            cols = ["channel_name", "channel_description", "channel_id"];
           }
         }
         sci.Table res = await factory.tableSchemaService.select(sch.id, cols, 0, sch.nRows);
-        print("Selected;;;");
+
         // res.columns[2].type = "string";
         widget.appData.channelAnnotationTbl = res;
         widget.appData.channelAnnotationDoc = po;
