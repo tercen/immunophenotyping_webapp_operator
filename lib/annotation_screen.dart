@@ -46,6 +46,7 @@ class AnnotationDataSource extends DataTableSource{
           cells: <DataCell>[
             
             DataCell(
+
               SizedBox.expand(
                 child: Container(
                   color: index % 2 == 0 ? Colors.white : const Color.fromARGB(80, 210, 220, 255),
@@ -155,13 +156,24 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           AnnotationDataSource dataSource = AnnotationDataSource(snapshot.requireData);
           RightScreenLayout layout = RightScreenLayout()
           ..addWidget(
+            SizedBox(
+              width: 700,
+              child:                 
                 Theme(
                     data: ThemeData(
+                      dividerTheme: const DividerThemeData(
+                        color: Colors.transparent,
+                        space: 0,
+                        thickness: 0,
+                        indent: 0,
+                        endIndent: 0,
+                      ),
                       cardTheme: const CardTheme(
                         shadowColor: Colors.white,
                         surfaceTintColor: Colors.white,
                         color: Colors.white,
-                        elevation: 0
+                        elevation: 0,
+
                       ),
                       ),
 
@@ -181,7 +193,9 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                         source: dataSource,
 
                   ),
-                )
+                ),
+            )
+
    
           )
           ..addWidget(
