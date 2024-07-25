@@ -402,16 +402,20 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     
     widget.appData.measurementsTbl = measurementTbl;
 
-    print("Uploading table");
+    
     uploadTable(measurementTbl, "FCS_Measurements",
                  compTask.projectId, 
                  compTask.owner,
                  "");
 
     List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
-
+    print("Filenames:");
+    for(var f in filenames ){
+      print("\t$f");
+    }
     for( var po in projObjs ){
       //TODO Need to check for && po.name.contains(uploadedFiledoc name ...)
+      print(po.name);
       if(po.name.contains( "Channel-Descriptions" ) && po.name.contains(filenames[0])  ){
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
         sci.Table res = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description", "channel_id"], 0, sch.nRows);
