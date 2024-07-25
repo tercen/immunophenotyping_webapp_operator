@@ -46,7 +46,13 @@ class AnnotationDataSource extends DataTableSource{
           cells: <DataCell>[
             
             DataCell(
-              Text(tbl.columns[0].values[index], style: Styles.text,)
+              SizedBox.expand(
+                child: Container(
+                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(255, 210, 220, 255),
+                  child: Text(tbl.columns[0].values[index], style: Styles.text,),
+                ),
+              )
+              
             ),
             DataCell(
               TextField(
@@ -143,12 +149,17 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           AnnotationDataSource dataSource = AnnotationDataSource(snapshot.requireData);
           RightScreenLayout layout = RightScreenLayout()
           ..addWidget(
-                DataTableTheme(
-                    data: Theme.of(context).dataTableTheme.copyWith(
-                      decoration: const BoxDecoration(color: Colors.white),
-                    ), 
+                Theme(
+                    data: ThemeData(
+                      cardTheme: const CardTheme(
+                        surfaceTintColor: Colors.white,
+                        color: Colors.white
+                      ),
+                      ),
+
                     child: 
                       PaginatedDataTable(
+
                         columns: const <DataColumn>[
                           DataColumn(
 
@@ -163,9 +174,6 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
 
                   ),
                 )
-                
-
-
    
           )
           ..addWidget(
@@ -205,33 +213,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
               child: const Text("Update Descriptions", style: Styles.textButton)
             )  
           );
-          // return layout.buildScreenWidget();
-          return 
-            Theme(
-                    data: ThemeData(
-                      cardTheme: const CardTheme(
-                        surfaceTintColor: Colors.white,
-                        color: Color.fromARGB(255, 100, 20, 0)
-                      ),
-                      ),
-
-                    child: 
-                      PaginatedDataTable(
-
-                        columns: const <DataColumn>[
-                          DataColumn(
-
-                            label: Text('Name', style: Styles.textH2,),
-                          ),
-                          DataColumn(
-                            label: Text('Description', style: Styles.textH2),
-                          ),
-                          
-                        ],
-                        source: dataSource,
-
-                  ),
-                ) ;
+          return layout.buildScreenWidget();
         }else{
           // TODO better place the loading icon
           return const Center(
