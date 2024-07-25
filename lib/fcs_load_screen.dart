@@ -142,12 +142,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   void _uploadFiles() async {
     var uuid = const Uuid();
 
-    List<sci.Project> projects = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: selectedTeam, endKey: selectedTeam);
-
-    print("Found projects");
-    for( var p in projects ){
-      print("${p.name}, ${p.url}, ${p.version}");
-    }
     // Create a project to store the workflow
     if( project.id == "" ){
       var projectList = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: selectedTeam, endKey: selectedTeam);
@@ -159,36 +153,52 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         }
       }
 
+
+      List<sci.ProjectDocument> list1 = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: "", endKey: "Flow Immunophenotyping - PhenoGraph");
+      List<sci.ProjectDocument> list2 = await factory.projectDocumentService.findProjectObjectsByLastModifiedDate(startKey: "0000", endKey: "9999");
+
+      print("List1:");
+      for( var po in list1){
+        print("\t${po.name}");
+      }
+
+      print("List2:");
+      for( var po in list2){
+        print("\t${po.name}");
+      }
+
       if( createProject == true ){
         project.name = workflowTfController.text;
         project.acl.owner = selectedTeam;
         project = await factory.projectService.create(project);
+
+        // Import the immunophenotyping workflow
+        progressDialog.update(msg: "Downloading Project Files. Please wait.");
+        sci.GitProjectTask projectTask = sci.GitProjectTask()
+            ..state = sci.InitState()
+            ..owner = selectedTeam;
+
+        projectTask.meta.add(sci.Pair.from("PROJECT_ID", project.id));
+        projectTask.meta.add(sci.Pair.from("PROJECT_REV", project.rev));
+        projectTask.meta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
+        projectTask.meta.add(sci.Pair.from("GIT_PAT", patController.text));
+        projectTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template_demo"));
+        projectTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.0"));
+        projectTask.meta.add(sci.Pair.from("GIT_BRANCH", "main"));
+        projectTask.meta.add(sci.Pair.from("GIT_MESSAGE", ""));
+          // ..meta = projectMeta;
+
+        
+
+        projectTask = await factory.taskService.create(projectTask) as sci.GitProjectTask;
+        await factory.taskService.runTask(projectTask.id);
+        await factory.taskService.waitDone(projectTask.id);
       }
 
 
 
 
-      // Import the immunophenotyping workflow
-      progressDialog.update(msg: "Importing workflow");
-      sci.GitProjectTask projectTask = sci.GitProjectTask()
-          ..state = sci.InitState()
-          ..owner = selectedTeam;
 
-      projectTask.meta.add(sci.Pair.from("PROJECT_ID", project.id));
-      projectTask.meta.add(sci.Pair.from("PROJECT_REV", project.rev));
-      projectTask.meta.add(sci.Pair.from("GIT_ACTION", "reset/pull"));
-      projectTask.meta.add(sci.Pair.from("GIT_PAT", patController.text));
-      projectTask.meta.add(sci.Pair.from("GIT_URL", "https://github.com/tercen/flow_core_immunophenotyping_template_demo"));
-      projectTask.meta.add(sci.Pair.from("GIT_TAG", "0.1.0"));
-      projectTask.meta.add(sci.Pair.from("GIT_BRANCH", "main"));
-      projectTask.meta.add(sci.Pair.from("GIT_MESSAGE", ""));
-        // ..meta = projectMeta;
-
-      
-
-      projectTask = await factory.taskService.create(projectTask) as sci.GitProjectTask;
-      await factory.taskService.runTask(projectTask.id);
-      await factory.taskService.waitDone(projectTask.id);
       
     }
 
