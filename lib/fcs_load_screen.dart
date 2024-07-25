@@ -257,7 +257,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..name = "documentId"
           ..type = "string"
           ..id = "documentId"
-          ..nRows = 1
+          ..nRows = dotDocIds.length
           ..size = -1
           ..values = tson.CStringList.fromList(dotDocIds);
     
@@ -267,7 +267,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..name = ".documentId"
           ..type = "string"
           ..id = ".documentId"
-          ..nRows = 1
+          ..nRows = docIds.length
           ..size = -1
           ..values = tson.CStringList.fromList(docIds);
     
@@ -385,7 +385,11 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         fileColIdx = i;
       }
     }
+    for( var fu in filesToUpload ){
+      print("Files in result: ${fu.filename}");
+    }
     for( var i = 0; i < measurementTbl.nRows; i++){
+      // print("Adding ~ ${}")
       filenames.add(filesToUpload[measurementTbl.columns[fileColIdx].values[i]-1].filename); // Starts at 1
     }
 
