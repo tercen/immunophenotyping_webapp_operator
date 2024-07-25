@@ -49,7 +49,7 @@ class AnnotationDataSource extends DataTableSource{
 
               SizedBox.expand(
                 child: Container(
-                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(80, 210, 220, 255),
+                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(20, 210, 220, 255),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(tbl.columns[0].values[index], style: Styles.text,),
@@ -62,7 +62,7 @@ class AnnotationDataSource extends DataTableSource{
             DataCell(
                SizedBox.expand(
                 child: Container(
-                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(80, 210, 220, 255),
+                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(20, 210, 220, 255),
                   child: TextField(
                     onChanged: (txt) {
                       if( !changedRows.contains(index) ){
@@ -161,7 +161,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           RightScreenLayout layout = RightScreenLayout()
           ..addWidget(
             SizedBox(
-              width: 700,
+              width: 800,
               child:                 
                 Theme(
                     data: ThemeData(
@@ -184,7 +184,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
 
                     child: 
                       PaginatedDataTable(
-                        
+                        columnSpacing: 0,
                         columns: const <DataColumn>[
                           DataColumn(
 

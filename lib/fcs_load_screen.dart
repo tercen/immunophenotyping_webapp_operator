@@ -60,6 +60,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   Color dvBackground = Colors.white;
   List<UploadFile> filesToUpload = [UploadFile("Drag Files Here", false)];
   List<web.File> htmlFileList = [];
+  List<PlatformFile> platformFileList = [];
   var workflowTfController = TextEditingController(text: "Immunophenotyping Workflow");
   var patController = TextEditingController(text: "");
 
@@ -136,6 +137,17 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     filesToUpload.add(UploadFile(wf.name, false));
 
     htmlFileList.add(wf);
+  }
+
+  void _updateFilesToUploadSingle(PlatformFile wf){
+
+
+    if( filesToUpload[0].filename == "Drag Files Here"){
+      filesToUpload.removeAt(0);
+    }
+    filesToUpload.add(UploadFile(wf.name, false));
+
+    platformFileList.add(wf);
   }
 
 
@@ -236,6 +248,33 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
       progressDialog.update(msg: "Uploading ${file.name}");
       uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes]) ) );
+
+      setState(() {
+        filesToUpload[i].uploaded = true;
+      });
+
+      docIds.add(uploadedDocs[i].id);
+      dotDocIds.add(uuid.v4());
+    }
+
+    for( int i = 0; i < platformFileList.length; i++ ){
+      PlatformFile file = platformFileList[i];
+      var bytes = file.bytes;
+
+      //DELETE file if it exists...
+      
+      var poFile = _findByName(projectObjects, file.name);
+      if( poFile.id != ''){
+        await factory.projectDocumentService.delete(poFile.id, poFile.rev);
+      }
+
+      sci.FileDocument docToUpload = sci.FileDocument()
+              ..name = file.name
+              ..projectId = project.id
+              ..acl.owner = selectedTeam;
+
+      progressDialog.update(msg: "Uploading ${file.name}");
+      uploadedDocs.add( await factory.fileService.upload(docToUpload, Stream.fromIterable([bytes!]) ) );
 
       setState(() {
         filesToUpload[i].uploaded = true;
@@ -510,6 +549,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         _updateFilesToUpload(ev);
       });
     } 
+
+    if( ev is PlatformFile){
+        setState(() {
+        _updateFilesToUploadSingle(ev);
+      });
+    }
   }
 
   void _doUpload(){
@@ -603,7 +648,12 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
               Material( 
                 child: InkWell(
                   onTap: () async {
-                    result = (await FilePicker.platform.pickFiles())!;
+                    result = (await FilePicker.platform.pickFiles(allowMultiple: false))!;
+                    for(var f in result.files){
+                      _processSingleFileDrop(f);
+
+                    }
+                    
                   },
                   child: const Icon(Icons.add_circle_outline_rounded),
                 )
