@@ -644,25 +644,31 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         },
         children: [
           TableRow(
-            children: [
-              Material( 
-                child: InkWell(
-                  onTap: () async {
-                    result = (await FilePicker.platform.pickFiles(allowMultiple: false))!;
-                    for(var f in result.files){
-                      _processSingleFileDrop(f);
 
-                    }
-                    
-                  },
-                  child: const Icon(Icons.add_circle_outline_rounded),
-                )
+            children: [
+              TableCell(
+                verticalAlignment: TableCellVerticalAlignment.middle,
+                child: 
+                  Material(
+                    color: Colors.white, 
+                    child: InkWell(
+                      onTap: () async {
+                        result = (await FilePicker.platform.pickFiles(allowMultiple: false))!;
+                        for(var f in result.files){
+                          _processSingleFileDrop(f);
+                        }
+                        
+                      },
+                      child: const Icon(Icons.add_circle_outline_rounded),
+                    )
+                  )
+              )
+              ,
+
+              const TableCell(
+                verticalAlignment: TableCellVerticalAlignment.middle,
+                child:  Text("Choose Files", style: Styles.text)
               ),
-              const TableCell(child: Align(
-                alignment: Alignment.center,
-                child: Text("Choose Files", style: Styles.text),
-              )
-              )
               
               
             ]

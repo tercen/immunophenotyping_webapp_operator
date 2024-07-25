@@ -49,7 +49,7 @@ class AnnotationDataSource extends DataTableSource{
 
               SizedBox.expand(
                 child: Container(
-                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(20, 210, 220, 255),
+                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(50, 210, 220, 255),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(tbl.columns[0].values[index], style: Styles.text,),
@@ -62,7 +62,7 @@ class AnnotationDataSource extends DataTableSource{
             DataCell(
                SizedBox.expand(
                 child: Container(
-                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(20, 210, 220, 255),
+                  color: index % 2 == 0 ? Colors.white : const Color.fromARGB(50, 210, 220, 255),
                   child: TextField(
                     onChanged: (txt) {
                       if( !changedRows.contains(index) ){
