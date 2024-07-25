@@ -410,13 +410,23 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
     List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
     print("Filenames:");
-    for(var f in filenames ){
+    
+    var uniqueFilenames = filenames.toSet().toList();
+
+    for(var f in uniqueFilenames ){
       print("\t$f");
     }
     for( var po in projObjs ){
       //TODO Need to check for && po.name.contains(uploadedFiledoc name ...)
       print(po.name);
-      if(po.name.contains( "Channel-Descriptions" ) && po.name.contains(filenames[0])  ){
+      bool anyFilename = false;
+      for( var f in uniqueFilenames ){
+        if(po.name.contains(f)){
+          anyFilename = true;
+        }
+      }
+      if(po.name.contains( "Channel-Descriptions" ) && anyFilename == true  ){
+        print("Found the file");
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
         sci.Table res = await factory.tableSchemaService.select(sch.id, ["channel_name", "channel_description", "channel_id"], 0, sch.nRows);
         // res.columns[2].type = "string";
