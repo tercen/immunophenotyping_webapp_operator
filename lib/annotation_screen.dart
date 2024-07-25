@@ -140,34 +140,21 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           AnnotationDataSource dataSource = AnnotationDataSource(snapshot.requireData);
           RightScreenLayout layout = RightScreenLayout()
           ..addWidget(
-            SizedBox(
-              width: 1000,
-              child: 
-                          Theme(
-              data: Theme.of(context)
-                    .copyWith(cardColor: Styles.white, dividerColor: Styles.gray,canvasColor: Styles.white),
-              child: 
-                ListView(
-                  children: [
-                    PaginatedDataTable(
-                                    
-                                    columns: const <DataColumn>[
-                                      DataColumn(
-                                        label: Text('Name'),
-                                      ),
-                                      DataColumn(
-                                        label: Text('Description'),
-                                      ),
-                                      
-                                    ],
-                                    source: dataSource,
-                                
-                                  )
+                PaginatedDataTable(
+                  
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: Text('Name'),
+                    ),
+                    DataColumn(
+                      label: Text('Description'),
+                    ),
+                    
                   ],
-                )
-                 ,
+                  source: dataSource,
+
             ),
-            )
+
 
    
           )
