@@ -214,19 +214,19 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
           );
           // return layout.buildScreenWidget();
           return 
-                Material(
-                  color: Colors.black87,
-                  child: Theme(
+              Theme(
                     data: Theme.of(context).copyWith(
                       scaffoldBackgroundColor: Color.fromARGB(255, 155, 0, 0),
                       cardColor: Colors.lightGreen,
                       dataTableTheme: DataTableThemeData(
+                        decoration: const BoxDecoration(color: Colors.white),
                         dataRowColor: WidgetStateProperty.resolveWith<Color?>(
                                               (Set<WidgetState> states) {
-                                            // if (states.contains(WidgetState.selected)) {
-                                            //   return Colors.blue;
-                                            // }
-                                            return Color.fromARGB(255, 50, 200, 200);
+                                            if (states.contains(WidgetState.hovered)) {
+                                              return const Color.fromARGB(255, 200, 200, 255);
+                                            }
+                                            
+                                            return Styles.white;
                                           }),
                       )
 
@@ -247,8 +247,6 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
                         source: dataSource,
 
                   ),
-                  )
-                  
                 ) ;
               
         }else{
