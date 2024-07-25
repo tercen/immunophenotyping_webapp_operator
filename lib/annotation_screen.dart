@@ -145,22 +145,27 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
               child: 
                           Theme(
               data: Theme.of(context)
-                    .copyWith(cardColor: Styles.white, dividerColor: Styles.gray),
+                    .copyWith(cardColor: Styles.white, dividerColor: Styles.gray,canvasColor: Styles.white),
               child: 
-                PaginatedDataTable(
-
-                  columns: const <DataColumn>[
-                    DataColumn(
-                      label: Text('Name'),
-                    ),
-                    DataColumn(
-                      label: Text('Description'),
-                    ),
-                    
+                ListView(
+                  children: [
+                    PaginatedDataTable(
+                                    
+                                    columns: const <DataColumn>[
+                                      DataColumn(
+                                        label: Text('Name'),
+                                      ),
+                                      DataColumn(
+                                        label: Text('Description'),
+                                      ),
+                                      
+                                    ],
+                                    source: dataSource,
+                                
+                                  )
                   ],
-                  source: dataSource,
-              
-                ) ,
+                )
+                 ,
             ),
             )
 
