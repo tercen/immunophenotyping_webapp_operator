@@ -7,6 +7,7 @@ import 'package:immunophenotyping_template_assistant/fcs_load_screen.dart';
 import 'package:immunophenotyping_template_assistant/results_screen.dart';
 import 'package:immunophenotyping_template_assistant/settings_screen.dart';
 import 'package:immunophenotyping_template_assistant/util.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 
@@ -53,6 +54,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   static const String ANNOTATION_SCREEN = "AnnotationScreen";
   static const String SETTINGS_SCREEN = "SettingsScreen";
   static const String RESULTS_SCREEN = "ResultsScreen";
+  static const String LINK = "Link";
 
   List<LeftMenuItem> leftMenuList = [];
 
@@ -70,12 +72,15 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     leftMenuList.add( LeftMenuItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN, false));
     leftMenuList.add( LeftMenuItem(Icons.settings, "Settings", _TwoColumnHomeState.SETTINGS_SCREEN, false));
     leftMenuList.add( LeftMenuItem(Icons.file_present_rounded, "Results", _TwoColumnHomeState.RESULTS_SCREEN, false));
+    leftMenuList.add( LeftMenuItem(Icons.apps_outlined, "Open Project", _TwoColumnHomeState.LINK, false));
 
     Timer.periodic(const Duration(milliseconds: 100), (tmr){
       if(appData.uploadRun == true && leftMenuList[1].enabled == false){
         setState(() {
           leftMenuList[1].enabled = true;  
           leftMenuList[2].enabled = true;  
+          leftMenuList[4].enabled = true;  
+          
         });
         tmr.cancel();  
       }
@@ -114,6 +119,11 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         );
   }
 
+  void _doRedirect(String destination) async {
+    final Uri url = Uri.parse(destination);
+    await launchUrl(url, webOnlyWindowName: '_blank');
+  }
+
   Widget _addItem( IconData icon, String label, String screenTo, bool enabled){
     var inset = const EdgeInsets.symmetric(vertical: 5, horizontal: 5);
 
@@ -138,9 +148,21 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
                       : Text(label, style: const TextStyle(color: Colors.grey, fontSize: 18),),
                   onTap: () {
                     if( enabled ){
-                      setState(() {
-                        selectedScreen = screenTo;
-                      });
+                      if( screenTo == _TwoColumnHomeState.LINK){
+                        String host = "";
+                        if( Uri.base.port != 80 ){
+                          host = "${Uri.base.host}:${Uri.base.port}";
+                        }else{
+                          host = Uri.base.host;
+                        }
+                        _doRedirect("${Uri.base.scheme}://$host/${appData.selectedTeam}/p/${appData.workflow.projectId}");
+                      }else{
+                        setState(() {
+                          
+                          selectedScreen = screenTo;
+                        });
+                      }
+                      
                     }
                     
                   },
