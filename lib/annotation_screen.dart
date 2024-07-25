@@ -44,7 +44,17 @@ class AnnotationDataSource extends DataTableSource{
 
     return DataRow(
           cells: <DataCell>[
-            DataCell(Text(tbl.columns[0].values[index])),
+            
+            DataCell(
+              SizedBox.expand(
+                child: 
+                  Container(
+                    color: Styles.white,
+                    child: Text(tbl.columns[0].values[index], style: Styles.text,) ,
+                  ),
+              )
+              
+            ),
             DataCell(
               TextField(
                 onChanged: (txt) {
