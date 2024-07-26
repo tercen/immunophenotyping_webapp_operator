@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:immunophenotyping_template_assistant/annotation_screen.dart';
@@ -9,6 +10,8 @@ import 'package:immunophenotyping_template_assistant/settings_screen.dart';
 import 'package:immunophenotyping_template_assistant/util.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:sci_tercen_client/sci_client.dart' as sci;
+import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
 
 
 //TODO list
@@ -49,14 +52,25 @@ class LeftMenuItem {
 
 }
 
+class ResultSchemaInfo {
+  String filenameCol = "";
+  String mimetypeCol = "";
+  String contentCol = "";
+  String schemaId;
+  int nRows;
+
+  ResultSchemaInfo(this.schemaId, this.nRows);
+}
 
 class _TwoColumnHomeState extends State<TwoColumnHome>{
   static const String FCS_LOAD_SCREEN = "FcsLoadScreen";
   static const String ANNOTATION_SCREEN = "AnnotationScreen";
   static const String SETTINGS_SCREEN = "SettingsScreen";
   static const String RESULTS_SCREEN = "ResultsScreen";
-  static const String LINK = "Link";
-
+  static const String PROJECT_LINK = "projectLink";
+  static const String REPORT_LINK = "reportLink";
+  
+  final factory = tercen.ServiceFactory();
   List<LeftMenuItem> leftMenuList = [];
 
   // final Widget _verticalDivider = Expanded(child: Container(constraints: const BoxConstraints(maxHeight: 1000, maxWidth: 5, minHeight: 50), color: Colors.black,) );
@@ -64,8 +78,66 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   final Map<String, Object> crossScreenData = {};
   final AppData appData = AppData();
   String selectedScreen = _TwoColumnHomeState.FCS_LOAD_SCREEN;
+  ResultSchemaInfo resultInfo = ResultSchemaInfo( "", 0 );
 
-  
+
+
+  List<sci.SimpleRelation> _getSimpleRelations(sci.Relation relation){
+    List<sci.SimpleRelation> l = [];
+
+    switch (relation.kind) {
+      case "SimpleRelation":
+        l.add(relation as sci.SimpleRelation);
+        break;
+      case "CompositeRelation":
+        sci.CompositeRelation cr = relation as sci.CompositeRelation;
+        List<sci.JoinOperator> joList = cr.joinOperators;
+        l.addAll(_getSimpleRelations(cr.mainRelation));
+        for(var jo in joList){
+          l.addAll(_getSimpleRelations(jo.rightRelation));
+        }
+      case "RenameRelation":
+        sci.RenameRelation rr = relation as sci.RenameRelation;
+        l.addAll(_getSimpleRelations(rr.relation));
+
+        // 
+      default:
+    }
+
+    return l;
+  }
+
+
+  Future<void> _readWorkflowResultInfo() async{
+    
+    for( sci.Step stp in appData.workflow.steps){
+      if(stp.name == "Export Report"){
+        sci.DataStep expStp = stp as sci.DataStep;
+        List<sci.SimpleRelation> simpleRels = _getSimpleRelations(expStp.computedRelation);
+        
+        sci.Schema reportSchema =  await factory.tableSchemaService.get( simpleRels[0].id );
+
+        resultInfo = ResultSchemaInfo( simpleRels[0].id, reportSchema.nRows );
+        for( sci.ColumnSchema col in reportSchema.columns){
+          
+          if( col.name.contains("filename")){
+            resultInfo.filenameCol = col.name;
+          }
+
+          if( col.name.contains("mimetype")){
+            resultInfo.mimetypeCol = col.name;
+          }
+
+          if( col.name.contains("content")){
+            resultInfo.contentCol = col.name;
+          }
+          
+        }
+      }
+    }
+  }
+
+
   @override
   initState() {
     super.initState();
@@ -73,14 +145,16 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     leftMenuList.add( LeftMenuItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN, false));
     leftMenuList.add( LeftMenuItem(Icons.settings, "Settings", _TwoColumnHomeState.SETTINGS_SCREEN, false));
     leftMenuList.add( LeftMenuItem(Icons.file_present_rounded, "Results", _TwoColumnHomeState.RESULTS_SCREEN, false));
-    leftMenuList.add( LeftMenuItem(Icons.apps_outlined, "Open Project", _TwoColumnHomeState.LINK, false));
+    leftMenuList.add( LeftMenuItem(Icons.download, "Download Report", _TwoColumnHomeState.REPORT_LINK, false));
+    leftMenuList.add( LeftMenuItem(Icons.apps_outlined, "Open Project", _TwoColumnHomeState.PROJECT_LINK, false));
+    
 
     Timer.periodic(const Duration(milliseconds: 100), (tmr){
       if(appData.uploadRun == true && leftMenuList[1].enabled == false){
         setState(() {
           leftMenuList[1].enabled = true;  
           leftMenuList[2].enabled = true;  
-          leftMenuList[4].enabled = true;  
+          leftMenuList[5].enabled = true;  
           
         });
         tmr.cancel();  
@@ -91,6 +165,9 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
       if(appData.workflowRun == true && leftMenuList[3].enabled == false){
         setState(() {
           leftMenuList[3].enabled = true;  
+          leftMenuList[4].enabled = true;  
+
+          _readWorkflowResultInfo();
         });
         tmr.cancel();  
       }
@@ -125,6 +202,24 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     await launchUrl(url, webOnlyWindowName: '_blank');
   }
 
+
+  void _doDownload(ResultSchemaInfo info) async {
+    sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
+          
+    final _mimetype = contentTable.columns[1].values[0];
+    final _filename = contentTable.columns[0].values[0];
+    final _base64 = contentTable.columns[2].values[0];
+
+
+    //   // Create the link with the file
+    // final anchor =
+    AnchorElement(href: 'data:$_mimetype;base64,$_base64')
+      ..target = 'blank'
+      ..download = _filename
+      ..click();
+  }
+
+
   Widget _addItem( IconData icon, String label, String screenTo, bool enabled){
     var inset = const EdgeInsets.symmetric(vertical: 5, horizontal: 5);
 
@@ -149,7 +244,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
                       : Text(label, style: const TextStyle(color: Colors.grey, fontSize: 18),),
                   onTap: () {
                     if( enabled ){
-                      if( screenTo == _TwoColumnHomeState.LINK){
+                      if( screenTo == _TwoColumnHomeState.PROJECT_LINK){
                         String host = "";
                         if( Uri.base.port != 80 ){
                           host = "${Uri.base.host}:${Uri.base.port}";
@@ -157,6 +252,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
                           host = Uri.base.host;
                         }
                         _doRedirect("${Uri.base.scheme}://$host/${appData.selectedTeam}/p/${appData.workflow.projectId}");
+                      } else if( screenTo == _TwoColumnHomeState.REPORT_LINK){
+                        _doDownload(resultInfo);
                       }else{
                         setState(() {
                           

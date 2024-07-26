@@ -1,25 +1,13 @@
 
 
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:immunophenotyping_template_assistant/ui_utils.dart';
-import 'package:immunophenotyping_template_assistant/util.dart';
-import 'package:list_picker/list_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:web/web.dart' as web;
 import 'package:sci_tercen_client/sci_client.dart' as sci;
-import 'package:sci_tercen_model/sci_model_base.dart' as model;
 import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
-import 'package:tson/tson.dart' as tson;
 import 'package:immunophenotyping_template_assistant/data.dart';
-import 'package:sn_progress_dialog/sn_progress_dialog.dart';
-import 'package:json_string/json_string.dart';
-import 'package:uuid/uuid.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
