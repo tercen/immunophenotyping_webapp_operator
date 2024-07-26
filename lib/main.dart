@@ -213,6 +213,10 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     ResultSchemaInfo info = await _readWorkflowResultInfo();
     print("Trying to download ${info.filenameCol}");
     print("Trying to download ${info.nRows}");
+
+    if( info.nRows == 0){
+      return;
+    }
     sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
           
     final _mimetype = contentTable.columns[1].values[0];
