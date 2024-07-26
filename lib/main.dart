@@ -66,7 +66,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   static const String FCS_LOAD_SCREEN = "FcsLoadScreen";
   static const String ANNOTATION_SCREEN = "AnnotationScreen";
   static const String SETTINGS_SCREEN = "SettingsScreen";
-  static const String RESULTS_SCREEN = "ResultsScreen";
+  // static const String RESULTS_SCREEN = "ResultsScreen";
   static const String PROJECT_LINK = "projectLink";
   static const String REPORT_LINK = "reportLink";
   
@@ -183,7 +183,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     leftMenuList.add( LeftMenuItem(Icons.home_rounded, "FCS Files", _TwoColumnHomeState.FCS_LOAD_SCREEN, true));
     leftMenuList.add( LeftMenuItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN, false));
     leftMenuList.add( LeftMenuItem(Icons.settings, "Settings", _TwoColumnHomeState.SETTINGS_SCREEN, false));
-    leftMenuList.add( LeftMenuItem(Icons.file_present_rounded, "Results", _TwoColumnHomeState.RESULTS_SCREEN, false));
+    // leftMenuList.add( LeftMenuItem(Icons.file_present_rounded, "Results", _TwoColumnHomeState.RESULTS_SCREEN, false));
     leftMenuList.add( LeftMenuItem(Icons.download, "Download Report", _TwoColumnHomeState.REPORT_LINK, false));
     leftMenuList.add( LeftMenuItem(Icons.apps_outlined, "Open Project", _TwoColumnHomeState.PROJECT_LINK, false));
     
@@ -193,7 +193,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         setState(() {
           leftMenuList[1].enabled = true;  
           leftMenuList[2].enabled = true;  
-          leftMenuList[5].enabled = true;  
+          leftMenuList[4].enabled = true;  
           
         });
         tmr.cancel();  
@@ -203,8 +203,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     Timer.periodic(const Duration(milliseconds: 100), (tmr){
       if(appData.workflowRun == true && leftMenuList[3].enabled == false){
         setState(() async {
+          // leftMenuList[3].enabled = true;  
           leftMenuList[3].enabled = true;  
-          leftMenuList[4].enabled = true;  
 
           // resultInfo = await _readWorkflowResultInfo();
         });
@@ -335,8 +335,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         return AnnotationScreen(appData: appData,);
       case _TwoColumnHomeState.SETTINGS_SCREEN:
         return SettingsScreen(appData: appData,);
-      case _TwoColumnHomeState.RESULTS_SCREEN:
-        return ResultsScreen(appData: appData,);
+      // case _TwoColumnHomeState.RESULTS_SCREEN:
+        // return ResultsScreen(appData: appData,);
       default:
         return FcsLoadScreen( appData: appData  );
     }
