@@ -167,7 +167,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
           leftMenuList[3].enabled = true;  
           leftMenuList[4].enabled = true;  
 
-          _readWorkflowResultInfo();
+          // _readWorkflowResultInfo();
         });
         tmr.cancel();  
       }
