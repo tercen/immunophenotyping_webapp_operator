@@ -115,7 +115,10 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         print("Found export");
         sci.DataStep expStp = stp as sci.DataStep;
         List<sci.SimpleRelation> simpleRels = _getSimpleRelations(expStp.computedRelation);
-        
+        print("Num simple rels ${simpleRels.length}");
+        for(var sr in simpleRels){
+          print(sr.toJson());
+        }
         sci.Schema reportSchema =  await factory.tableSchemaService.get( simpleRels[0].id );
 
         ResultSchemaInfo resultInfo = ResultSchemaInfo( simpleRels[0].id, reportSchema.nRows );
