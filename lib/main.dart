@@ -109,7 +109,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
 
   Future<void> _readWorkflowResultInfo() async{
-    
+    print("Trying yo read");
     for( sci.Step stp in appData.workflow.steps){
       if(stp.name == "Export Report"){
         sci.DataStep expStp = stp as sci.DataStep;
