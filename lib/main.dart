@@ -70,7 +70,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   static const String PROJECT_LINK = "projectLink";
   static const String REPORT_LINK = "reportLink";
   
-  late final factory;
+  late var factory;
   List<LeftMenuItem> leftMenuList = [];
 
   // final Widget _verticalDivider = Expanded(child: Container(constraints: const BoxConstraints(maxHeight: 1000, maxWidth: 5, minHeight: 50), color: Colors.black,) );
@@ -167,7 +167,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
           leftMenuList[3].enabled = true;  
           leftMenuList[4].enabled = true;  
 
-          // _readWorkflowResultInfo();
+          _readWorkflowResultInfo();
         });
         tmr.cancel();  
       }
