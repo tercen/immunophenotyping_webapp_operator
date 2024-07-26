@@ -205,7 +205,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   }
 
 
-  void _doDownload(ResultSchemaInfo info) async {
+  void _doDownload() async {
+    ResultSchemaInfo info = await _readWorkflowResultInfo();
     print("Trying to download ${info.filenameCol}");
     print("Trying to download ${info.nRows}");
     sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
@@ -258,7 +259,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
                         _doRedirect("${Uri.base.scheme}://$host/${appData.selectedTeam}/p/${appData.workflow.projectId}");
                       } else if( screenTo == _TwoColumnHomeState.REPORT_LINK){
                         // resultInfo = _readWorkflowResultInfo();
-                        _doDownload(resultInfo);
+                        _doDownload();
                       }else{
                         setState(() {
                           
