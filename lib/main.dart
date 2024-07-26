@@ -109,7 +109,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
 
   Future<void> _readWorkflowResultInfo() async{
-    print("Trying yo read");
+    print("Reading workflow results");
     for( sci.Step stp in appData.workflow.steps){
       if(stp.name == "Export Report"){
         sci.DataStep expStp = stp as sci.DataStep;
@@ -204,7 +204,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
 
   void _doDownload(ResultSchemaInfo info) async {
-    
+    print("Trying to download ${info.filenameCol}");
+    print("Trying to download ${info.nRows}");
     sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
           
     final _mimetype = contentTable.columns[1].values[0];
