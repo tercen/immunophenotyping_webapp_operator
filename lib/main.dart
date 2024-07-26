@@ -119,27 +119,57 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         for(var sr in simpleRels){
           print(sr.toJson());
         }
-        sci.Schema reportSchema =  await factory.tableSchemaService.get( simpleRels[0].id );
+        for(var sr in simpleRels){
+          sci.Schema reportSchema =  await factory.tableSchemaService.get( sr.id );  
+          int colsPresent = 0;
+          ResultSchemaInfo resultInfo = ResultSchemaInfo( sr.id, reportSchema.nRows );
+          
+          for( sci.ColumnSchema col in reportSchema.columns){
+            print("Column ${col.name}");
+            if( col.name.contains("filename")){
+              resultInfo.filenameCol = col.name;
+              colsPresent += 1;
+            }
 
-        ResultSchemaInfo resultInfo = ResultSchemaInfo( simpleRels[0].id, reportSchema.nRows );
-        for( sci.ColumnSchema col in reportSchema.columns){
-          print("Column ${col.name}");
-          if( col.name.contains("filename")){
-            resultInfo.filenameCol = col.name;
+            if( col.name.contains("mimetype")){
+              resultInfo.mimetypeCol = col.name;
+              colsPresent += 1;
+            }
+
+            if( col.name.contains("content")){
+              resultInfo.contentCol = col.name;
+              colsPresent += 1;
+            }
+
+            print("Info ${resultInfo.nRows}, ${resultInfo.filenameCol}, ${resultInfo.mimetypeCol}, ${resultInfo.contentCol}");
+            if( colsPresent == 3){
+              return resultInfo;
+            }
+            
           }
-
-          if( col.name.contains("mimetype")){
-            resultInfo.mimetypeCol = col.name;
-          }
-
-          if( col.name.contains("content")){
-            resultInfo.contentCol = col.name;
-          }
-
-          print("Info ${resultInfo.nRows}, ${resultInfo.filenameCol}, ${resultInfo.mimetypeCol}, ${resultInfo.contentCol}");
-
-          return resultInfo;
         }
+        // sci.Schema reportSchema =  await factory.tableSchemaService.get( simpleRels[0].id );
+
+
+        
+        // for( sci.ColumnSchema col in reportSchema.columns){
+        //   print("Column ${col.name}");
+        //   if( col.name.contains("filename")){
+        //     resultInfo.filenameCol = col.name;
+        //   }
+
+        //   if( col.name.contains("mimetype")){
+        //     resultInfo.mimetypeCol = col.name;
+        //   }
+
+        //   if( col.name.contains("content")){
+        //     resultInfo.contentCol = col.name;
+        //   }
+
+        //   print("Info ${resultInfo.nRows}, ${resultInfo.filenameCol}, ${resultInfo.mimetypeCol}, ${resultInfo.contentCol}");
+
+        //   return resultInfo;
+        // }
       }
     }
 
