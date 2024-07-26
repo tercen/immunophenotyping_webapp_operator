@@ -108,7 +108,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   }
 
 
-  Future<void> _readWorkflowResultInfo() async{
+  Future<ResultSchemaInfo> _readWorkflowResultInfo() async{
     print("Reading workflow results");
     for( sci.Step stp in appData.workflow.steps){
       if(stp.name == "Export Report"){
@@ -117,7 +117,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         
         sci.Schema reportSchema =  await factory.tableSchemaService.get( simpleRels[0].id );
 
-        resultInfo = ResultSchemaInfo( simpleRels[0].id, reportSchema.nRows );
+        ResultSchemaInfo resultInfo = ResultSchemaInfo( simpleRels[0].id, reportSchema.nRows );
         for( sci.ColumnSchema col in reportSchema.columns){
           
           if( col.name.contains("filename")){
@@ -131,10 +131,12 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
           if( col.name.contains("content")){
             resultInfo.contentCol = col.name;
           }
-          
+          return resultInfo;
         }
       }
     }
+
+    return ResultSchemaInfo("NONE", 0);
   }
 
 
@@ -163,11 +165,11 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
     Timer.periodic(const Duration(milliseconds: 100), (tmr){
       if(appData.workflowRun == true && leftMenuList[3].enabled == false){
-        setState(() {
+        setState(() async {
           leftMenuList[3].enabled = true;  
           leftMenuList[4].enabled = true;  
 
-          _readWorkflowResultInfo();
+          resultInfo = await _readWorkflowResultInfo();
         });
         tmr.cancel();  
       }
@@ -255,6 +257,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
                         }
                         _doRedirect("${Uri.base.scheme}://$host/${appData.selectedTeam}/p/${appData.workflow.projectId}");
                       } else if( screenTo == _TwoColumnHomeState.REPORT_LINK){
+                        // resultInfo = _readWorkflowResultInfo();
                         _doDownload(resultInfo);
                       }else{
                         setState(() {
