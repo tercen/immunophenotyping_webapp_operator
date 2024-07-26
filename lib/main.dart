@@ -132,8 +132,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
           if( col.name.contains("content")){
             resultInfo.contentCol = col.name;
           }
-          print("Info ${resultInfo.filenameCol}");
-          print("Info ${resultInfo.nRows}");
+
+          print("Info ${resultInfo.nRows}, ${resultInfo.filenameCol}, ${resultInfo.mimetypeCol}, ${resultInfo.contentCol}");
 
           return resultInfo;
         }
@@ -151,8 +151,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
     leftMenuList.add( LeftMenuItem(Icons.search_rounded, "Annotations", _TwoColumnHomeState.ANNOTATION_SCREEN, false));
     leftMenuList.add( LeftMenuItem(Icons.settings, "Settings", _TwoColumnHomeState.SETTINGS_SCREEN, false));
     leftMenuList.add( LeftMenuItem(Icons.file_present_rounded, "Results", _TwoColumnHomeState.RESULTS_SCREEN, false));
-    // leftMenuList.add( LeftMenuItem(Icons.download, "Download Report", _TwoColumnHomeState.REPORT_LINK, false));
-    // leftMenuList.add( LeftMenuItem(Icons.apps_outlined, "Open Project", _TwoColumnHomeState.PROJECT_LINK, false));
+    leftMenuList.add( LeftMenuItem(Icons.download, "Download Report", _TwoColumnHomeState.REPORT_LINK, false));
+    leftMenuList.add( LeftMenuItem(Icons.apps_outlined, "Open Project", _TwoColumnHomeState.PROJECT_LINK, false));
     
 
     Timer.periodic(const Duration(milliseconds: 100), (tmr){
@@ -160,7 +160,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
         setState(() {
           leftMenuList[1].enabled = true;  
           leftMenuList[2].enabled = true;  
-          // leftMenuList[5].enabled = true;  
+          leftMenuList[5].enabled = true;  
           
         });
         tmr.cancel();  
@@ -171,7 +171,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
       if(appData.workflowRun == true && leftMenuList[3].enabled == false){
         setState(() async {
           leftMenuList[3].enabled = true;  
-          // leftMenuList[4].enabled = true;  
+          leftMenuList[4].enabled = true;  
 
           // resultInfo = await _readWorkflowResultInfo();
         });
