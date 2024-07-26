@@ -70,7 +70,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
   static const String PROJECT_LINK = "projectLink";
   static const String REPORT_LINK = "reportLink";
   
-  final factory = tercen.ServiceFactory();
+  late final factory;
   List<LeftMenuItem> leftMenuList = [];
 
   // final Widget _verticalDivider = Expanded(child: Container(constraints: const BoxConstraints(maxHeight: 1000, maxWidth: 5, minHeight: 50), color: Colors.black,) );
@@ -204,19 +204,19 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
 
   void _doDownload(ResultSchemaInfo info) async {
-    sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
+    // sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
           
-    final _mimetype = contentTable.columns[1].values[0];
-    final _filename = contentTable.columns[0].values[0];
-    final _base64 = contentTable.columns[2].values[0];
+    // final _mimetype = contentTable.columns[1].values[0];
+    // final _filename = contentTable.columns[0].values[0];
+    // final _base64 = contentTable.columns[2].values[0];
 
 
-    //   // Create the link with the file
-    // final anchor =
-    AnchorElement(href: 'data:$_mimetype;base64,$_base64')
-      ..target = 'blank'
-      ..download = _filename
-      ..click();
+    // //   // Create the link with the file
+    // // final anchor =
+    // AnchorElement(href: 'data:$_mimetype;base64,$_base64')
+    //   ..target = 'blank'
+    //   ..download = _filename
+    //   ..click();
   }
 
 
