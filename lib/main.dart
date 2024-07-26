@@ -120,7 +120,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
         ResultSchemaInfo resultInfo = ResultSchemaInfo( simpleRels[0].id, reportSchema.nRows );
         for( sci.ColumnSchema col in reportSchema.columns){
-          
+          print("Column ${col.name}");
           if( col.name.contains("filename")){
             resultInfo.filenameCol = col.name;
           }
