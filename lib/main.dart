@@ -204,19 +204,20 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
 
   void _doDownload(ResultSchemaInfo info) async {
-    // sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
+    
+    sci.Table contentTable = await factory.tableSchemaService.select(info.schemaId, [info.filenameCol, info.mimetypeCol, info.contentCol], 0, info.nRows);
           
-    // final _mimetype = contentTable.columns[1].values[0];
-    // final _filename = contentTable.columns[0].values[0];
-    // final _base64 = contentTable.columns[2].values[0];
+    final _mimetype = contentTable.columns[1].values[0];
+    final _filename = contentTable.columns[0].values[0];
+    final _base64 = contentTable.columns[2].values[0];
 
 
-    // //   // Create the link with the file
-    // // final anchor =
-    // AnchorElement(href: 'data:$_mimetype;base64,$_base64')
-    //   ..target = 'blank'
-    //   ..download = _filename
-    //   ..click();
+    //   // Create the link with the file
+    // final anchor =
+    AnchorElement(href: 'data:$_mimetype;base64,$_base64')
+      ..target = 'blank'
+      ..download = _filename
+      ..click();
   }
 
 
@@ -334,6 +335,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
       future: initFactory(),
       builder: (context, data) {
           if (data.hasData) {
+            factory = tercen.ServiceFactory();
             return wdg;
           } else if (data.hasError) {
             return Text(data.error!.toString());
