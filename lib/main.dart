@@ -109,9 +109,10 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
 
   Future<ResultSchemaInfo> _readWorkflowResultInfo() async{
-    print("Reading workflow results");
+    print("Reading workflow results: ${appData.workflow}");
     for( sci.Step stp in appData.workflow.steps){
       if(stp.name == "Export Report"){
+        print("Found export");
         sci.DataStep expStp = stp as sci.DataStep;
         List<sci.SimpleRelation> simpleRels = _getSimpleRelations(expStp.computedRelation);
         
@@ -131,6 +132,9 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
           if( col.name.contains("content")){
             resultInfo.contentCol = col.name;
           }
+          print("Info ${resultInfo.filenameCol}");
+          print("Info ${resultInfo.nRows}");
+
           return resultInfo;
         }
       }
@@ -169,7 +173,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
           leftMenuList[3].enabled = true;  
           leftMenuList[4].enabled = true;  
 
-          resultInfo = await _readWorkflowResultInfo();
+          // resultInfo = await _readWorkflowResultInfo();
         });
         tmr.cancel();  
       }

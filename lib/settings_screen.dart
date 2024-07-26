@@ -338,8 +338,6 @@ class _SettingsScreenState extends State<SettingsScreen>{
     
     sub = taskStream.listen((evt){
       var evtMap = evt.toJson();
-      //TODO Handle progress messages better
-      // print(evtMap);
       if(evtMap["kind"] == "TaskStateEvent"){
         if( evtMap["state"]["kind"] == "DoneState"){
           finishedSteps += 1;
@@ -349,9 +347,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
     });
 
     sub.onDone(() async {
+      widget.appData.workflow = await factory.workflowService.get(wkf.id);
       finishedRunning = true;
       widget.appData.workflowRun = true;
-      widget.appData.workflow = await factory.workflowService.get(wkf.id);
       progressDialog.close();
     });
   }
