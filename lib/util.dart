@@ -10,15 +10,15 @@ bool get isDev => Uri.base.hasPort && (Uri.base.port > 10000);
 
 Future<bool> initFactory() async {
   var token = Uri.base.queryParameters["token"] ?? '';
-  var taskId = Uri.base.queryParameters["taskId"] ?? '';
+  // var taskId = Uri.base.queryParameters["taskId"] ?? '';
 
   if (token.isEmpty) {
     throw "A token is required";
   }
 
-  if (taskId.isEmpty) {
-    throw "A taskId is required";
-  }
+  // if (taskId.isEmpty) {
+    // throw "A taskId is required";
+  // }
 
   var authClient =
   auth_http.HttpAuthClient(token, io_http.HttpBrowserClient());
