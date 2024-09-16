@@ -3,6 +3,7 @@
     "description": "",
     "isWebApp": true,
     "isViewOnly": false,
+    "entryType": "app",
     "tags": [
       "workflow"
     ],
