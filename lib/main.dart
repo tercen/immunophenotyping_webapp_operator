@@ -360,14 +360,12 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
             columnWidths: 
               const {
                 0: FixedColumnWidth(250.0),
-                // 1: FixedColumnWidth(5.0),
                 2: IntrinsicColumnWidth(),
               },
             children: [
               TableRow(
                 children: [
                   _buildLeftTab(),
-                  // _verticalDivider,
                   _buildRightScreen(),
                 ]
               )
@@ -382,7 +380,11 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
       builder: (context, data) {
           if (data.hasData) {
             factory = tercen.ServiceFactory();
-            return wdg;
+            return Material( color: Colors.transparent,
+            child:Column(children:[
+              Image.asset("img/logo.png", width: 300,),
+              wdg
+            ])) ;
           } else if (data.hasError) {
             return Text(data.error!.toString());
           } else {
