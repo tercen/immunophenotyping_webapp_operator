@@ -382,7 +382,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
             factory = tercen.ServiceFactory();
             return Material( color: Colors.transparent,
             child:Column(children:[
-              Image.asset("img/logo.png", width: 300,),
+              Image.asset("assets/img/logo.png", width: 300,),
               wdg
             ])) ;
           } else if (data.hasError) {
