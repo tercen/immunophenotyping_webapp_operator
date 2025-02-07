@@ -1,21 +1,15 @@
 
 
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
 
-import 'package:file_picker/file_picker.dart';
+
+
 import 'package:flutter/material.dart';
 
 import 'package:immunophenotyping_template_assistant/ui_utils.dart';
-import 'package:immunophenotyping_template_assistant/util.dart';
 import 'package:intl/intl.dart';
-import 'package:list_picker/list_picker.dart';
-import 'package:web/web.dart' as web;
 import 'package:sci_tercen_client/sci_client.dart' as sci;
-import 'package:sci_tercen_model/sci_model_base.dart' as model;
 import 'package:sci_tercen_client/sci_client_service_factory.dart' as tercen;
-import 'package:tson/tson.dart' as tson;
 import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:json_string/json_string.dart';
@@ -41,19 +35,21 @@ class SettingsEntry{
   final String settingName;
   final String step;
   late String value;
-  late List<String> options = [];
+  List<String> options = [];
   late TextEditingController controller;
 
-  SettingsEntry(this.name, this.section, this.settingName, this.step, this.hint, this.type, this.value) {
+  SettingsEntry(this.name, this.section, this.settingName, this.step, this.hint, this.type, this.value, {List<String> opts = const []}) {
     controller = TextEditingController(text: value); 
+    options.addAll(opts);
   }
 
-  void addOptions(List<String> opt){
-
-    for( var o in opt ){
-      options.add(o);
-    }
-  }
+  // void addOptions(List<String> opt){
+  //   print("Inside addOptions!");
+  //   for( var o in opt ){
+  //     print("Adding $o");
+  //     options.add(o);
+  //   }
+  // }
 
   String info(){
     return "Name: $name" + 
@@ -76,17 +72,38 @@ class _SettingsScreenState extends State<SettingsScreen>{
   bool finishedRunning = false;
   
   Future<List<SettingsEntry>> _readSettings() async {
+    print("Reading settings");
     List<SettingsEntry> settingsList = [];    
 
     String settingsStr = await DefaultAssetBundle.of(context).loadString("assets/cfg/workflow_settings.json");
-    try {
+
+    // try {
       final jsonString = JsonString(settingsStr);
+
       final settingsMap = jsonString.decodedValueAsMap;
 
+      print(settingsMap["settings"].length);
       
       for(int i = 0; i < settingsMap["settings"].length; i++){
+        
         Map<String, dynamic> jsonEntry = settingsMap["settings"][i];  
-        SettingsEntry setting = SettingsEntry(
+        if( jsonEntry.keys.contains("options")){
+          print("Reading $i with options");
+                  SettingsEntry setting = SettingsEntry(
+          jsonEntry["name"],
+          jsonEntry["section"],
+          jsonEntry["setting_name"],
+          jsonEntry["step"],
+          jsonEntry["hint"],
+          jsonEntry["type"], 
+          "FastPG",
+          opts: ["FastPG", "Phenograph"]);
+          print("Read A $jsonEntry");
+        settingsList.add(setting);
+          
+        }else{
+          print("Reading $i");
+                  SettingsEntry setting = SettingsEntry(
           jsonEntry["name"],
           jsonEntry["section"],
           jsonEntry["setting_name"],
@@ -94,20 +111,20 @@ class _SettingsScreenState extends State<SettingsScreen>{
           jsonEntry["hint"],
           jsonEntry["type"], 
           jsonEntry["value"]);
-
-        if( jsonEntry.keys.contains("options") ){
-          setting.addOptions(jsonEntry["options"]);
+print("Read B $jsonEntry");
+        settingsList.add(setting);
         }
 
-        settingsList.add(setting);
+        
       }
+      print("Done");
 
-    } on Exception catch (e) {
-        print('Invalid JSON: $e');
-    }
+    // } on Exception catch (e) {
+        // print('Invalid JSON: $e');
+    // }
 
     
-
+    print(settingsList);
 
     return settingsList;
   }
@@ -236,17 +253,16 @@ class _SettingsScreenState extends State<SettingsScreen>{
     widget.appData.workflow = sci.Workflow();
     finishedSteps = 0;
 
-
-    List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: 
-                    [widget.appData.channelAnnotationDoc.projectId, "ufff0", "ufff0"], 
-                    endKey: [widget.appData.channelAnnotationDoc.projectId, "", ""]
-    );
-
-
-    List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.subKind == "Workflow" && po.folderId == "").toList();
+    // List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: 
+    //                 [widget.appData.channelAnnotationDoc.projectId, "ufff0", "ufff0"], 
+    //                 endKey: [widget.appData.channelAnnotationDoc.projectId, "", ""]
+    // );
 
 
-    sci.Workflow wkf = await factory.workflowService.get(workflows[0].id);
+    // List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.subKind == "Workflow" && po.folderId == "").toList();
+    var perm = await factory.persistentService.findByKind(keys: ["Workflow"]);
+    var workflows = await factory.workflowService.list(perm.map((e) => e.id).toList());
+    sci.Workflow wkf = await factory.workflowService.get(workflows.firstWhere((e) => e.name == "Flow Immunophenotyping - PhenoGraph").id);
 
     progressDialog.show(
         msg: "Running the workflow. Please wait.", 
@@ -263,25 +279,37 @@ class _SettingsScreenState extends State<SettingsScreen>{
     for(sci.Step stp in wkf.steps){
       if(stp.kind == "DataStep" ){
         _updateOperatorSettings(stp as sci.DataStep, settingsList);
-
-        
       }
       
       
       if(stp.kind == "TableStep" ){
         if(stp.name == "FCS Data"){
           
-          sci.InMemoryRelation rel = sci.InMemoryRelation()
-                ..id = uuid.v4()
-                ..inMemoryTable = widget.appData.measurementsTbl;
+          var rrel = sci.RenameRelation();
+          var colNames = widget.appData.measurementsTbl.columns.map((e) => e.name).toList();
+          rrel.inNames.addAll(colNames);
+          rrel.outNames.addAll(colNames);
+          rrel.relation = sci.SimpleRelation()..id = widget.appData.measurementsSch.id;
+
+
+          // sci.InMemoryRelation rel = sci.InMemoryRelation()
+          //       ..id = uuid.v4()
+          //       ..inMemoryTable = widget.appData.measurementsTbl;
+
           sci.TableStep tmpStp = stp as sci.TableStep;
-          tmpStp.model.relation = rel;
+          tmpStp.model.relation =   rrel;
           tmpStp.state.taskState = sci.DoneState();
           stp = tmpStp;
 
         }
 
         if(stp.name == "Marker Annotation"){
+          // var rrel = sci.RenameRelation();
+          // var colNames = widget.appData.channelAnnotationTbl.columns.map((e) => e.name).toList();
+          // rrel.inNames.addAll(colNames);
+          // rrel.outNames.addAll(colNames);
+          // rrel.relation = sci.SimpleRelation()..id = widget.appData.channelAnnotationSch.id;
+
           sci.InMemoryRelation rel = sci.InMemoryRelation()
                 ..id = uuid.v4()
                 ..inMemoryTable = widget.appData.channelAnnotationTbl;
@@ -346,6 +374,9 @@ class _SettingsScreenState extends State<SettingsScreen>{
       }
     });
 
+
+    
+
     sub.onDone(() async {
       widget.appData.workflow = await factory.workflowService.get(wkf.id);
       finishedRunning = true;
@@ -357,15 +388,11 @@ class _SettingsScreenState extends State<SettingsScreen>{
   @override
   Widget build(BuildContext context) {
     
-
+    
     return FutureBuilder(
       future: _readSettings(), 
       builder: (BuildContext context, AsyncSnapshot snapshot ){
-
-        if(  snapshot.connectionState == ConnectionState.done && snapshot.hasData && widget.appData.uploadRun ){
-
-          
-
+        if(  snapshot.hasData && widget.appData.uploadRun ){
           List<SettingsEntry> settingsList = [];
           if( snapshot.data != null ){
             settingsList = snapshot.data;
@@ -418,7 +445,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
             paddingAbove: RightScreenLayout.paddingLarge,
             ElevatedButton(
               style: setButtonStyle("enabled"),
-              onPressed: (){
+              onPressed: () async {
                 // progressDialog.show(
                 //     msg: "Running the workflow. Please wait.", 
                 //     barrierColor: const Color.fromARGB(125, 0, 0, 0),
@@ -435,7 +462,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
               //   }
               // });
 
-              _runWorkflow(settingsList);
+              await _runWorkflow(settingsList);
                
               }, 
               child: const Text("Run Analysis", style: Styles.textButton,)

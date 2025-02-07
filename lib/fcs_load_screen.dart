@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:immunophenotyping_template_assistant/data.dart';
 import 'package:immunophenotyping_template_assistant/ui_utils.dart';
@@ -165,9 +166,35 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   void _uploadFiles() async {
     var uuid = const Uuid();
 
+
+        //http://127.0.0.1:5400/test-team/w/4636a61f6867796c23693e7d023b632c/ts/6dba340a-af59-42ba-aea5-55fa7f7b2b4b //CORRECT
+    // http://127.0.0.1:5400/test-team/w/4636a61f6867796c23693e7d023b632c/ts/8346b5cb-5e4d-41ae-be35-313abe9500d0 //WRONG
+
+    // var wkf = await factory.workflowService.get("4636a61f6867796c23693e7d023b632c");
+
+    // for( var stp in wkf.steps ){
+    //   if( stp.id == "6dba340a-af59-42ba-aea5-55fa7f7b2b4b"){
+    //     print("CORRECT:");
+    //     print(stp.toJson());
+    //     print("........................");
+    //   }
+    //   if( stp.id == "8346b5cb-5e4d-41ae-be35-313abe9500d0"){
+    //     print("WRONG:");
+    //     print(stp.toJson());
+    //     print("........................");
+    //   }
+    // }
+
+    // return;
+
     // Create a project to store the workflow
     if( project.id == "" ){
-      var projectList = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: selectedTeam, endKey: selectedTeam);
+      print("Selected team is $selectedTeam");
+      var perm = await factory.persistentService.findByKind(keys: ["Project"]);
+
+      var projectList = await factory.projectService.list(perm.map((e) => e.id).toList());
+      
+      // var projectList2 = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: [selectedTeam], endKey: [selectedTeam]);
       bool createProject = true;
       for( var proj in projectList){
         if(proj.name == workflowTfController.text){
@@ -296,8 +323,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Document op = sci.Document();
     bool opFound = false;
 
-      
-    var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '', limit: 1000);
+    var permOp = await factory.persistentService.findByKind(keys: ["Operator"]);
+
+    var installedOperators = await factory.projectService.list(permOp.map((e) => e.id).toList());
+    // var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '', limit: 1000);
     for( var o in installedOperators ){
       if( o.name == "FCS" && o.version == "2.3.0"){
         print("Found FCS operator installed (version ${op.version})");
@@ -420,70 +449,67 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
   }
 
   List<sci.SimpleRelation> _getSimpleRelations(sci.Relation relation){
-    List<sci.SimpleRelation> l = [];
+List<sci.SimpleRelation> l = [];
 
-    switch (relation.kind) {
-      case "SimpleRelation":
-        l.add(relation as sci.SimpleRelation);
-        break;
-      case "CompositeRelation":
-        sci.CompositeRelation cr = relation as sci.CompositeRelation;
-        List<sci.JoinOperator> joList = cr.joinOperators;
-        l.addAll(_getSimpleRelations(cr.mainRelation));
-        for(var jo in joList){
-          l.addAll(_getSimpleRelations(jo.rightRelation));
-        }
-      case "RenameRelation":
-        sci.RenameRelation rr = relation as sci.RenameRelation;
-        l.addAll(_getSimpleRelations(rr.relation));
+  switch (relation.kind) {
+    case "SimpleRelation":
+      l.add(relation as sci.SimpleRelation);
+      break;
+    case "CompositeRelation":
+      sci.CompositeRelation cr = relation as sci.CompositeRelation;
+      List<sci.JoinOperator> joList = cr.joinOperators;
+      l.addAll(_getSimpleRelations(cr.mainRelation));
+      for(var jo in joList){
+        l.addAll(_getSimpleRelations(jo.rightRelation));
+      }
+    case "RenameRelation":
+      sci.RenameRelation rr = relation as sci.RenameRelation;
+      l.addAll(_getSimpleRelations(rr.relation));
 
-        // 
-      default:
-    }
+      // 
+    default:
+  }
 
-    return l;
+  return l;
   }
 
 
   void _getComputedRelation(String taskId) async{
     // Works for zip file...
-    print("Getting computed relation");
+    print("Getting computed relation for taskId $taskId");
+    
     var compTask = await factory.taskService.get(taskId) as sci.RunComputationTask;
-
+    
 
     List<sci.SimpleRelation> relations = _getSimpleRelations(compTask.computedRelation);
+    
     sci.Schema measurementSch = sci.Schema();
-    // sci.Schema observationsSch = sci.Schema();
+    sci.Schema summarySch = sci.Schema();
+
     for(var r in relations ){
       sci.Schema sch = await factory.tableSchemaService.get(r.id);
+
       if( sch.name == "Measurements"){
         measurementSch = sch;
       }
-      // if( sch.name == "Observations"){
-        // observationsSch = sch;
-      // }
+      if( sch.name == "Observations"){
+        summarySch = sch;
+      }
     }
+
+    var filenameTbl = await factory.tableSchemaService.select(summarySch.id, ["filename"], 0, summarySch.nRows); 
+    var filenames = filenameTbl.columns[0].values;
 
     List<String> colNames = [];
     for( var col in measurementSch.columns ){
       colNames.add(col.name);
     }
 
-
-
+    
     sci.Table measurementTbl = await factory.tableSchemaService.select(measurementSch.id, colNames, 0, measurementSch.nRows);
 
-    List<String> filenames = [];
-    int fileColIdx = 0;
-    for( var i = 0; i < measurementTbl.columns.length; i++){
-      if(measurementTbl.columns[i].name == "fileId"){
-        fileColIdx = i;
-      }
-    }
 
-    for( var i = 0; i < measurementTbl.nRows; i++){
-      filenames.add(filesToUpload[measurementTbl.columns[fileColIdx].values[i]-1].filename); // Starts at 1
-    }
+    print("Added all file names");
 
     sci.Column fileCol = sci.Column()
           ..type = "string"
@@ -494,19 +520,37 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
           ..values = tson.CStringList.fromList(filenames);
     measurementTbl.columns.add(fileCol);
     measurementTbl.properties.name = "Measurements";
-    
+
+
+
     widget.appData.measurementsTbl = measurementTbl;
 
-    var poFile = _findByName(projectObjects,  "Measurements");
-    if( poFile.id != ''){
-      await factory.projectDocumentService.delete(poFile.id, poFile.rev);
-    }
-    uploadTable(measurementTbl, "Measurements",
+
+
+    var schId = await uploadTable(measurementTbl, "Measurements",
                  compTask.projectId, 
                  compTask.owner,
                  "");
 
-    List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
+                 widget.appData.measurementsSch = await factory.tableSchemaService.get(schId);
+    
+
+
+
+    // var permDocs = await factory.persistentService.findByKind(keys: ["ProjectObject", "File"]);
+    var permDocs = await factory.persistentService.getDependentObjects(compTask.projectId);
+
+
+    var poFile = _findByName(projectObjects,  "Measurements");
+
+    if( poFile.id != ''){
+      await factory.projectDocumentService.delete(poFile.id, poFile.rev);
+    }
+
+    var projObjs = await factory.tableSchemaService.list(permDocs.where((e) => e.kind == "TableSchema").map((e) => e.id).toList()); 
+
+    // List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
+    // print(projObjs);
     
     List<String> uniqueFilenames = [];
     for( var fu in filesToUpload ){
@@ -515,8 +559,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
      
 
     for( var po in projObjs ){
-      //TODO Need to check for && po.name.contains(uploadedFiledoc name ...)
-      
       bool anyFilename = false;
       for( var f in uniqueFilenames ){
         if(po.name.contains(f)){
@@ -536,7 +578,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         }
         sci.Table res = await factory.tableSchemaService.select(sch.id, cols, 0, sch.nRows);
 
-        // res.columns[2].type = "string";
+        // // res.columns[2].type = "string";
         widget.appData.channelAnnotationTbl = res;
         widget.appData.channelAnnotationDoc = po;
       }
@@ -561,6 +603,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   void _doUpload(){
     finishedUploading = false;
+
 
 
     progressDialog.show(

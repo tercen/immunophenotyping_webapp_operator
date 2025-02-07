@@ -143,6 +143,7 @@ class _AnnotationScreenState extends State<AnnotationScreen>{
   }
 
   Future<sci.Table> _readTable() async {
+    print("Reading table ${widget.appData.channelAnnotationDoc.id}");
     annotSch = await factory.tableSchemaService.get(widget.appData.channelAnnotationDoc.id);
     var channelAnnotationTbl = await factory.tableSchemaService.select(annotSch.id, ["channel_name", "channel_description"], 0, annotSch.nRows);
 

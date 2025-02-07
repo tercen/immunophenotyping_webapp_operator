@@ -41,11 +41,13 @@ Future<bool> initFactory() async {
 }
 
 
-Future<void> uploadTable(
+Future<String> uploadTable(
       sci.Table table, String filename, String projectId, String owner, String folderId) async {
     var factory = tercen.ServiceFactory();
     var bytes = tson.encode(table.toJson());
+
     print("Uploading to folderId '${folderId}'");
+
     var resultFile = sci.FileDocument()
       ..name = table.properties.name
       ..isHidden = true
@@ -77,6 +79,8 @@ Future<void> uploadTable(
 
       await factory.tableSchemaService.update(schema);
     }
+
+    return csvTask.schemaId;
     
 
     // var computedSchema = sci.ComputedTableSchema()

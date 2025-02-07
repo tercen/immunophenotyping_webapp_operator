@@ -32,6 +32,7 @@
         {
             "name": "Implementation",
             "section": "PhenoGraph",
+            "step": "Clustering: PhenoGraph",
             "setting_name":"implementation",
             "hint": "Help/Description about setting",
             "type": "ListSingle",

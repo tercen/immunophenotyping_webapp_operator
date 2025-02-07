@@ -202,7 +202,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome>{
 
     Timer.periodic(const Duration(milliseconds: 100), (tmr){
       if(appData.workflowRun == true && leftMenuList[3].enabled == false){
-        setState(() async {
+        setState(() {
           // leftMenuList[3].enabled = true;  
           leftMenuList[3].enabled = true;  
 
