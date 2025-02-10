@@ -589,6 +589,7 @@ List<sci.SimpleRelation> l = [];
         sci.Table res = await factory.tableSchemaService.select(sch.id, cols, 0, sch.nRows);
 
         // // res.columns[2].type = "string";
+        widget.appData.channelAnnotationSch = sch;
         widget.appData.channelAnnotationTbl = res;
         widget.appData.channelAnnotationDoc = po;
       }

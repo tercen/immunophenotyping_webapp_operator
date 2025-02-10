@@ -262,32 +262,13 @@ print("Read B $jsonEntry");
     widget.appData.workflow = sci.Workflow();
     finishedSteps = 0;
 
-    print(widget.appData.channelAnnotationDoc.projectId);
+
 
     var projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: 
                     [widget.appData.channelAnnotationDoc.projectId, "\ufff0", "\ufff0"], 
                     endKey: [widget.appData.channelAnnotationDoc.projectId, "", ""]
     );
 
-    var projObjs2 = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: 
-                    [widget.appData.channelAnnotationDoc.projectId, "", "\ufff0"], 
-                    endKey: [widget.appData.channelAnnotationDoc.projectId, "", ""]
-    );
-
-    var projObjs3 = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: 
-                    [widget.appData.channelAnnotationDoc.projectId, "", ""], 
-                    endKey: [widget.appData.channelAnnotationDoc.projectId, "\ufff0", "\ufff0"]
-    );
-
-    var projObjs4 = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: 
-                    [widget.appData.channelAnnotationDoc.projectId, "", ""], 
-                    endKey: [widget.appData.channelAnnotationDoc.projectId, "ufff0", "ufff0"]
-    );
-
-    print("A - ${projObjs.length}");
-    print("B - ${projObjs2.length}");
-    print("C - ${projObjs3.length}");
-    print("D - ${projObjs4.length}");
 
     //FIXME not properly working if the workflow tests folder is present
     List<sci.ProjectDocument>? workflows = projObjs.where((po) => (po.subKind == "Workflow" || po.kind == "Workflow") && po.folderId == "").toList();
@@ -345,17 +326,17 @@ print("Read B $jsonEntry");
         }
 
         if(stp.name == "Marker Annotation"){
-          // var rrel = sci.RenameRelation();
-          // var colNames = widget.appData.channelAnnotationTbl.columns.map((e) => e.name).toList();
-          // rrel.inNames.addAll(colNames);
-          // rrel.outNames.addAll(colNames);
-          // rrel.relation = sci.SimpleRelation()..id = widget.appData.channelAnnotationSch.id;
+          var rrel = sci.RenameRelation();
+          var colNames = widget.appData.channelAnnotationTbl.columns.map((e) => e.name).toList();
+          rrel.inNames.addAll(colNames);
+          rrel.outNames.addAll(colNames);
+          rrel.relation = sci.SimpleRelation()..id = widget.appData.channelAnnotationSch.id;
 
-          sci.InMemoryRelation rel = sci.InMemoryRelation()
-                ..id = uuid.v4()
-                ..inMemoryTable = widget.appData.channelAnnotationTbl;
+          // sci.InMemoryRelation rel = sci.InMemoryRelation()
+                // ..id = uuid.v4()
+                // ..inMemoryTable = widget.appData.channelAnnotationTbl;
           sci.TableStep tmpStp = stp as sci.TableStep;
-          tmpStp.model.relation = rel;
+          tmpStp.model.relation = rrel;
           tmpStp.state.taskState = sci.DoneState();
           stp = tmpStp;
         }
