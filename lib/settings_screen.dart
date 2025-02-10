@@ -248,6 +248,15 @@ print("Read B $jsonEntry");
   }
 
   Future<void> _runWorkflow(List<SettingsEntry> settingsList) async {
+    progressDialog.show(
+        msg: "Loading Workflow. Please wait.", 
+        progressBgColor: Colors.white,
+        progressValueColor: const Color.fromARGB(255, 76, 18, 211),
+        valuePosition: ValuePosition.center,
+        valueFontSize: 18.0,
+        progressType: ProgressType.valuable,
+        barrierColor: const Color.fromARGB(125, 0, 0, 0),
+    );
     finishedRunning = true;
     widget.appData.workflowRun = false;
     widget.appData.workflow = sci.Workflow();
@@ -259,16 +268,20 @@ print("Read B $jsonEntry");
     );
 
     //FIXME not properly working if the workflow tests folder is present
-    List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.subKind == "Workflow" && po.folderId == "").toList();
+    List<sci.ProjectDocument>? workflows = projObjs.where((po) => (po.subKind == "Workflow" || po.kind == "Workflow") && po.folderId == "").toList();
     // var perm = await factory.persistentService.findByKind(keys: ["Workflow"]);
     // print("A) Found ${perm.length} workflows");
     // print("B) Found ${workflows2.length} workflows");
     // var workflows = await factory.workflowService.list(perm.map((e) => e.id).toList());
+    print("Found ${workflows.length} workflows");
+
 
     for( var w in workflows ){
       print("\t-${w.name}");
     }
     sci.Workflow wkf = await factory.workflowService.get(workflows.firstWhere((e) => e.name == "Flow Immunophenotyping - PhenoGraph").id);
+
+    progressDialog.close();
 
     progressDialog.show(
         msg: "Running the workflow. Please wait.", 
