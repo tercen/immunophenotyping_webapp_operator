@@ -193,8 +193,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       var perm = await factory.persistentService.findByKind(keys: ["Project"]);
 
       var projectList = await factory.projectService.list(perm.map((e) => e.id).toList());
+      var projectList2 = await factory.projectService.findByIsPublicAndLastModifiedDate(startKey: [true, selectedTeam], endKey: [true, selectedTeam]);
       
       print("Found ${projectList.length} projects");
+      print("Found ${projectList2.length} projects");
       bool createProject = true;
       for( var proj in projectList){
         print("\t${proj.name} ==? ${workflowTfController.text}");
