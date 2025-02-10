@@ -41,6 +41,20 @@
                 "FastPG",
                 "Rphenograph"
             ]
+        },
+
+        {
+            "name": "Export Optimization",
+            "section": "Export",
+            "step": "Export Report",
+            "setting_name":"SVGOptimization",
+            "hint": "Help/Description about setting",
+            "type": "ListSingle",
+            "value": "None",
+            "options": [
+                "FastPG",
+                "Rphenograph"
+            ]
         }
     ]
 }
