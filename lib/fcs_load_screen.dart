@@ -228,7 +228,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         project.name = workflowTfController.text;
         project.acl.owner = selectedTeam;
         project = await factory.projectService.create(project);
-
+        widget.appData.projectId = project.id;
         // Import the immunophenotyping workflow
         progressDialog.update(msg: "Downloading Project Files. Please wait.");
         sci.GitProjectTask projectTask = sci.GitProjectTask()
