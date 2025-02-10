@@ -109,7 +109,7 @@ class _SettingsScreenState extends State<SettingsScreen>{
           jsonEntry["hint"],
           jsonEntry["type"], 
           "FastPG",
-          opts: ["FastPG", "Phenograph"] );
+          opts: ["FastPG", "Phenograph"] as List<String>);
           settingsList.add(setting);
           }
 
@@ -386,7 +386,7 @@ print("Read B $jsonEntry");
     }
     // Create a folder for the workflow to run in 
     sci.FolderDocument folder = sci.FolderDocument()
-        ..acl.owner = widget.appData.selectedTeam
+        ..acl = wkf.acl
         ..name = formattedDate
         ..isHidden = false
         ..projectId = wkf.projectId;
@@ -407,7 +407,7 @@ print("Read B $jsonEntry");
     //3. Run Workflow task
     sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask()
           ..state = sci.InitState()
-          ..owner = widget.appData.selectedTeam
+          ..owner = wkf.acl.owner
           ..projectId = wkf.projectId
           ..workflowId = wkf.id
           ..workflowRev = wkf.rev;
