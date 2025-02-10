@@ -89,18 +89,18 @@ class _SettingsScreenState extends State<SettingsScreen>{
         Map<String, dynamic> jsonEntry = settingsMap["settings"][i];  
         if( jsonEntry.keys.contains("options")){
           print("Reading $i with options");
-          // if( jsonEntry["name"] == "Export Optimization"){
-          //                     SettingsEntry setting = SettingsEntry(
-          // jsonEntry["name"],
-          // jsonEntry["section"],
-          // jsonEntry["setting_name"],
-          // jsonEntry["step"],
-          // jsonEntry["hint"],
-          // jsonEntry["type"], 
-          // "None",
-          // opts: ["None", "BitmapAuto"]);
-          // settingsList.add(setting);
-          // }else{
+          if( jsonEntry["name"] == "Export Optimization"){
+                              SettingsEntry setting = SettingsEntry(
+          jsonEntry["name"],
+          jsonEntry["section"],
+          jsonEntry["setting_name"],
+          jsonEntry["step"],
+          jsonEntry["hint"],
+          jsonEntry["type"], 
+          "None",
+          opts: ["None", "BitmapAuto"]);
+          settingsList.add(setting);
+          }else{
                   SettingsEntry setting = SettingsEntry(
           jsonEntry["name"],
           jsonEntry["section"],
@@ -108,10 +108,10 @@ class _SettingsScreenState extends State<SettingsScreen>{
           jsonEntry["step"],
           jsonEntry["hint"],
           jsonEntry["type"], 
-          jsonEntry["value"],
-          opts: jsonEntry["options"] as List<String>);
+          "FastPG",
+          opts: ["FastPG", "Phenograph"] );
           settingsList.add(setting);
-          // }
+          }
 
           print("Read A $jsonEntry");
         
