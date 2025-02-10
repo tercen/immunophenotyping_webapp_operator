@@ -259,11 +259,11 @@ print("Read B $jsonEntry");
     );
 
     //FIXME not properly working if the workflow tests folder is present
-    List<sci.ProjectDocument>? workflows2 = projObjs.where((po) => po.subKind == "Workflow" && po.folderId == "").toList();
-    var perm = await factory.persistentService.findByKind(keys: ["Workflow"]);
-    print("A) Found ${perm.length} workflows");
-    print("B) Found ${workflows2.length} workflows");
-    var workflows = await factory.workflowService.list(perm.map((e) => e.id).toList());
+    List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.subKind == "Workflow" && po.folderId == "").toList();
+    // var perm = await factory.persistentService.findByKind(keys: ["Workflow"]);
+    // print("A) Found ${perm.length} workflows");
+    // print("B) Found ${workflows2.length} workflows");
+    // var workflows = await factory.workflowService.list(perm.map((e) => e.id).toList());
 
     for( var w in workflows ){
       print("\t-${w.name}");
