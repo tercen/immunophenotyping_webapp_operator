@@ -190,17 +190,20 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     // Create a project to store the workflow
     if( project.id == "" ){
       print("Selected team is $selectedTeam");
-      var perm = await factory.persistentService.findByKind(keys: ["Project"]);
+      // var perm = await factory.persistentService.findByKind(keys: ["Project"]);
 
-      var projectList = await factory.projectService.list(perm.map((e) => e.id).toList());
-      var projectList2 = await factory.projectService.findByIsPublicAndLastModifiedDate(startKey: [true, selectedTeam], endKey: [true, selectedTeam]);
+      
+      // var projectList = await factory.projectService.list(perm.map((e) => e.id).toList());
+      var projectList = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: [selectedTeam, false, "0000"], endKey: [selectedTeam, true, "9999"]);
+      
       
       print("Found ${projectList.length} projects");
-      print("Found ${projectList2.length} projects");
+      // print("Found ${projectList2.length} projects");
       bool createProject = true;
       for( var proj in projectList){
         print("\t${proj.name} ==? ${workflowTfController.text}");
         if(proj.name == workflowTfController.text){
+          print("\t\tPROJECT Already exists, using it");
           project = proj;
           createProject = false;
         }
@@ -326,10 +329,14 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     sci.Document op = sci.Document();
     bool opFound = false;
 
-    var permOp = await factory.persistentService.findByKind(keys: ["Operator"]);
+    // var permOp = await factory.persistentService.findByKind(keys: ["Operator"]);
 
-    var installedOperators = await factory.projectService.list(permOp.map((e) => e.id).toList());
-    // var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: selectedTeam, endKey: '', limit: 1000);
+    // var installedOperators = await factory.projectService.list(permOp.map((e) => e.id).toList());
+    var installedOperators = await factory.documentService.findOperatorByOwnerLastModifiedDate(startKey: [selectedTeam, "0000"], endKey: [selectedTeam, "9999"], limit: 1000);
+    print("Found ${installedOperators.length} operators");
+    for( var o in installedOperators ){
+      print(o.name);
+    }
     for( var o in installedOperators ){
       if( o.name == "FCS" && o.version == "2.3.0"){
         print("Found FCS operator installed (version ${op.version})");
