@@ -258,10 +258,15 @@ print("Read B $jsonEntry");
     //                 endKey: [widget.appData.channelAnnotationDoc.projectId, "", ""]
     // );
 
-
+    //FIXME not properly working if the workflow tests folder is present
     // List<sci.ProjectDocument>? workflows = projObjs.where((po) => po.subKind == "Workflow" && po.folderId == "").toList();
     var perm = await factory.persistentService.findByKind(keys: ["Workflow"]);
+    print("Found ${perm.length} workflows");
     var workflows = await factory.workflowService.list(perm.map((e) => e.id).toList());
+
+    for( var w in workflows ){
+      print("\t-${w.name}");
+    }
     sci.Workflow wkf = await factory.workflowService.get(workflows.firstWhere((e) => e.name == "Flow Immunophenotyping - PhenoGraph").id);
 
     progressDialog.show(
