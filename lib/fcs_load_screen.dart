@@ -209,7 +209,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
         }
       }
 
-//""
+      widget.appData.projectId = project.id;
       projectObjects = await factory.projectDocumentService.findProjectObjectsByFolderAndName(
                             startKey: [project.id,  "ufff0", "ufff0"], 
                             endKey: [project.id,  "", ""]);
