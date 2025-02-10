@@ -89,18 +89,18 @@ class _SettingsScreenState extends State<SettingsScreen>{
         Map<String, dynamic> jsonEntry = settingsMap["settings"][i];  
         if( jsonEntry.keys.contains("options")){
           print("Reading $i with options");
-          if( jsonEntry["name"] == "Export Optimization"){
-                              SettingsEntry setting = SettingsEntry(
-          jsonEntry["name"],
-          jsonEntry["section"],
-          jsonEntry["setting_name"],
-          jsonEntry["step"],
-          jsonEntry["hint"],
-          jsonEntry["type"], 
-          "None",
-          opts: ["None", "BitmapAuto"]);
-          settingsList.add(setting);
-          }else{
+          // if( jsonEntry["name"] == "Export Optimization"){
+          //                     SettingsEntry setting = SettingsEntry(
+          // jsonEntry["name"],
+          // jsonEntry["section"],
+          // jsonEntry["setting_name"],
+          // jsonEntry["step"],
+          // jsonEntry["hint"],
+          // jsonEntry["type"], 
+          // "None",
+          // opts: ["None", "BitmapAuto"]);
+          // settingsList.add(setting);
+          // }else{
                   SettingsEntry setting = SettingsEntry(
           jsonEntry["name"],
           jsonEntry["section"],
@@ -108,10 +108,10 @@ class _SettingsScreenState extends State<SettingsScreen>{
           jsonEntry["step"],
           jsonEntry["hint"],
           jsonEntry["type"], 
-          "FastPG",
-          opts: ["FastPG", "Phenograph"]);
+          jsonEntry["value"],
+          opts: jsonEntry["options"] as List<String>);
           settingsList.add(setting);
-          }
+          // }
 
           print("Read A $jsonEntry");
         
@@ -386,7 +386,7 @@ print("Read B $jsonEntry");
     }
     // Create a folder for the workflow to run in 
     sci.FolderDocument folder = sci.FolderDocument()
-        ..acl.owner = wkf.acl.owner
+        ..acl.owner = widget.appData.selectedTeam
         ..name = formattedDate
         ..isHidden = false
         ..projectId = wkf.projectId;
@@ -407,7 +407,7 @@ print("Read B $jsonEntry");
     //3. Run Workflow task
     sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask()
           ..state = sci.InitState()
-          ..owner = wkf.acl.owner
+          ..owner = widget.appData.selectedTeam
           ..projectId = wkf.projectId
           ..workflowId = wkf.id
           ..workflowRev = wkf.rev;
