@@ -339,7 +339,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     }
     for( var o in installedOperators ){
       if( o.name == "FCS" && o.version == "2.3.0"){
-        print("Found FCS operator installed (version ${op.version})");
+        print("Found FCS operator installed (version ${o.version})");
         op = o;
         opFound = true;
         break;

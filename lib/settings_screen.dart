@@ -437,10 +437,42 @@ print("Read B $jsonEntry");
 
     sub.onDone(() async {
       widget.appData.workflow = await factory.workflowService.get(wkf.id);
+      _runExportAgain(widget.appData.workflow);
+    });
+  }
+
+  Future<void> _runExportAgain(sci.Workflow workflow) async {
+    for( var stp in workflow.steps ){
+      if( stp.id == "d53c7343-41d8-470f-bd62-db52f2bd98a4"){
+        stp.state.taskState = sci.InitState();
+      }
+    }
+
+      await factory.workflowService.update(workflow);
+      var wkf = await factory.workflowService.get(workflow.id);
+      
+      sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask()
+          ..state = sci.InitState()
+          ..owner = wkf.acl.owner
+          ..projectId = wkf.projectId
+          ..workflowId = wkf.id
+          ..workflowRev = wkf.rev;
+    
+
+    workflowTask = await factory.taskService.create(workflowTask) as sci.RunWorkflowTask;
+    
+    var taskStream = factory.eventService.listenTaskChannel(workflowTask.id, true).asBroadcastStream();
+    sub = taskStream.listen((evt){
+      var evtMap = evt.toJson();
+    });
+
+    sub.onDone(() async {
       finishedRunning = true;
       widget.appData.workflowRun = true;
       progressDialog.close();
     });
+
+
   }
 
   @override
