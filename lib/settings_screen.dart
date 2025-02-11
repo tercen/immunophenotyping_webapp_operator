@@ -448,29 +448,31 @@ print("Read B $jsonEntry");
       }
     }
 
-      await factory.workflowService.update(workflow);
+    await factory.workflowService.update(workflow);
       var wkf = await factory.workflowService.get(workflow.id);
-      
-      sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask()
-          ..state = sci.InitState()
-          ..owner = wkf.acl.owner
-          ..projectId = wkf.projectId
-          ..workflowId = wkf.id
-          ..workflowRev = wkf.rev;
-    
-
-    workflowTask = await factory.taskService.create(workflowTask) as sci.RunWorkflowTask;
-    
-    var taskStream = factory.eventService.listenTaskChannel(workflowTask.id, true).asBroadcastStream();
-    sub = taskStream.listen((evt){
-      var evtMap = evt.toJson();
-    });
-
-    sub.onDone(() async {
-      finishedRunning = true;
+          finishedRunning = true;
       widget.appData.workflowRun = true;
       progressDialog.close();
-    });
+    //   sci.RunWorkflowTask workflowTask = sci.RunWorkflowTask()
+    //       ..state = sci.InitState()
+    //       ..owner = wkf.acl.owner
+    //       ..projectId = wkf.projectId
+    //       ..workflowId = wkf.id
+    //       ..workflowRev = wkf.rev;
+    
+
+    // workflowTask = await factory.taskService.create(workflowTask) as sci.RunWorkflowTask;
+    
+    // var taskStream = factory.eventService.listenTaskChannel(workflowTask.id, true).asBroadcastStream();
+    // sub = taskStream.listen((evt){
+    //   var evtMap = evt.toJson();
+    // });
+
+    // sub.onDone(() async {
+    //   finishedRunning = true;
+    //   widget.appData.workflowRun = true;
+    //   progressDialog.close();
+    // });
 
 
   }

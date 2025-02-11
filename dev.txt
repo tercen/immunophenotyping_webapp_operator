@@ -1,0 +1,2 @@
+flutter run  --web-hostname 127.0.0.1 --web-port 12888 -d web-server --dart-define PROJECT_ID=b53e61586e288535dbb1499597051e09
+flutter build web --profile --dart-define=Dart2jsOptimization=O0 
