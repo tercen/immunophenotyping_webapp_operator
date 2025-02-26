@@ -599,6 +599,7 @@ List<sci.SimpleRelation> l = [];
 
   
   void  _processSingleFileDrop(ev){
+    print(ev);
     if (ev is DropzoneFileInterface) {
       setState(() {
         _updateFilesToUpload(ev);
