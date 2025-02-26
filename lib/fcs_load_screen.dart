@@ -60,7 +60,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
 
   Color dvBackground = Colors.white;
   List<UploadFile> filesToUpload = [UploadFile("Drag Files Here", false)];
-  List<web.File> htmlFileList = [];
+  List<DropzoneFileInterface> htmlFileList = [];
   List<PlatformFile> platformFileList = [];
   var workflowTfController = TextEditingController(text: "Immunophenotyping Workflow");
   var patController = TextEditingController(text: "");
@@ -131,7 +131,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     return wdgList;
   }
 
-  void _updateFilesToUpload(web.File wf){
+  void _updateFilesToUpload(DropzoneFileInterface wf){
     if( filesToUpload[0].filename == "Drag Files Here"){
       filesToUpload.removeAt(0);
     }
@@ -264,7 +264,7 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     List<String> dotDocIds = [];
     int fti = 0;
     for( int i = 0; i < htmlFileList.length; i++ ){
-      web.File file = htmlFileList[i];
+      var file = htmlFileList[i];
       var bytes = await dvController.getFileData(file);
 
       //DELETE file if it exists...
@@ -599,7 +599,7 @@ List<sci.SimpleRelation> l = [];
 
   
   void  _processSingleFileDrop(ev){
-    if (ev is web.File) {
+    if (ev is DropzoneFileInterface) {
       setState(() {
         _updateFilesToUpload(ev);
       });

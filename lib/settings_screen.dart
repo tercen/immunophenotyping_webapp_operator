@@ -342,11 +342,11 @@ print("Read B $jsonEntry");
       if(stp.kind == "TableStep" ){
         if(stp.name == "FCS Data"){
           
-          var rrel = sci.RenameRelation();
-          var colNames = widget.appData.measurementsTbl.columns.map((e) => e.name).toList();
-          rrel.inNames.addAll(colNames);
-          rrel.outNames.addAll(colNames);
-          rrel.relation = sci.SimpleRelation()..id = widget.appData.measurementsSch.id;
+          // var rrel = sci.RenameRelation();
+          // var colNames = widget.appData.measurementsTbl.columns.map((e) => e.name).toList();
+          // rrel.inNames.addAll(colNames);
+          // rrel.outNames.addAll(colNames);
+          // rrel.relation = sci.SimpleRelation()..id = widget.appData.measurementsSch.id;
 
 
           // sci.InMemoryRelation rel = sci.InMemoryRelation()
@@ -354,24 +354,24 @@ print("Read B $jsonEntry");
           //       ..inMemoryTable = widget.appData.measurementsTbl;
 
           sci.TableStep tmpStp = stp as sci.TableStep;
-          tmpStp.model.relation =   rrel;
+          tmpStp.model.relation = sci.SimpleRelation()..id = widget.appData.measurementsSch.id;
           tmpStp.state.taskState = sci.DoneState();
           stp = tmpStp;
 
         }
 
         if(stp.name == "Marker Annotation"){
-          var rrel = sci.RenameRelation();
-          var colNames = widget.appData.channelAnnotationTbl.columns.map((e) => e.name).toList();
-          rrel.inNames.addAll(colNames);
-          rrel.outNames.addAll(colNames);
-          rrel.relation = sci.SimpleRelation()..id = widget.appData.channelAnnotationSch.id;
+          // var rrel = sci.RenameRelation();
+          // var colNames = widget.appData.channelAnnotationTbl.columns.map((e) => e.name).toList();
+          // rrel.inNames.addAll(colNames);
+          // rrel.outNames.addAll(colNames);
+          // rrel.relation = sci.SimpleRelation()..id = widget.appData.channelAnnotationSch.id;
 
           // sci.InMemoryRelation rel = sci.InMemoryRelation()
                 // ..id = uuid.v4()
                 // ..inMemoryTable = widget.appData.channelAnnotationTbl;
           sci.TableStep tmpStp = stp as sci.TableStep;
-          tmpStp.model.relation = rrel;
+          tmpStp.model.relation = sci.SimpleRelation()..id = widget.appData.channelAnnotationSch.id;
           tmpStp.state.taskState = sci.DoneState();
           stp = tmpStp;
         }
