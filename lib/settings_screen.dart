@@ -433,7 +433,10 @@ print("Read B $jsonEntry");
     });
 
 
-    
+    sub.onError((err) async {
+      print(err);
+      progressDialog.close();
+    });
 
     sub.onDone(() async {
       widget.appData.workflow = await factory.workflowService.get(wkf.id);

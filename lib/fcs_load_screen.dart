@@ -554,7 +554,7 @@ List<sci.SimpleRelation> l = [];
     var poFile = _findByName(projectObjects,  "Measurements");
 
     if( poFile.id != ''){
-      await factory.projectDocumentService.delete(poFile.id, poFile.rev);
+      // await factory.projectDocumentService.delete(poFile.id, poFile.rev);
     }
 
     var projObjs = await factory.tableSchemaService.list(permDocs.where((e) => e.kind == "TableSchema").map((e) => e.id).toList()); 
