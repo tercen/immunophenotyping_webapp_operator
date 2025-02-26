@@ -599,7 +599,6 @@ List<sci.SimpleRelation> l = [];
 
   
   void  _processSingleFileDrop(ev){
-    print(ev);
     if (ev is DropzoneFileInterface) {
       setState(() {
         _updateFilesToUpload(ev);
@@ -768,7 +767,7 @@ List<sci.SimpleRelation> l = [];
                     dvBackground = Colors.cyan.shade50;
                   });
                 },
-                onDrop:  (ev) async => _processSingleFileDrop(ev),
+                onDropFile:  (ev) async => _processSingleFileDrop(ev),
                 onDropMultiple: (dynamic ev) => (List<dynamic> ev) => print('Drop multiple: $ev'),
               ),
           )
