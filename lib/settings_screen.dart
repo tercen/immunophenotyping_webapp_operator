@@ -326,7 +326,9 @@ print("Read B $jsonEntry");
     }
 
     assert( wkf.id != "");
+    print("Copying workflow>> ${wkf.id} - ${wkf.name}");
     wkf = await factory.workflowService.copyApp(wkf.id, widget.appData.projectId);
+    print(wkf.toJson());
     wkf.acl.owner = widget.appData.selectedTeam;
 
 
@@ -406,13 +408,13 @@ print("Read B $jsonEntry");
     folder = await factory.folderService.create(folder);
     wkf.folderId = folder.id;
     
-    // wkf.id = "";
-    // wkf.rev = "";
+    wkf.id = "";
+    wkf.rev = "";
 
     
 
-    await factory.workflowService.update(wkf);
-    wkf = await factory.workflowService.get(wkf.id);
+    wkf = await factory.workflowService.create(wkf);
+    
     
     
 
