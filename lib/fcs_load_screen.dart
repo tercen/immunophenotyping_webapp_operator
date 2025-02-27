@@ -422,9 +422,9 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     });
 
 
-    sub.onDone((){
+    sub.onDone(() async {
       if( finishedUploading == false){
-        _getComputedRelation(compTask.id);
+        await _getComputedRelation(compTask.id);
       
         finishedUploading = true;
         widget.appData.uploadRun = true;
@@ -460,7 +460,7 @@ List<sci.SimpleRelation> l = [];
   }
 
 
-  void _getComputedRelation(String taskId) async{
+  Future<void> _getComputedRelation(String taskId) async{
     // Works for zip file...
     print("Getting computed relation for taskId $taskId");
     
