@@ -524,7 +524,8 @@ List<sci.SimpleRelation> l = [];
 
 
     // var permDocs = await factory.persistentService.findByKind(keys: ["ProjectObject", "File"]);
-    var permDocs = await factory.persistentService.getDependentObjects(compTask.projectId);
+
+    // var permDocs = await factory.persistentService.getDependentObjects(compTask.projectId);
 
 
     var poFile = _findByName(projectObjects,  "Measurements");
@@ -533,9 +534,9 @@ List<sci.SimpleRelation> l = [];
       // await factory.projectDocumentService.delete(poFile.id, poFile.rev);
     }
 
-    var projObjs = await factory.tableSchemaService.list(permDocs.where((e) => e.kind == "TableSchema").map((e) => e.id).toList()); 
+    // var projObjs = await factory.tableSchemaService.list(permDocs.where((e) => e.kind == "TableSchema").map((e) => e.id).toList()); 
 
-    // List<sci.ProjectDocument> projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
+    var projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
     // print(projObjs);
     
     List<String> uniqueFilenames = [];
@@ -554,7 +555,7 @@ List<sci.SimpleRelation> l = [];
 
 
 
-      if(po.name.contains( "Channel-Descriptions" ) && anyFilename == true  ){
+      if(po.name.contains( "Channel-Descriptions" )   ){
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
         List<String> cols = ["channel_name", "channel_description"];
         for( var col in sch.columns){
