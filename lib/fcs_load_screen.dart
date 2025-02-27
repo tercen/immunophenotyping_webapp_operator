@@ -555,7 +555,7 @@ List<sci.SimpleRelation> l = [];
 
 
 
-      if(po.name.contains( "Channel-Descriptions" )   ){
+      if(po.name.contains( "Channel-Descriptions" ) && !po.name.contains( "Channel-Descriptions-CyTOF_example.zip" )   ){
         sci.Schema sch = await factory.tableSchemaService.get(po.id);
         List<String> cols = ["channel_name", "channel_description"];
         for( var col in sch.columns){
