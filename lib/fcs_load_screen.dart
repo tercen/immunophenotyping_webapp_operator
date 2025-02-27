@@ -167,26 +167,6 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
     var uuid = const Uuid();
 
 
-        //http://127.0.0.1:5400/test-team/w/4636a61f6867796c23693e7d023b632c/ts/6dba340a-af59-42ba-aea5-55fa7f7b2b4b //CORRECT
-    // http://127.0.0.1:5400/test-team/w/4636a61f6867796c23693e7d023b632c/ts/8346b5cb-5e4d-41ae-be35-313abe9500d0 //WRONG
-
-    // var wkf = await factory.workflowService.get("4636a61f6867796c23693e7d023b632c");
-
-    // for( var stp in wkf.steps ){
-    //   if( stp.id == "6dba340a-af59-42ba-aea5-55fa7f7b2b4b"){
-    //     print("CORRECT:");
-    //     print(stp.toJson());
-    //     print("........................");
-    //   }
-    //   if( stp.id == "8346b5cb-5e4d-41ae-be35-313abe9500d0"){
-    //     print("WRONG:");
-    //     print(stp.toJson());
-    //     print("........................");
-    //   }
-    // }
-
-    // return;
-
     // Create a project to store the workflow
     if( project.id == "" ){
       print("Selected team is $selectedTeam");
@@ -196,14 +176,10 @@ class _FcsLoadScreenState extends State<FcsLoadScreen>{
       // var projectList = await factory.projectService.list(perm.map((e) => e.id).toList());
       var projectList = await factory.projectService.findByTeamAndIsPublicAndLastModifiedDate(startKey: [selectedTeam, false, "0000"], endKey: [selectedTeam, true, "9999"]);
       
-      
-      print("Found ${projectList.length} projects");
-      // print("Found ${projectList2.length} projects");
+
       bool createProject = true;
       for( var proj in projectList){
-        print("\t${proj.name} ==? ${workflowTfController.text}");
         if(proj.name == workflowTfController.text){
-          print("\t\tPROJECT Already exists, using it");
           project = proj;
           createProject = false;
         }
@@ -554,7 +530,7 @@ List<sci.SimpleRelation> l = [];
     var poFile = _findByName(projectObjects,  "Measurements");
 
     if( poFile.id != ''){
-      // await factory.projectDocumentService.delete(poFile.id, poFile.rev);
+      await factory.projectDocumentService.delete(poFile.id, poFile.rev);
     }
 
     var projObjs = await factory.tableSchemaService.list(permDocs.where((e) => e.kind == "TableSchema").map((e) => e.id).toList()); 

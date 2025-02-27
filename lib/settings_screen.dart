@@ -316,7 +316,19 @@ print("Read B $jsonEntry");
     for( var w in workflows ){
       print("\t-${w.name}");
     }
-    sci.Workflow wkf = await factory.workflowService.get(workflows.firstWhere((e) => e.name == "Flow Immunophenotyping - PhenoGraph").id);
+    var wkfList = await factory.workflowService.list(workflows.where((e) => e.name == "Flow Immunophenotyping - PhenoGraph" ).map((e) => e.id).toList());
+
+    sci.Workflow wkf = sci.Workflow();
+    for( var w in wkfList ){
+      if( !w.steps.any((e) => e.state.taskState is! sci.InitState)){
+        wkf = w;
+      }
+    }
+
+    assert( wkf.id != "");
+    wkf = await factory.workflowService.copyApp(wkf.id, widget.appData.projectId);
+    wkf.acl.owner = widget.appData.selectedTeam;
+
 
     progressDialog.close();
 
@@ -393,12 +405,14 @@ print("Read B $jsonEntry");
 
     folder = await factory.folderService.create(folder);
     wkf.folderId = folder.id;
-    wkf.id = "";
-    wkf.rev = "";
+    
+    // wkf.id = "";
+    // wkf.rev = "";
 
-        
+    
 
-    wkf = await factory.workflowService.create(wkf);
+    await factory.workflowService.update(wkf);
+    wkf = await factory.workflowService.get(wkf.id);
     
     
 
