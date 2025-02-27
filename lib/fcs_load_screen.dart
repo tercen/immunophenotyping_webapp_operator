@@ -508,7 +508,7 @@ List<sci.SimpleRelation> l = [];
     measurementTbl.properties.name = "Measurements";
 
 
-
+    
     widget.appData.measurementsTbl = measurementTbl;
 
 
@@ -518,7 +518,8 @@ List<sci.SimpleRelation> l = [];
                  compTask.owner,
                  "");
 
-                 widget.appData.measurementsSch = await factory.tableSchemaService.get(schId);
+    print("Measurements Table Id is >> $schId");
+    widget.appData.measurementsSch = await factory.tableSchemaService.get(schId);
     
 
 
@@ -527,16 +528,16 @@ List<sci.SimpleRelation> l = [];
 
     // var permDocs = await factory.persistentService.getDependentObjects(compTask.projectId);
 
+    var projObjs = await factory.projectDocumentService.findProjectObjectsByLastModifiedDate(startKey: [project.id, "0000"], endKey: [project.id, "9999"]);
+    // var poFile = _findByName(projObjs,  "Measurements");
 
-    var poFile = _findByName(projectObjects,  "Measurements");
-
-    if( poFile.id != ''){
-      // await factory.projectDocumentService.delete(poFile.id, poFile.rev);
-    }
+    // if( poFile.id != ''){
+    //   // await factory.projectDocumentService.delete(poFile.id, poFile.rev);
+    // }
 
     // var projObjs = await factory.tableSchemaService.list(permDocs.where((e) => e.kind == "TableSchema").map((e) => e.id).toList()); 
 
-    var projObjs = await factory.projectDocumentService.findProjectObjectsByFolderAndName(startKey: [project.id, "ufff0", "ufff0"], endKey: [project.id, "", ""]);
+    
     // print(projObjs);
     
     List<String> uniqueFilenames = [];
@@ -546,17 +547,16 @@ List<sci.SimpleRelation> l = [];
      
 
     for( var po in projObjs ){
-      bool anyFilename = false;
-      for( var f in uniqueFilenames ){
-        if(po.name.contains(f)){
-          anyFilename = true;
-        }
-      }
-
-
+      // bool anyFilename = false;
+      // for( var f in uniqueFilenames ){
+      //   if(po.name.contains(f)){
+      //     anyFilename = true;
+      //   }
+      // }
 
       if(po.name.contains( "Channel-Descriptions" ) && !po.name.contains( "Channel-Descriptions-CyTOF_example.zip" )   ){
-        sci.Schema sch = await factory.tableSchemaService.get(po.id);
+        print("FOUND Channel Description> ${po.name}");
+        var sch = await factory.tableSchemaService.get(po.id);
         List<String> cols = ["channel_name", "channel_description"];
         for( var col in sch.columns){
           if(col.name == "channel_id"){
